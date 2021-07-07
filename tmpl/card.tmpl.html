@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comment Card</title>
+</head>
+<body>
+    {{ if .FirstName }}
+        <h2>{{ .FirstName }}'s Magic Card</h2>
+    {{ else }}
+    <!-- todo: does not show -->
+        <h2>student not found</h2>
+        <a href="search/">Search for student</a>
+    {{ end }}
+
+
+    <button id="showMerrit" onclick="addMerrit()">Give Merrit</button>
+    <button id="showDemerrit">Give Demerrit</button>
+    <!-- <button id="cancel" display="none">Cancel</button> -->
+
+
+    <form action="addComment" id="addComment" hidden>
+        <input type="hidden" id="isMerrit" name="isMerrit">
+        <h3 id="merritType"></h3>
+
+        <!-- <input type="textarea" name="comment" id=""> -->
+        <textarea name="comment" id="comment" cols="30" rows="10"></textarea>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
+
+<script>
+    function addMerrit() {
+       var form, h3, isMerrit, comment;
+       isMerrit = document.getElementById("isMerrit");
+       form = document.getElementById("addComment");
+       h3 = document.getElementById("merritType");
+        comment = document.getElementById("comment");
+    
+       isMerrit.value = true;
+       form.hidden = false;
+       h3.innerText = "Is awarded merit for:";
+    }
+    
+
+</script>
