@@ -39,11 +39,20 @@ func (sv *StudentView) Search(w http.ResponseWriter, r *http.Request) {
 }
 
 func (sv *StudentView) Home(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "home")
+
 }
 
 func (sv *StudentView) Add(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+		return
+	}
+	// validate input: session, msg
 
+	// insert db & log change
+
+	// display confirmation
+	sv.tmpls.Lookup("add.tmpl.html").Execute(w, fmt.Sprintf("%s awarded merrit with message:\n%s", r.FormValue("firstName"), r.FormValue("comment")))
 }
 
 func (sv *StudentView) Card(w http.ResponseWriter, r *http.Request) {

@@ -1,0 +1,4 @@
+github.com/matthewkappus/Roster v0.0.0-20210706170219-37c691d2ca6c h1:7KFdNY16cAmQc4jfNxehXW/j+T7F6aFUuE+QqUm050M=
+github.com/matthewkappus/Roster v0.0.0-20210706170219-37c691d2ca6c/go.mod h1:q3zB2ghP+sE6G6xpajdsPVOE+OtTARgymXOo2E8mW2I=
+github.com/mattn/go-sqlite3 v1.14.7 h1:fxWBnXkxfM6sRiuH3bqJ4CfzZojMOLVc0UTsTglEghA=
+github.com/mattn/go-sqlite3 v1.14.7/go.mod h1:NyWgC/yNuGj7Q9rpYnZvas74GogHl5/Z4A/KQRfk6bU=

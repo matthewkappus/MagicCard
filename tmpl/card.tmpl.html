@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comment Card</title>
+    <title>New Magic Card</title>
 </head>
 <body>
     {{ if .FirstName }}
-        <h2>{{ .FirstName }}'s Magic Card</h2>
+        <h2>{{ .FirstName }} {{ .LastName}} 's Magic Card</h2>
     {{ else }}
     <!-- todo: does not show -->
         <h2>student not found</h2>
@@ -21,28 +21,37 @@
     <!-- <button id="cancel" display="none">Cancel</button> -->
 
 
-    <form action="addComment" id="addComment" hidden>
+    <form method="POST" action="addComment" id="addComment" hidden>
         <input type="hidden" id="isMerrit" name="isMerrit">
+        <input type="hidden" id="permID" value={{.PermID}}>
+        <input type="hidden" id="firstName" name="firstName" value={{.FirstName}}>
         <h3 id="merritType"></h3>
 
         <!-- <input type="textarea" name="comment" id=""> -->
-        <textarea name="comment" id="comment" cols="30" rows="10"></textarea>
+        <input type="text" name="comment" id="comment">
+        <br />
         <input type="submit" value="Submit">
+        <!-- add cancel -->
     </form>
 </body>
 </html>
 
 <script>
     function addMerrit() {
-       var form, h3, isMerrit, comment;
+       var form, h3, isMerrit, comment, merritBtn, demerritBtn;
+
+       merritBtn = document.getElementById("showMerrit");
+       demerritBtn = document.getElementById("showDemerrit");
        isMerrit = document.getElementById("isMerrit");
        form = document.getElementById("addComment");
        h3 = document.getElementById("merritType");
         comment = document.getElementById("comment");
     
+        merritBtn.style.visibility = "hidden";
+        demerritBtn.style.visibility = "hidden";
        isMerrit.value = true;
        form.hidden = false;
-       h3.innerText = "Is awarded merit for:";
+       h3.innerText = "{{.FirstName}} awarded merit for:";
     }
     
 
