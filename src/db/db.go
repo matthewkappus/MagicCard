@@ -31,6 +31,25 @@ const (
 	selectStu415ByPermID = `SELECT organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled FROM stu415 WHERE perm_id=? `
 )
 
+// comment table
+const (
+	createComment = `CREATE TABLE IF NOT EXISTS comment (id INTEGER PRIMARY KEY, perm_id, email, comment TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, is_merrit BOOLEAN, is_active BOOLEAN DEFAULT true, FOREIGN KEY(perm_id) REFERENCES stu415(perm_id))`
+	// createComment = `CREATE TABLE IF NOT EXISTS comment (id INTEGER PRIMARY KEY, perm_id, email, comment TEXT, created DATETIME, is_merrit, is_active boolean, FOREIGN KEY(perm_id) REFERENCES stu415(perm_id))`
+	insertComment = `INSERT INTO comment(perm_id, email, comment, is_merrit) VALUES(?,?,?,?);`
+
+	// INSERT INTO comment(perm_id, email, comment, created, is_merrit, is_active) VALUES(1, "2", "3", time('now'), true, true);
+
+)
+
+func (s *Store) CreateCommentTable() error {
+	_, err := s.db.Exec(createComment)
+	return err
+}
+func (s *Store) InsertComment(permID, email, comment string, isMerrit bool) error {
+	_, err := s.db.Exec(insertComment, permID, email, comment, isMerrit)
+	return err
+}
+
 func (s *Store) UpdateStu415(stu415CSV string) error {
 	f, err := os.Open(stu415CSV)
 	if err != nil {

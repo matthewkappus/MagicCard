@@ -1,32 +1,42 @@
 package roster
 
 import (
-	"fmt"
 	"log"
 	"net/http"
+	"net/http/cookiejar"
 	"os"
 	"text/template"
 
+	"github.com/matthewkappus/MagicCard/src/db"
 	"github.com/matthewkappus/Roster/src/synergy"
+	"golang.org/x/net/publicsuffix"
 )
 
 type StudentView struct {
+	jar   *cookiejar.Jar
 	tmpls *template.Template
+	store *db.Store
 	// store sql.DB
 }
 
 // New view takes a roster db and tmpl path and returns handler object
 // todo: put auth of object for sessions
-func NewView() (*StudentView, error) {
+func NewView(store *db.Store) (*StudentView, error) {
 	tmpls, err := template.ParseGlob("tmpl/*.tmpl.html")
 	if err != nil {
 		return nil, err
 	}
 
+	jar, err := cookiejar.New(&cookiejar.Options{PublicSuffixList: publicsuffix.List})
+	if err != nil {
+		return nil, err
+	}
 	// todo: load roster from sql
 
 	return &StudentView{
+		jar:   jar,
 		tmpls: tmpls,
+		store: store,
 	}, nil
 
 }
@@ -43,19 +53,6 @@ func (sv *StudentView) Search(w http.ResponseWriter, r *http.Request) {
 
 func (sv *StudentView) Home(w http.ResponseWriter, r *http.Request) {
 
-}
-
-func (sv *StudentView) Add(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
-		return
-	}
-	// validate input: session, msg
-
-	// insert db & log change
-
-	// display confirmation
-	sv.tmpls.Lookup("add.tmpl.html").Execute(w, fmt.Sprintf("%s awarded merrit with message:\n%s", r.FormValue("firstName"), r.FormValue("comment")))
 }
 
 func (sv *StudentView) Card(w http.ResponseWriter, r *http.Request) {

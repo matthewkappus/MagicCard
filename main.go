@@ -19,7 +19,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	sv, err := roster.NewView()
+	sv, err := roster.NewView(store)
 	if err != nil {
 		log.Fatal(err)
 	}
