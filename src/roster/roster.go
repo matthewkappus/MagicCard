@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"os"
 	"text/template"
+
+	"github.com/matthewkappus/Roster/src/synergy"
 )
 
 type StudentView struct {
@@ -14,6 +16,7 @@ type StudentView struct {
 }
 
 // New view takes a roster db and tmpl path and returns handler object
+// todo: put auth of object for sessions
 func NewView() (*StudentView, error) {
 	tmpls, err := template.ParseGlob("tmpl/*.tmpl.html")
 	if err != nil {
@@ -63,10 +66,10 @@ func (sv *StudentView) Card(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	stu401s, _ := UpdateRoster()
-	var found *Stu401
+	stu415s, _ := UpdateRoster()
+	var found *synergy.Stu415
 
-	for _, stu := range stu401s {
+	for _, stu := range stu415s {
 		if stu.PermID == id {
 			found = stu
 			break
@@ -77,13 +80,13 @@ func (sv *StudentView) Card(w http.ResponseWriter, r *http.Request) {
 	// todo: add email and session info
 	sv.tmpls.Lookup("card.tmpl.html").Execute(w, found)
 }
-func UpdateRoster() ([]*Stu401, error) {
+func UpdateRoster() ([]*synergy.Stu415, error) {
 	// todo: get from synergy
-	f, err := os.Open("data/stu401.csv")
+	f, err := os.Open("data/stu415.csv")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	return ReadStu401sFromCSV(f)
+	return synergy.ReadStu415sFromCSV(f)
 
 }

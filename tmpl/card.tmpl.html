@@ -7,8 +7,8 @@
     <title>New Magic Card</title>
 </head>
 <body>
-    {{ if .FirstName }}
-        <h2>{{ .FirstName }} {{ .LastName}} 's Magic Card</h2>
+    {{ if .StudentName }}
+        <h2>{{.StudentName}} 's Magic Card</h2>
     {{ else }}
     <!-- todo: does not show -->
         <h2>student not found</h2>
@@ -24,7 +24,7 @@
     <form method="POST" action="addComment" id="addComment" hidden>
         <input type="hidden" id="isMerrit" name="isMerrit">
         <input type="hidden" id="permID" value={{.PermID}}>
-        <input type="hidden" id="firstName" name="firstName" value={{.FirstName}}>
+        <input type="hidden" id="firstName" name="firstName" value={{.StudentName}}>
         <h3 id="merritType"></h3>
 
         <!-- <input type="textarea" name="comment" id=""> -->
@@ -51,7 +51,7 @@
         demerritBtn.style.visibility = "hidden";
        isMerrit.value = true;
        form.hidden = false;
-       h3.innerText = "{{.FirstName}} awarded merit for:";
+       h3.innerText = "{{.StudentName}} awarded merit for:";
     }
     
 
