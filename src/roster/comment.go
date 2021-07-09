@@ -40,17 +40,18 @@ func (sv *StudentView) insertComment(r *http.Request) (*Comment, error) {
 	// validate input: session, msg
 	// insert db & log change
 	// INSERT INTO comment(perm_id, email, comment, is_merrit, is_active) VALUES(?,?,?,?,?)
-
+	r.ParseForm()
 	isMerrit := false
 	if r.FormValue("isMerrit") == "true" {
 		isMerrit = true
 	}
 
+	fmt.Println("adding comment for", r.FormValue("permID"))
 	c := &Comment{
-		PermID: r.FormValue("permID"),
+		PermID: r.PostFormValue("permID"),
 		// can this get from the session?
-		Email:    "samplesetinAdd@gmail.com",
-		Comment:  r.FormValue("comment"),
+		Email:    "insertComment@gmail.com",
+		Comment:  r.PostFormValue("comment"),
 		IsMerrit: isMerrit,
 	}
 

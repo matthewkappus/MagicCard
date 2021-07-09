@@ -61,7 +61,7 @@ func ReadStu401sFromCSV(csvReport io.Reader) (students []*Stu401, err error) {
 	}
 
 	students = make([]*Stu401, len(rows))
-	fmt.Printf("ReadStu415sFromCSV found %d rows", len(rows))
+	fmt.Printf("R %d rows", len(rows))
 
 	for i, r := range rows {
 		students[i] = rowToStu401s(r)

@@ -25,10 +25,20 @@ func OpenStore(path string) (*Store, error) {
 
 // stu415 table
 const (
-	createStu415         = `CREATE TABLE IF NOT EXISTS stu415 (organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled text)`
-	dropStu415           = `DROP TABLE IF EXISTS stu415`
-	insertStu415         = `INSERT INTO stu415(organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`
-	selectStu415ByPermID = `SELECT organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled FROM stu415 WHERE perm_id=? `
+	createStu415          = `CREATE TABLE IF NOT EXISTS stu415 (organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled text)`
+	dropStu415            = `DROP TABLE IF EXISTS stu415`
+	insertStu415          = `INSERT INTO stu415(organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`
+	selectStu415ByPermID  = `SELECT organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled FROM stu415 WHERE perm_id=? `
+	selectStu415BySection = `SELECT organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled FROM stu415 WHERE section_id=? `
+
+	//    SELECT  DISTINCT * from stu415 WHERE teacher="Susco Taylor, Kevin R.";
+	selectDistinctSectionsByTeacher = `SELECT DISTINCT section_id,  course_id_and_title from stu415 WHERE teacher=?`
+)
+
+// staff table
+const (
+// teacher is the s415 full name and name is the Mr/Mrs version. Email is their aps gmail
+// createGroup = `CREATE TABLE IF NOT EXISTS group(id PRIMARY KEY, teacher, name, staff_email, perm_id TEXT, FOREIGN KEY(staff_email) REFERENCES staff(email)`
 )
 
 // comment table
@@ -41,6 +51,14 @@ const (
 
 )
 
+func (s *Store) SelectStu415(permid string) (s415 *synergy.Stu415, err error) {
+	s415 = new(synergy.Stu415)
+	row := s.db.QueryRow(selectStu415ByPermID, permid)
+	// organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled
+	err = row.Scan(&s415.OrganizationName, &s415.SchoolYear, &s415.StudentName, &s415.PermID, &s415.Gender, &s415.Grade, &s415.TermName, &s415.Per, &s415.Term, &s415.SectionID, &s415.CourseIDAndTitle, &s415.MeetDays, &s415.Teacher, &s415.Room, &s415.PreScheduled)
+
+	return
+}
 func (s *Store) CreateCommentTable() error {
 	_, err := s.db.Exec(createComment)
 	return err
@@ -97,9 +115,45 @@ func (s *Store) insertStu415(stu415s []*synergy.Stu415) error {
 	return tx.Commit()
 }
 
-// staff table
-const (
-	createStaff = `CREATE TABLE IF NOT EXISTS staff(email primary_key, teacher_name text)`
-)
+// ListStudents takes a stu415 section_id and returns the students
+func (s *Store) ListStudents(section string) ([]*synergy.Stu415, error) {
+	rows, err := s.db.Query(selectStu415BySection, section)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	students := make([]*synergy.Stu415, 0)
+	for rows.Next() {
+		s415 := new(synergy.Stu415)
+		err = rows.Scan(&s415.OrganizationName, &s415.SchoolYear, &s415.StudentName, &s415.PermID, &s415.Gender, &s415.Grade, &s415.TermName, &s415.Per, &s415.Term, &s415.SectionID, &s415.CourseIDAndTitle, &s415.MeetDays, &s415.Teacher, &s415.Room, &s415.PreScheduled)
+		if err != nil {
+			log.Printf("sql couldn't scan student: %v", err)
+			continue
+		}
+		students = append(students, s415)
+	}
+	return students, rows.Err()
+}
 
-// comments table
+// ListClasses takes a teacher name and returns the [section_id, course_id_and_title]
+func (s *Store) ListClasses(teacher string) ([]*synergy.Stu415, error) {
+	rows, err := s.db.Query(selectDistinctSectionsByTeacher, teacher)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	classes := make([]*synergy.Stu415, 0)
+	for rows.Next() {
+		// SELECT DISTINCT section_id,  course_id_and_title from stu415 WHERE teacher=?
+		stu := new(synergy.Stu415)
+		err = rows.Scan(&stu.SectionID, &stu.CourseIDAndTitle)
+		if err != nil {
+			log.Printf("error listing classes: %v", err)
+			continue
+		}
+		classes = append(classes, stu)
+
+	}
+
+	return classes, nil
+}

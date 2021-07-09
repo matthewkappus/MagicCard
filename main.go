@@ -15,9 +15,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if err = store.UpdateStu415("data/stu415.csv"); err != nil {
-		log.Fatal(err)
-	}
+	// if err = store.UpdateStu415("data/stu415.csv"); err != nil {
+	// 	log.Fatal(err)
+	// }
 
 	sv, err := roster.NewView(store)
 	if err != nil {
@@ -25,6 +25,8 @@ func main() {
 	}
 
 	http.HandleFunc("/search", sv.Search)
+	http.HandleFunc("/classes", sv.ListClasses)
+	http.HandleFunc("/class", sv.Class)
 	http.HandleFunc("/addComment", sv.Add)
 	http.HandleFunc("/card", sv.Card)
 	// login

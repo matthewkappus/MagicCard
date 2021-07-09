@@ -23,9 +23,9 @@
 
     <form method="POST" action="addComment" id="addComment" hidden>
         <input type="hidden" id="isMerrit" name="isMerrit">
-        <input type="hidden" id="permID" value={{.PermID}}>
+        <input type="hidden" id="permID" name="permID" value={{.PermID}}>
         <!-- todo: get email from session cookie -->
-        <input type="hidden" id="firstName" name="firstName" value={{.StudentName}}>
+        <input type="hidden" id="studentName" name="studentName" value={{.StudentName}}>
         <h3 id="merritType"></h3>
 
         <!-- <input type="textarea" name="comment" id=""> -->

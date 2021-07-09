@@ -31,6 +31,8 @@ func NewView(store *db.Store) (*StudentView, error) {
 	if err != nil {
 		return nil, err
 	}
+
+
 	// todo: load roster from sql
 
 	return &StudentView{
@@ -57,25 +59,19 @@ func (sv *StudentView) Home(w http.ResponseWriter, r *http.Request) {
 
 func (sv *StudentView) Card(w http.ResponseWriter, r *http.Request) {
 	// todo: look up student in db: join with comments
-	id := r.FormValue("id")
-	if len(id) != 9 {
+	permid := r.FormValue("id")
+	if len(permid) != 9 {
 		http.NotFound(w, r)
 		return
 	}
 
-	stu415s, _ := UpdateRoster()
-	var found *synergy.Stu415
-
-	for _, stu := range stu415s {
-		if stu.PermID == id {
-			found = stu
-			break
-		}
-
+	stu415, err := sv.store.SelectStu415(permid)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
-
 	// todo: add email and session info
-	sv.tmpls.Lookup("card.tmpl.html").Execute(w, found)
+	sv.tmpls.Lookup("card.tmpl.html").Execute(w, stu415)
 }
 func UpdateRoster() ([]*synergy.Stu415, error) {
 	// todo: get from synergy
