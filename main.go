@@ -15,6 +15,10 @@ func main() {
 		log.Fatal(err)
 	}
 
+	if err := store.CreateStaff("data/cards.db"); err != nil {
+		log.Fatal(err)
+	}
+
 	sv, err := roster.NewView(store)
 	if err != nil {
 		log.Fatal(err)

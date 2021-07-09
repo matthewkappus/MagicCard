@@ -39,7 +39,9 @@ const (
 // staff table
 const (
 	// teacher is the s415 full name and name is the Mr/Mrs version. Email is their aps gmail
-	createStaff              = `CREATE TABLE IF NOT EXISTS staff(teacher NOT NULL UNIQUE, name, staff_email NOT NULL UNIQUE, FOREIGN KEY(teacher) REFERENCES stu415(teacher))`
+	createStaff = `CREATE TABLE IF NOT EXISTS staff(teacher NOT NULL UNIQUE, name, staff_email, key NOT NULL UNIQUE, FOREIGN KEY(teacher) REFERENCES stu415(teacher))`
+	// key is a uuid for session
+	// insertStaff              = `INSERT INTO staff(teacher, name, staff_email, key) VALUES(?,?,?,?)`
 	insertStaff              = `INSERT INTO staff(teacher, name, staff_email) VALUES(?,?,?)`
 	selectTeacherNameByEmail = `SELECT teacher, name FROM staff where staff_email=?`
 )
@@ -83,6 +85,9 @@ func (s *Store) CreateStaff(stu415CSV string) error {
 	defer stmt.Close()
 	for _, stu := range s415s {
 		name, email := toNameEmail(stu.Teacher)
+		// key := uuid.Must(uuid.NewRandom()).String()
+		// fmt.Println(" made key ", key)
+		// INSERT INTO staff(teacher, name, staff_email, key) VALUES(?,?,?,?)
 		_, err = stmt.Exec(stu.Teacher, name, email)
 		if err != nil {
 			log.Printf("error inserting %s: %v", stu.Teacher, err)

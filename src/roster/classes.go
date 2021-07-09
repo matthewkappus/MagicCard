@@ -33,8 +33,6 @@ func (sv *StudentView) Class(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("class listing", s415s)
-
 	// todo: wrap s415s in struct with class info and tags
 	sv.tmpls.Lookup("studentlist.tmpl.html").Execute(w, s415s)
 }
