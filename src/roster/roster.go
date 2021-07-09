@@ -1,42 +1,30 @@
 package roster
 
 import (
+	"embed"
 	"log"
 	"net/http"
-	"net/http/cookiejar"
 	"os"
 	"text/template"
 
 	"github.com/matthewkappus/MagicCard/src/db"
 	"github.com/matthewkappus/Roster/src/synergy"
-	"golang.org/x/net/publicsuffix"
 )
 
 type StudentView struct {
-	jar   *cookiejar.Jar
 	tmpls *template.Template
 	store *db.Store
 	// store sql.DB
 }
 
-// New view takes a roster db and tmpl path and returns handler object
-// todo: put auth of object for sessions
-func NewView(store *db.Store) (*StudentView, error) {
-	tmpls, err := template.ParseGlob("tmpl/*.tmpl.html")
+// NewView takes a roster db and tmpl path and returns handler object
+func NewView(store *db.Store, templates embed.FS) (*StudentView, error) {
+	tmpls, err := template.ParseFS(templates, "tmpl/*.tmpl.html")
 	if err != nil {
 		return nil, err
 	}
-
-	jar, err := cookiejar.New(&cookiejar.Options{PublicSuffixList: publicsuffix.List})
-	if err != nil {
-		return nil, err
-	}
-
-
-	// todo: load roster from sql
 
 	return &StudentView{
-		jar:   jar,
 		tmpls: tmpls,
 		store: store,
 	}, nil

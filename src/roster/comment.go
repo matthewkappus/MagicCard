@@ -2,6 +2,7 @@ package roster
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 )
@@ -10,8 +11,8 @@ type Comment struct {
 	ID int
 	//
 	PermID string
-	// Teacher Email
-	Email   string
+	// staff(name)
+	Author  string
 	Comment string
 
 	Created time.Time
@@ -46,16 +47,19 @@ func (sv *StudentView) insertComment(r *http.Request) (*Comment, error) {
 		isMerrit = true
 	}
 
-	fmt.Println("adding comment for", r.FormValue("permID"))
+	name, err := r.Cookie("name")
+	if err != nil {
+		log.Printf("insertComment without name. error: %v", err)
+	}
 	c := &Comment{
 		PermID: r.PostFormValue("permID"),
 		// can this get from the session?
-		Email:    "insertComment@gmail.com",
+		Author:   name.Value,
 		Comment:  r.PostFormValue("comment"),
 		IsMerrit: isMerrit,
 	}
 
-	sv.store.InsertComment(c.PermID, c.Email, c.Comment, c.IsMerrit)
+	sv.store.InsertComment(c.PermID, c.Author, c.Comment, c.IsMerrit)
 	return c, nil
 
 }

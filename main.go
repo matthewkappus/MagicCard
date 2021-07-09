@@ -1,12 +1,16 @@
 package main
 
 import (
+	"embed"
 	"log"
 	"net/http"
 
 	"github.com/matthewkappus/MagicCard/src/db"
 	"github.com/matthewkappus/MagicCard/src/roster"
 )
+
+//go:embed tmpl/*tmpl.html
+var tmpls embed.FS
 
 func main() {
 
@@ -15,20 +19,16 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// if err := store.CreateStaff("data/stu415.csv"); err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	sv, err := roster.NewView(store)
+	sv, err := roster.NewView(store, tmpls)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	http.HandleFunc("/search", sv.TeacherLock(sv.Search))
-	http.HandleFunc("/classes", sv.ListClasses)
-	http.HandleFunc("/class", sv.Class)
-	http.HandleFunc("/addComment", sv.Add)
-	http.HandleFunc("/card", sv.Card)
+	http.HandleFunc("/classes", sv.TeacherLock(sv.ListClasses))
+	http.HandleFunc("/class", sv.TeacherLock(sv.Class))
+	http.HandleFunc("/addComment", sv.TeacherLock(sv.Add))
+	http.HandleFunc("/card", sv.TeacherLock(sv.Card))
 	http.HandleFunc("/login", sv.Login)
 
 	http.HandleFunc("/", sv.Home)

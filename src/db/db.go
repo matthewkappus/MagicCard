@@ -124,11 +124,8 @@ func toNameEmail(teacherName string) (name, email string) {
 
 // comment table
 const (
-	createComment = `CREATE TABLE IF NOT EXISTS comment (id INTEGER PRIMARY KEY, perm_id, email, comment TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, is_merrit BOOLEAN, is_active BOOLEAN DEFAULT true, FOREIGN KEY(perm_id) REFERENCES stu415(perm_id))`
-	insertComment = `INSERT INTO comment(perm_id, email, comment, is_merrit) VALUES(?,?,?,?);`
-
-	// INSERT INTO comment(perm_id, email, comment, created, is_merrit, is_active) VALUES(1, "2", "3", time('now'), true, true);
-
+	createComment = `CREATE TABLE IF NOT EXISTS comment (id INTEGER PRIMARY KEY, perm_id, author, comment TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, is_merrit BOOLEAN, is_active BOOLEAN DEFAULT true, FOREIGN KEY(perm_id) REFERENCES stu415(perm_id))`
+	insertComment = `INSERT INTO comment(perm_id, author, comment, is_merrit) VALUES(?,?,?,?);`
 )
 
 func (s *Store) SelectStu415(permid string) (s415 *synergy.Stu415, err error) {
@@ -143,8 +140,8 @@ func (s *Store) CreateCommentTable() error {
 	_, err := s.db.Exec(createComment)
 	return err
 }
-func (s *Store) InsertComment(permID, email, comment string, isMerrit bool) error {
-	_, err := s.db.Exec(insertComment, permID, email, comment, isMerrit)
+func (s *Store) InsertComment(permID, author, comment string, isMerrit bool) error {
+	_, err := s.db.Exec(insertComment, permID, author, comment, isMerrit)
 	return err
 }
 

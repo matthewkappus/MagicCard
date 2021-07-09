@@ -32,7 +32,6 @@ func (sv *StudentView) isTeacher(r *http.Request) bool {
 		fmt.Printf("error looking up key %s: %v", teacherCookie.Value, err)
 		return false
 	}
-	fmt.Printf("isTeacher comparing cooKey: %s to staff key %s", keyCookie.Value, dbKey)
 	return keyCookie.Value == dbKey
 }
 func (sv *StudentView) Login(w http.ResponseWriter, r *http.Request) {
