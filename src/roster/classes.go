@@ -6,12 +6,12 @@ import (
 )
 
 func (sv *StudentView) ListClasses(w http.ResponseWriter, r *http.Request) {
+	// todo: allow all staff to magiccard
 	teacherCookie, err := r.Cookie("teacher")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	fmt.Println("getting classes for", teacherCookie.Value)
 	classes, err := sv.store.ListClasses(teacherCookie.Value)
 	if err != nil {
 		http.NotFound(w, r)

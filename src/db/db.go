@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/google/uuid"
 	"github.com/matthewkappus/Roster/src/synergy"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -15,6 +16,7 @@ type Store struct {
 	db *sql.DB
 }
 
+// OpenStore creates store from provided sqllite db path
 func OpenStore(path string) (*Store, error) {
 	db, err := sql.Open("sqlite3", path)
 	if err != nil {
@@ -41,15 +43,20 @@ const (
 	// teacher is the s415 full name and name is the Mr/Mrs version. Email is their aps gmail
 	createStaff = `CREATE TABLE IF NOT EXISTS staff(teacher NOT NULL UNIQUE, name, staff_email, key NOT NULL UNIQUE, FOREIGN KEY(teacher) REFERENCES stu415(teacher))`
 	// key is a uuid for session
-	// insertStaff              = `INSERT INTO staff(teacher, name, staff_email, key) VALUES(?,?,?,?)`
-	insertStaff              = `INSERT INTO staff(teacher, name, staff_email) VALUES(?,?,?)`
-	selectTeacherNameByEmail = `SELECT teacher, name FROM staff where staff_email=?`
+	insertStaff              = `INSERT INTO staff(teacher, name, staff_email, key) VALUES(?,?,?,?)`
+	selectTeacherNameByEmail = `SELECT teacher, name, key FROM staff WHERE staff_email=?`
+	selectKeyByTeacher       = `SELECT key FROM staff WHERE teacher=?`
 )
 
 // TeacherNameFromEmail returns the "teacher" associated with stu415s and their formal name
-func (s *Store) TeacherNameFromEmail(email string) (teacher, name string, err error) {
-	err = s.db.QueryRow(selectTeacherNameByEmail, strings.ToLower(email)).Scan(&teacher, &name)
-	return teacher, name, err
+func (s *Store) TeacherNameFromEmail(email string) (teacher, name, key string, err error) {
+	err = s.db.QueryRow(selectTeacherNameByEmail, strings.ToLower(email)).Scan(&teacher, &name, &key)
+	return teacher, name, key, err
+}
+
+func (s *Store) GetKeyByTeacher(teacher string) (key string, err error) {
+	err = s.db.QueryRow(selectKeyByTeacher, teacher).Scan(&key)
+	return key, err
 }
 
 func (s *Store) CreateStaff(stu415CSV string) error {
@@ -85,10 +92,9 @@ func (s *Store) CreateStaff(stu415CSV string) error {
 	defer stmt.Close()
 	for _, stu := range s415s {
 		name, email := toNameEmail(stu.Teacher)
-		// key := uuid.Must(uuid.NewRandom()).String()
-		// fmt.Println(" made key ", key)
+		key := uuid.Must(uuid.NewRandom()).String()
 		// INSERT INTO staff(teacher, name, staff_email, key) VALUES(?,?,?,?)
-		_, err = stmt.Exec(stu.Teacher, name, email)
+		_, err = stmt.Exec(stu.Teacher, name, email, key)
 		if err != nil {
 			log.Printf("error inserting %s: %v", stu.Teacher, err)
 		}

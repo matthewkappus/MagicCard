@@ -3,23 +3,45 @@ package roster
 import (
 	"fmt"
 	"net/http"
-	"net/url"
 )
 
+func (sv *StudentView) TeacherLock(h http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if !sv.isTeacher(r) {
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
+		}
+		h(w, r)
+	}
+}
+
+// looks for teacher and key cookie, matches with staff db
+func (sv *StudentView) isTeacher(r *http.Request) bool {
+	teacherCookie, err := r.Cookie("teacher")
+	if err != nil {
+		return false
+	}
+
+	keyCookie, err := r.Cookie("key")
+	if err != nil {
+		return false
+	}
+
+	dbKey, err := sv.store.GetKeyByTeacher(teacherCookie.Value)
+	if err != nil {
+		fmt.Printf("error looking up key %s: %v", teacherCookie.Value, err)
+		return false
+	}
+	fmt.Printf("isTeacher comparing cooKey: %s to staff key %s", keyCookie.Value, dbKey)
+	return keyCookie.Value == dbKey
+}
 func (sv *StudentView) Login(w http.ResponseWriter, r *http.Request) {
 	email := "Lindsey.Berg@aps.edu"
 
 	// todo: check if student number
-	teacher, name, err := sv.store.TeacherNameFromEmail(email)
+	teacher, name, key, err := sv.store.TeacherNameFromEmail(email)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
-		return
-	}
-
-	// todo: set to appengine url
-	u, err := url.Parse("http://localhost:8080")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -29,27 +51,26 @@ func (sv *StudentView) Login(w http.ResponseWriter, r *http.Request) {
 			Name:  "name",
 			Value: name,
 			// cookie lasts a day
-			MaxAge: 86400,
+			MaxAge: 40000,
 		},
 		{
 			Name:  "teacher",
 			Value: teacher,
 			// cookie lasts a day
-			MaxAge: 86400,
+			MaxAge: 40000,
 		},
 
 		{
-			Name:  "email",
-			Value: email,
+			Name:  "key",
+			Value: key,
 			// cookie lasts a day
-			MaxAge: 86400,
+			MaxAge: 40000,
 		},
 	}
 
 	http.SetCookie(w, cookies[0])
 	http.SetCookie(w, cookies[1])
 	http.SetCookie(w, cookies[2])
-	fmt.Printf("set cookies for %v:\n%v\n", u, cookies)
 
 	// redirect to /classes or /card (student)
 

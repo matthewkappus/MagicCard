@@ -15,16 +15,16 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if err := store.CreateStaff("data/cards.db"); err != nil {
-		log.Fatal(err)
-	}
+	// if err := store.CreateStaff("data/stu415.csv"); err != nil {
+	// 	log.Fatal(err)
+	// }
 
 	sv, err := roster.NewView(store)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	http.HandleFunc("/search", sv.Search)
+	http.HandleFunc("/search", sv.TeacherLock(sv.Search))
 	http.HandleFunc("/classes", sv.ListClasses)
 	http.HandleFunc("/class", sv.Class)
 	http.HandleFunc("/addComment", sv.Add)
