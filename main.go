@@ -15,9 +15,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// if err = store.UpdateStu415("data/stu415.csv"); err != nil {
-	// 	log.Fatal(err)
-	// }
+	if err = store.CreateStaff("data/stu415.csv"); err != nil {
+		log.Fatal(err)
+	}
 
 	sv, err := roster.NewView(store)
 	if err != nil {

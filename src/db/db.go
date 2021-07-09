@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/matthewkappus/Roster/src/synergy"
 	_ "github.com/mattn/go-sqlite3"
@@ -37,14 +38,75 @@ const (
 
 // staff table
 const (
-// teacher is the s415 full name and name is the Mr/Mrs version. Email is their aps gmail
-// createGroup = `CREATE TABLE IF NOT EXISTS group(id PRIMARY KEY, teacher, name, staff_email, perm_id TEXT, FOREIGN KEY(staff_email) REFERENCES staff(email)`
+	// teacher is the s415 full name and name is the Mr/Mrs version. Email is their aps gmail
+	createStaff = `CREATE TABLE IF NOT EXISTS staff(teacher, name, staff_email, FOREIGN KEY(teacher) REFERENCES stu415(teacher))`
+	insertStaff = `INSERT INTO staff(teacher, name, staff_email) VALUES(?,?,?)`
 )
+
+func (s *Store) CreateStaff(stu415CSV string) error {
+	f, err := os.Open(stu415CSV)
+	if err != nil {
+		return err
+	}
+	s415s, err := synergy.ReadStu415sFromCSV(f)
+	if err != nil {
+		return err
+	}
+	if len(s415s) < 2 {
+		return fmt.Errorf("%s CSV empty (%d students)", stu415CSV, len(s415s))
+	}
+
+	// create table if not exists
+	_, err = s.db.Exec(createStaff)
+	if err != nil {
+		return err
+	}
+
+	// insert staff names and generic email (first.last@aps.edu)
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+
+	stmt, err := tx.Prepare(insertStaff)
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+	for _, stu := range s415s {
+		name, email := toNameEmail(stu.Teacher)
+		_, err = stmt.Exec(stu.Teacher, name, email)
+		if err != nil {
+			log.Printf("error inserting %s: %v", stu.Teacher, err)
+		}
+	}
+
+	return tx.Commit()
+
+}
+
+// toNameEmail takes L, F MI. teacher name and returns [fl, f.l@aps.com]
+func toNameEmail(teacherName string) (name, email string) {
+	fl := strings.Split(teacherName, " ")
+
+	if len(fl) < 2 {
+		log.Printf("%s does not have first and last name", teacherName)
+		return
+	}
+	// remove , after first name
+	fl[0] = strings.TrimSuffix(fl[0], ",")
+
+	name = fmt.Sprintf("%s %s", fl[1], fl[0])
+
+	email = strings.ToLower(fmt.Sprintf("%s.%s@aps.edu", fl[1], fl[0]))
+
+	return name, email
+}
 
 // comment table
 const (
 	createComment = `CREATE TABLE IF NOT EXISTS comment (id INTEGER PRIMARY KEY, perm_id, email, comment TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, is_merrit BOOLEAN, is_active BOOLEAN DEFAULT true, FOREIGN KEY(perm_id) REFERENCES stu415(perm_id))`
-	// createComment = `CREATE TABLE IF NOT EXISTS comment (id INTEGER PRIMARY KEY, perm_id, email, comment TEXT, created DATETIME, is_merrit, is_active boolean, FOREIGN KEY(perm_id) REFERENCES stu415(perm_id))`
 	insertComment = `INSERT INTO comment(perm_id, email, comment, is_merrit) VALUES(?,?,?,?);`
 
 	// INSERT INTO comment(perm_id, email, comment, created, is_merrit, is_active) VALUES(1, "2", "3", time('now'), true, true);
@@ -135,7 +197,7 @@ func (s *Store) ListStudents(section string) ([]*synergy.Stu415, error) {
 	return students, rows.Err()
 }
 
-// ListClasses takes a teacher name and returns the [section_id, course_id_and_title]
+// ListClasses takes a teacher name and returns stu415s with unique sections
 func (s *Store) ListClasses(teacher string) ([]*synergy.Stu415, error) {
 	rows, err := s.db.Query(selectDistinctSectionsByTeacher, teacher)
 	if err != nil {
