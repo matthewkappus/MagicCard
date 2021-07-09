@@ -39,9 +39,16 @@ const (
 // staff table
 const (
 	// teacher is the s415 full name and name is the Mr/Mrs version. Email is their aps gmail
-	createStaff = `CREATE TABLE IF NOT EXISTS staff(teacher, name, staff_email, FOREIGN KEY(teacher) REFERENCES stu415(teacher))`
-	insertStaff = `INSERT INTO staff(teacher, name, staff_email) VALUES(?,?,?)`
+	createStaff              = `CREATE TABLE IF NOT EXISTS staff(teacher NOT NULL UNIQUE, name, staff_email NOT NULL UNIQUE, FOREIGN KEY(teacher) REFERENCES stu415(teacher))`
+	insertStaff              = `INSERT INTO staff(teacher, name, staff_email) VALUES(?,?,?)`
+	selectTeacherNameByEmail = `SELECT teacher, name FROM staff where staff_email=?`
 )
+
+// TeacherNameFromEmail returns the "teacher" associated with stu415s and their formal name
+func (s *Store) TeacherNameFromEmail(email string) (teacher, name string, err error) {
+	err = s.db.QueryRow(selectTeacherNameByEmail, strings.ToLower(email)).Scan(&teacher, &name)
+	return teacher, name, err
+}
 
 func (s *Store) CreateStaff(stu415CSV string) error {
 	f, err := os.Open(stu415CSV)

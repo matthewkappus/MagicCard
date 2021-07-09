@@ -15,10 +15,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if err = store.CreateStaff("data/stu415.csv"); err != nil {
-		log.Fatal(err)
-	}
-
 	sv, err := roster.NewView(store)
 	if err != nil {
 		log.Fatal(err)
@@ -29,7 +25,8 @@ func main() {
 	http.HandleFunc("/class", sv.Class)
 	http.HandleFunc("/addComment", sv.Add)
 	http.HandleFunc("/card", sv.Card)
-	// login
+	http.HandleFunc("/login", sv.Login)
+
 	http.HandleFunc("/", sv.Home)
 
 	http.ListenAndServe(":8080", nil)
