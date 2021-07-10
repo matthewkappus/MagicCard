@@ -35,7 +35,19 @@ func (sv *StudentView) isTeacher(r *http.Request) bool {
 	return keyCookie.Value == dbKey
 }
 func (sv *StudentView) Login(w http.ResponseWriter, r *http.Request) {
-	email := "Lindsey.Berg@aps.edu"
+
+	if r.Method == http.MethodPost {
+		// parse the Identity JSON token
+
+		email := ""
+		sv.startSession(email, w, r)
+
+	}
+
+	http.Redirect(w, r, "/classes", http.StatusTemporaryRedirect)
+}
+
+func (sv *StudentView) startSession(email string, w http.ResponseWriter, r *http.Request) {
 
 	// todo: check if student number
 	teacher, name, key, err := sv.store.TeacherNameFromEmail(email)
@@ -73,5 +85,4 @@ func (sv *StudentView) Login(w http.ResponseWriter, r *http.Request) {
 
 	// redirect to /classes or /card (student)
 
-	http.Redirect(w, r, "/classes", http.StatusTemporaryRedirect)
 }
