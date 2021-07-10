@@ -1,7 +1,6 @@
 package roster
 
 import (
-	"embed"
 	"log"
 	"net/http"
 	"os"
@@ -18,8 +17,8 @@ type StudentView struct {
 }
 
 // NewView takes a roster db and tmpl path and returns handler object
-func NewView(store *db.Store, templates embed.FS) (*StudentView, error) {
-	tmpls, err := template.ParseFS(templates, "tmpl/*.tmpl.html")
+func NewView(store *db.Store) (*StudentView, error) {
+	tmpls, err := template.ParseGlob("tmpl/*.tmpl.html")
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +41,7 @@ func (sv *StudentView) Search(w http.ResponseWriter, r *http.Request) {
 }
 
 func (sv *StudentView) Home(w http.ResponseWriter, r *http.Request) {
-
+	sv.tmpls.Lookup("login.tmpl.html").Execute(w, nil)
 }
 
 func (sv *StudentView) Card(w http.ResponseWriter, r *http.Request) {

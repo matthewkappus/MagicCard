@@ -1,7 +1,6 @@
 package main
 
 import (
-	"embed"
 	"log"
 	"net/http"
 
@@ -9,8 +8,8 @@ import (
 	"github.com/matthewkappus/MagicCard/src/roster"
 )
 
-//go:embed tmpl/*tmpl.html
-var tmpls embed.FS
+// //go:embed tmpl/*tmpl.html
+// var tmpls embed.FS
 
 func main() {
 
@@ -19,7 +18,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	sv, err := roster.NewView(store, tmpls)
+	sv, err := roster.NewView(store)
 	if err != nil {
 		log.Fatal(err)
 	}
