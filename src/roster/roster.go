@@ -41,7 +41,7 @@ func (sv *StudentView) Search(w http.ResponseWriter, r *http.Request) {
 }
 
 func (sv *StudentView) Home(w http.ResponseWriter, r *http.Request) {
-	sv.tmpls.Lookup("login.tmpl.html").Execute(w, nil)
+	sv.tmpls.Lookup("home").Execute(w, nil)
 }
 
 func (sv *StudentView) Card(w http.ResponseWriter, r *http.Request) {

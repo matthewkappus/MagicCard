@@ -24,7 +24,8 @@ func main() {
 	}
 
 	http.HandleFunc("/search", sv.TeacherLock(sv.Search))
-	http.HandleFunc("/classes", sv.TeacherLock(sv.ListClasses))
+	http.HandleFunc("/classes", sv.ListClasses)
+	// http.HandleFunc("/classes", sv.TeacherLock(sv.ListClasses))
 	http.HandleFunc("/class", sv.TeacherLock(sv.Class))
 	http.HandleFunc("/addComment", sv.TeacherLock(sv.Add))
 	http.HandleFunc("/card", sv.TeacherLock(sv.Card))
