@@ -2,6 +2,7 @@ package roster
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -36,15 +37,15 @@ func (sv *StudentView) isTeacher(r *http.Request) bool {
 }
 func (sv *StudentView) Login(w http.ResponseWriter, r *http.Request) {
 
-	if r.Method == http.MethodPost {
-		// parse the Identity JSON token
+	tok, err := json.Parse(r.Body)
 
-		email := ""
-		sv.startSession(email, w, r)
-
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
-
-	http.Redirect(w, r, "/classes", http.StatusTemporaryRedirect)
+	bs, _ := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	fmt.Fprintf(w, "app got credential: %s", bs)
 }
 
 func (sv *StudentView) startSession(email string, w http.ResponseWriter, r *http.Request) {
