@@ -26,6 +26,11 @@ func OpenStore(path string) (*Store, error) {
 	return &Store{db}, nil
 }
 
+func (s *Store) Close() error {
+	return s.db.Close()
+
+}
+
 // stu415 table
 const (
 	createStu415          = `CREATE TABLE IF NOT EXISTS stu415 (organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled text)`
@@ -37,6 +42,7 @@ const (
 	//    SELECT  DISTINCT * from stu415 WHERE teacher="Susco Taylor, Kevin R.";
 	selectDistinctSectionsByTeacher = `SELECT DISTINCT section_id,  course_id_and_title from stu415 WHERE teacher=?`
 )
+
 // staff table
 const (
 	// teacher is the s415 full name and name is the Mr/Mrs version. Email is their aps gmail
@@ -47,13 +53,20 @@ const (
 	selectKeyByTeacher       = `SELECT key FROM staff WHERE teacher=?`
 )
 
+func (s *Store) GetKeyByTeacher(teacher string) (key string, err error) {
+	var keyString string
+	err = s.db.QueryRow(selectKeyByTeacher, strings.ToLower(teacher)).Scan(&keyString)
+	if err != nil {
+		return "", err
+	}
+	return keyString, nil
+}
+
 // TeacherNameFromEmail returns the "teacher" associated with stu415s and their formal name
 func (s *Store) TeacherNameFromEmail(email string) (teacher, name, key string, err error) {
 	err = s.db.QueryRow(selectTeacherNameByEmail, strings.ToLower(email)).Scan(&teacher, &name, &key)
 	return teacher, name, key, err
 }
-
-
 
 func (s *Store) CreateStaff(stu415CSV string) error {
 	f, err := os.Open(stu415CSV)

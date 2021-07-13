@@ -65,21 +65,25 @@ func (sv *StudentView) TeacherLock(h http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-// looks for teacher and key cookie, matches with staff db
-func (sv *StudentView) isTeacher(r *http.Request) bool {
+func (sv *StudentView) GetTeacher(r *http.Request) string {
 	teacherCookie, err := r.Cookie("teacher")
 	if err != nil {
-		return false
+		return ""
 	}
+	return string(teacherCookie.Value)
+}
+
+// looks for teacher and key cookie, matches with staff db
+func (sv *StudentView) isTeacher(r *http.Request) bool {
 
 	keyCookie, err := r.Cookie("key")
 	if err != nil {
 		return false
 	}
 
-	dbKey, err := sv.store.GetKeyByTeacher(teacherCookie.Value)
+	dbKey, err := sv.store.GetKeyByTeacher(sv.GetTeacher(r))
 	if err != nil {
-		fmt.Printf("error looking up key %s: %v", teacherCookie.Value, err)
+		fmt.Printf("error looking up key %v", err)
 		return false
 	}
 

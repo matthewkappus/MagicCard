@@ -2,8 +2,10 @@ package main
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/matthewkappus/MagicCard/src/db"
+	"github.com/matthewkappus/MagicCard/src/roster"
 )
 
 // //go:embed tmpl/*tmpl.html
@@ -15,33 +17,23 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer store.Close()
 
-	store.AddStarBar("Kappus, Matthew D.", "Particpation", "You volunteered some good stuff today.", true)
-
-	sbs, err := store.GetStarBars("Kappus, Matthew D.")
+	sv, err := roster.NewView(store)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	for _, sb := range sbs {
-		log.Println(sb)
-	}
+	http.HandleFunc("/login", sv.Login)
 
-	// sv, err := roster.NewView(store)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	http.HandleFunc("/matty", roster.Matty)
+	http.HandleFunc("/search", sv.TeacherLock(sv.Search))
+	http.HandleFunc("/classes", sv.TeacherLock(sv.ListClasses))
+	http.HandleFunc("/class", sv.TeacherLock(sv.Class))
+	http.HandleFunc("/addComment", sv.TeacherLock(sv.Add))
+	http.HandleFunc("/card", sv.TeacherLock(sv.Card))
 
-	// http.HandleFunc("/login", sv.Login)
+	http.HandleFunc("/", sv.Home)
 
-	// http.HandleFunc("/matty", roster.Matty)
-	// http.HandleFunc("/search", sv.TeacherLock(sv.Search))
-	// http.HandleFunc("/classes", sv.TeacherLock(sv.ListClasses))
-	// http.HandleFunc("/class", sv.TeacherLock(sv.Class))
-	// http.HandleFunc("/addComment", sv.TeacherLock(sv.Add))
-	// http.HandleFunc("/card", sv.TeacherLock(sv.Card))
-
-	// http.HandleFunc("/", sv.Home)
-
-	// http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8080", nil)
 }

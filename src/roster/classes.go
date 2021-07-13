@@ -3,6 +3,9 @@ package roster
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/matthewkappus/Roster/src/comment"
+	"github.com/matthewkappus/Roster/src/synergy"
 )
 
 func (sv *StudentView) ListClasses(w http.ResponseWriter, r *http.Request) {
@@ -35,6 +38,18 @@ func (sv *StudentView) Class(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	teacher := sv.GetTeacher(r)
+	sbs, err := sv.store.GetStarBars(teacher)
+	classinfo := struct {
+		Stu415s  []*synergy.Stu415
+		StarBars []*comment.StarBar
+		Teacher  string
+	}{
+		Stu415s:  s415s,
+		StarBars: sbs,
+		Teacher:  teacher,
+	}
+
 	// todo: wrap s415s in struct with class info and tags
-	sv.tmpls.Lookup("studentlist.tmpl.html").Execute(w, s415s)
+	sv.tmpls.Lookup("studentlist.tmpl.html").Execute(w, classinfo)
 }
