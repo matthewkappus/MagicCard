@@ -54,12 +54,11 @@ const (
 )
 
 func (s *Store) GetKeyByTeacher(teacher string) (key string, err error) {
-	var keyString string
-	err = s.db.QueryRow(selectKeyByTeacher, strings.ToLower(teacher)).Scan(&keyString)
+	err = s.db.QueryRow(selectKeyByTeacher, teacher).Scan(&key)
 	if err != nil {
 		return "", err
 	}
-	return keyString, nil
+	return key, nil
 }
 
 // TeacherNameFromEmail returns the "teacher" associated with stu415s and their formal name

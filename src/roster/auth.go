@@ -70,6 +70,7 @@ func (sv *StudentView) GetTeacher(r *http.Request) string {
 	if err != nil {
 		return ""
 	}
+
 	return string(teacherCookie.Value)
 }
 
@@ -87,10 +88,7 @@ func (sv *StudentView) isTeacher(r *http.Request) bool {
 		return false
 	}
 
-	// todo: trim space when setting
-	cookie := strings.TrimSpace(keyCookie.Value)
-	db := strings.TrimSpace(dbKey)
-	return cookie == db
+	return keyCookie.Value == dbKey
 }
 
 // Login takes JWT from Google Sign In Button and sets the name, email and token values
@@ -107,29 +105,6 @@ func (sv *StudentView) Login(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
 	}
-
-	// // todo: set a session id
-	// cookies := []*http.Cookie{
-	// 	{
-	// 		Name:  "name",
-	// 		Value: name,
-	// 		// cookie lasts a day
-	// 		MaxAge: 40000,
-	// 	},
-	// 	{
-	// 		Name:  "teacher",
-	// 		Value: teacher,
-	// 		// cookie lasts a day
-	// 		MaxAge: 40000,
-	// 	},
-
-	// 	{
-	// 		Name:  "key",
-	// 		Value: key,
-	// 		// cookie lasts a day
-	// 		MaxAge: 40000,
-	// 	},
-	// }
 
 	http.SetCookie(w, &http.Cookie{Name: "name", Value: name, Domain: "/"})
 	http.SetCookie(w, &http.Cookie{Name: "teacher", Value: teacher})

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/matthewkappus/Roster/src/comment"
+	"github.com/matthewkappus/MagicCard/src/comment"
 	"github.com/matthewkappus/Roster/src/synergy"
 )
 
@@ -40,6 +40,11 @@ func (sv *StudentView) Class(w http.ResponseWriter, r *http.Request) {
 
 	teacher := sv.GetTeacher(r)
 	sbs, err := sv.store.GetStarBars(teacher)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+
+		return
+	}
 	classinfo := struct {
 		Stu415s  []*synergy.Stu415
 		StarBars []*comment.StarBar
@@ -51,5 +56,5 @@ func (sv *StudentView) Class(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// todo: wrap s415s in struct with class info and tags
-	sv.tmpls.Lookup("studentlist.tmpl.html").Execute(w, classinfo)
+	sv.tmpls.Lookup("studentlist").Execute(w, classinfo)
 }
