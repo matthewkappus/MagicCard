@@ -1,20 +1,39 @@
-{{ define "classlist" }}
 
+{{ define "classlist" }}
 <!DOCTYPE html>
 <html lang="en">
 
-{{ template "head" }}
-
+    {{template "head"}} 
 <body>
-    <h1>My Classes</h1>
-    <!-- todo sort by period -->
+    <h2>classes</h2>
 
-    <ul>
-    {{ range . }}
-        <li><a href="class?section={{.SectionID}}">{{.CourseIDAndTitle}}</a></li>
-    {{ end }}
-</ul>
+    {{ range .}}
+    <ul id="myUL">
+
+            <li>
+                <a href="/class?section={{.SectionID}}">{{.CourseIDAndTitle}}</a>
+            </li>
+     {{ end }}
+    </ul>
 </body>
 </html>
 
 {{ end }}
+
+<!-- type Stu415 struct {
+	OrganizationName string `json:"organization_name,omitempty"`
+	SchoolYear       string `json:"school_year,omitempty"`
+	StudentName      string `json:"student_name,omitempty"`
+	PermID           string `json:"perm_id,omitempty"`
+	Gender           string `json:"gender,omitempty"`
+	Grade            string `json:"grade,omitempty"`
+	TermName         string `json:"term_name,omitempty"`
+	Per              string `json:"per,omitempty"`
+	Term             string `json:"term,omitempty"`
+	SectionID        string `json:"section_id,omitempty"`
+	CourseIDAndTitle string `json:"course_id_and_title,omitempty"`
+	MeetDays         string `json:"meet_days,omitempty"`
+	Teacher          string `json:"teacher,omitempty"`
+	Room             string `json:"room,omitempty"`
+	PreScheduled     string `json:"pre_scheduled,omitempty"`
+} -->

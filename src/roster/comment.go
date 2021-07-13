@@ -8,17 +8,17 @@ import (
 )
 
 type Comment struct {
-	ID int
+	ID int `json:"id,omitempty"`
 	//
-	PermID string
+	PermID string `json:"perm_id,omitempty"`
 	// staff(name)
-	Author  string
-	Comment string
+	Author  string `json:"author,omitempty"`
+	Comment string `json:"comment,omitempty"`
 
-	Created time.Time
+	Created time.Time `json:"created,omitempty"`
 	// max comment: 280
-	IsMerrit bool
-	IsActive bool
+	IsMerrit bool `json:"is_merrit,omitempty"`
+	IsActive bool `json:"is_active,omitempty"`
 }
 
 func (sv *StudentView) Add(w http.ResponseWriter, r *http.Request) {

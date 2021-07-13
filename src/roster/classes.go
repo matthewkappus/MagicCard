@@ -12,11 +12,13 @@ func (sv *StudentView) ListClasses(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 	classes, err := sv.store.ListClasses(teacherCookie.Value)
 	if err != nil {
 		http.NotFound(w, r)
 	}
-	sv.tmpls.Lookup("classlist.tmpl.html").Execute(w, classes)
+
+	sv.tmpls.Lookup("classlist").Execute(w, classes)
 }
 
 // show class by section

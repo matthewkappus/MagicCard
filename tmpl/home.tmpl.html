@@ -7,32 +7,24 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <h1>MagicCard Login</h1>
+    
     <div id="g_id_onload"
-     data-client_id="844922792275-q2rtvab06aegss1gjqqdhs2fqteu0at3.apps.googleusercontent.com"
-     data-login_uri="https://mymagiccard.wn.r.appspot.com/login
-     data-auto_prompt="false"
-     data-ux_mode="redirect"
-     data-callback="exchangeCredential"
-
-     >
-
-     <script>
-          function exchangeCredential(res) {
-               const tok = JSON.parse(res);
-
-               console.log("exchangeCredential with token", tok);
-          }
-     </script>
-     
+    data-client_id="844922792275-q2rtvab06aegss1gjqqdhs2fqteu0at3.apps.googleusercontent.com"
+    data-context="signin"
+    data-ux_mode="popup"
+    data-login_uri="https://mymagiccard.wn.r.appspot.com/login"
+    data-auto_prompt="false">
 </div>
+
 <div class="g_id_signin"
-     data-type="standard"
-     data-size="large"
-     data-theme="outline"
-     data-text="sign_in_with"
-     data-shape="rectangular"
-     data-logo_alignment="left">
+    data-type="standard"
+    data-shape="rectangular"
+    data-theme="outline"
+    data-text="signin_with"
+    data-size="medium"
+    data-logo_alignment="left">
 </div>
+    
 </body>
 </html>
 

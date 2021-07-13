@@ -37,7 +37,6 @@ const (
 	//    SELECT  DISTINCT * from stu415 WHERE teacher="Susco Taylor, Kevin R.";
 	selectDistinctSectionsByTeacher = `SELECT DISTINCT section_id,  course_id_and_title from stu415 WHERE teacher=?`
 )
-
 // staff table
 const (
 	// teacher is the s415 full name and name is the Mr/Mrs version. Email is their aps gmail
@@ -54,10 +53,7 @@ func (s *Store) TeacherNameFromEmail(email string) (teacher, name, key string, e
 	return teacher, name, key, err
 }
 
-func (s *Store) GetKeyByTeacher(teacher string) (key string, err error) {
-	err = s.db.QueryRow(selectKeyByTeacher, teacher).Scan(&key)
-	return key, err
-}
+
 
 func (s *Store) CreateStaff(stu415CSV string) error {
 	f, err := os.Open(stu415CSV)
