@@ -16,11 +16,16 @@ func main() {
 		log.Fatal(err)
 	}
 
+	store.AddStarBar("Kappus, Matthew D.", "Particpation", "You volunteered some good stuff today.", true)
+
 	sbs, err := store.GetStarBars("Kappus, Matthew D.")
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(sbs)
+
+	for _, sb := range sbs {
+		log.Println(sb)
+	}
 
 	// sv, err := roster.NewView(store)
 	// if err != nil {
