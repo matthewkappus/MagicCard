@@ -34,6 +34,12 @@ func (sv *StaffView) ListClasses(w http.ResponseWriter, r *http.Request) {
 	sv.tmpls.Lookup("classlist").Execute(w, classes)
 }
 
+func (sv *StaffView) Profile(w http.ResponseWriter, r *http.Request) {
+	// todo: render template, add class info
+
+	fmt.Fprintf(w, "welcome %s", sv.GetTeacher(r))
+}
+
 // show class by section
 func (sv *StaffView) ClassEdit(w http.ResponseWriter, r *http.Request) {
 	if len(r.FormValue("section")) != 4 {

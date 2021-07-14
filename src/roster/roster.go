@@ -43,13 +43,19 @@ func NewView(store *db.Store) (*StaffView, error) {
 }
 
 func (sv *StaffView) Search(w http.ResponseWriter, r *http.Request) {
-	stu401s, err := UpdateRoster()
+	stu415s, err := sv.store.SelectStu415s()
 	if err != nil {
 		http.Error(w, "Could not get students\n"+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	sv.tmpls.Lookup("search.tmpl.html").Execute(w, stu401s)
+	classes, _ := sv.ClassList(r)
+	ci := &ClassInfo{
+		Stu415s:   stu415s,
+		ClassList: classes,
+		Title:     "Student Search",
+	}
+	sv.tmpls.Lookup("search").Execute(w, ci)
 }
 
 func (sv *StaffView) Home(w http.ResponseWriter, r *http.Request) {

@@ -119,5 +119,5 @@ func Matty(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{Name: "teacher", Value: "Kappus, Matthew D."})
 	http.SetCookie(w, &http.Cookie{Name: "key", Value: "1830a69c-a641-4832-9b38-77320de25756"})
 
-	http.Redirect(w, r, "/classes", http.StatusTemporaryRedirect)
+	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }

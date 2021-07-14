@@ -36,6 +36,7 @@ const (
 	createStu415          = `CREATE TABLE IF NOT EXISTS stu415 (organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled text)`
 	dropStu415            = `DROP TABLE IF EXISTS stu415`
 	insertStu415          = `INSERT INTO stu415(organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`
+	selectStudentList     = `SELECT DISTINCT perm_id, student_name FROM stu415;`
 	selectStu415ByPermID  = `SELECT organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled FROM stu415 WHERE perm_id=? `
 	selectStu415BySection = `SELECT organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled FROM stu415 WHERE section_id=? `
 
@@ -52,6 +53,26 @@ const (
 	selectTeacherNameByEmail = `SELECT teacher, name, key FROM staff WHERE staff_email=?`
 	selectKeyByTeacher       = `SELECT key FROM staff WHERE teacher=?`
 )
+
+func (s *Store) SelectStu415s() ([]*synergy.Stu415, error) {
+	rows, err := s.db.Query(selectStudentList)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	students := make([]*synergy.Stu415, 0)
+	for rows.Next() {
+		s415 := new(synergy.Stu415)
+		// 	selectStudentList     = `SELECT DISTINCT perm_id, student_name FROM stu415;`
+		err = rows.Scan(&s415.PermID, &s415.StudentName)
+		if err != nil {
+			log.Printf("sql couldn't scan student: %v", err)
+			continue
+		}
+		students = append(students, s415)
+	}
+	return students, rows.Err()
+}
 
 func (s *Store) GetKeyByTeacher(teacher string) (key string, err error) {
 	err = s.db.QueryRow(selectKeyByTeacher, teacher).Scan(&key)

@@ -1,13 +1,22 @@
 {{ define "home" }}
 <!DOCTYPE html>
 <html lang="en">
-{{ template "head" }}
+
+{{ template "nav" . }}
+{{ template "head" . }}
 
 <body>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-    <h1>MagicCard Login</h1>
+    <h1>MagicCard</h1>
     
+
+    {{ if .Teacher }}
+    <p>Here are your stats</p>> 
+
+
+    {{ else }}
+
     <div id="g_id_onload"
     data-client_id="844922792275-q2rtvab06aegss1gjqqdhs2fqteu0at3.apps.googleusercontent.com"
     data-context="signin"
@@ -24,8 +33,23 @@
     data-size="medium"
     data-logo_alignment="left">
 </div>
+
+{{ end }}
     
 </body>
 </html>
 
 {{ end }}
+
+<!-- 
+
+      type ClassInfo struct {
+	Stu415s   []*synergy.Stu415
+	Stars     []*comment.StarBar
+	Bars      []*comment.StarBar
+	Teacher   string
+	ClassName string
+	Title     string
+}
+
+ -->
