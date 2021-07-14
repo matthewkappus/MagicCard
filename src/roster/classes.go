@@ -16,28 +16,42 @@ type ClassInfo struct {
 	Teacher   string
 	ClassName string
 	Title     string
+	// shoud be a css class
+	Path string
 }
 
-func (sv *StaffView) ListClasses(w http.ResponseWriter, r *http.Request) {
-	// todo: allow all staff to magiccard
-	teacherCookie, err := r.Cookie("teacher")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+// func (sv *StaffView) ListClasses(w http.ResponseWriter, r *http.Request) {
+// 	// todo: allow all staff to magiccard
+// 	teacherCookie, err := r.Cookie("teacher")
+// 	if err != nil {
+// 		http.Error(w, err.Error(), http.StatusInternalServerError)
+// 		return
+// 	}
 
-	classes, err := sv.store.ListClasses(teacherCookie.Value)
-	if err != nil {
-		http.NotFound(w, r)
-	}
+// 	classes, err := sv.store.ListClasses(teacherCookie.Value)
+// 	if err != nil {
+// 		http.NotFound(w, r)
+// 	}
 
-	sv.tmpls.Lookup("classlist").Execute(w, classes)
-}
+// 	sv.tmpls.Lookup("classlist").Execute(w, classes)
+// }
 
 func (sv *StaffView) Profile(w http.ResponseWriter, r *http.Request) {
 	// todo: render template, add class info
 
-	fmt.Fprintf(w, "welcome %s", sv.GetTeacher(r))
+	teacher := sv.GetTeacher(r)
+	stars, bars, _ := sv.store.GetStarBars(teacher)
+	list, _ := sv.store.ListClasses(teacher)
+
+	ci := &ClassInfo{
+		Path:      "profile",
+		ClassList: list,
+		Stars:     stars,
+		Bars:      bars,
+		Title:     teacher + " Profile",
+	}
+
+	sv.tmpls.Lookup("profile").Execute(w, ci)
 }
 
 // show class by section

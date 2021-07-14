@@ -1,0 +1,32 @@
+{{ define "profile" }}
+
+<!DOCTYPE html>
+<html lang="en">
+
+{{ template "head" .}}
+
+<body>
+
+    {{ template "nav" . }}
+
+    <h1>{{ .Title }}</h1>
+    
+
+    star/bar/name edit goes here
+</body>
+</html>
+
+
+{{ end}}
+<!-- 
+
+
+	ci := &ClassInfo{
+		Path:      "profile",
+		Stars:     stars,
+		Bars:      bars,
+		Title:     teacher + " Profile",
+		ClassList: list,
+	}
+ -->
+

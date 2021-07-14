@@ -10,24 +10,6 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-// type ClaimIdentity struct {
-// 	Aud           string `json:"aud"`
-// 	Azp           string `json:"azp"`
-// 	Email         string `json:"email"`
-// 	EmailVerified bool   `json:"email_verified"`
-// 	Exp           int    `json:"exp"`
-// 	FamilyName    string `json:"family_name"`
-// 	GivenName     string `json:"given_name"`
-// 	Hd            string `json:"hd"`
-// 	Iat           int    `json:"iat"`
-// 	Iss           string `json:"iss"`
-// 	Jti           string `json:"jti"`
-// 	Name          string `json:"name"`
-// 	Nbf           int    `json:"nbf"`
-// 	Picture       string `json:"picture"`
-// 	Sub           string `json:"sub"`
-// }
-
 func ParseIdentity(r *http.Request) (email string, err error) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {

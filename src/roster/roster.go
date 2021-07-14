@@ -59,7 +59,16 @@ func (sv *StaffView) Search(w http.ResponseWriter, r *http.Request) {
 }
 
 func (sv *StaffView) Home(w http.ResponseWriter, r *http.Request) {
-	sv.tmpls.Lookup("home").Execute(w, nil)
+
+	classes, _ := sv.ClassList(r)
+	teacher := sv.GetTeacher(r)
+	ci := &ClassInfo{
+		ClassList: classes,
+		Teacher:   teacher,
+		Title:     "Student Search",
+		Path:      "home",
+	}
+	sv.tmpls.Lookup("home").Execute(w, ci)
 }
 
 func (sv *StaffView) Card(w http.ResponseWriter, r *http.Request) {
