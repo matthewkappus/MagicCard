@@ -1,21 +1,70 @@
 {{ define "toolbox" }}
 
+
+<style>
+
+  #toolbox select  {
+    float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+  }
+
+  #toolbox a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+</style>
+
+<form action="/confirm">
+  <input type="hidden" name="selectedSB" id="selectedSB" >
+</form>
+
+
 <div id="toolbox">
 
-    <label for="starSelect">⭐️</label>
+    <label for="starSelect">Stars & Bars</label>
     <select name="star" id="starSelect">
-      
-      {{ range $sb := .StarBars }}
-        <option> {{ $sb.Title }} </option>
-      {{ end }}
+      <optgroup label="Stars ⭐️">
+
+        {{ range $sb := .Stars }}
+          <option value="{{$sb.ID}}"> {{ $sb.Title }} </option>
+        {{ end }}
+        </optgroup>
+        <optgroup label="Bars ❌">
+        {{ range $sb := .Bars }}
+          <option value="{{$sb.ID}}"> {{ $sb.Title }} </option>
+        {{ end }}
     </select>
-    <label for="barSelect">❌</label>
-    <select name="star" id="barSelect">
-      
-      {{ range $sb := .StarBars }}
-        <option> {{ $sb.Title }} </option>
-      {{ end }}
-    </select>
+
+
+  
   </div>
+
+  <script>
+  
+    var starSelect = document.getElementById('starSelect');
+    var selectedSB = document.getElementById('selectedSB');
+
+    starSelect.addEventListener('change', function() {
+      var star = starSelect.options[starSelect.selectedIndex].value;
+      selectedSB.value = star;
+    });
+  </script>
   
 {{ end }}
+
+<!-- type ClassInfo struct {
+	Stu415s   []*synergy.Stu415
+	Stars     []*comment.StarBar
+	Bars      []*comment.StarBar
+	Teacher   string
+	ClassName string
+	Title     string
+} -->

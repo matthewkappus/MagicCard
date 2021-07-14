@@ -8,7 +8,17 @@ import (
 	"github.com/matthewkappus/Roster/src/synergy"
 )
 
-func (sv *StudentView) ListClasses(w http.ResponseWriter, r *http.Request) {
+type ClassInfo struct {
+	Stu415s   []*synergy.Stu415
+	Stars     []*comment.StarBar
+	Bars      []*comment.StarBar
+	ClassList []*synergy.Stu415
+	Teacher   string
+	ClassName string
+	Title     string
+}
+
+func (sv *StaffView) ListClasses(w http.ResponseWriter, r *http.Request) {
 	// todo: allow all staff to magiccard
 	teacherCookie, err := r.Cookie("teacher")
 	if err != nil {
@@ -25,7 +35,7 @@ func (sv *StudentView) ListClasses(w http.ResponseWriter, r *http.Request) {
 }
 
 // show class by section
-func (sv *StudentView) Class(w http.ResponseWriter, r *http.Request) {
+func (sv *StaffView) ClassEdit(w http.ResponseWriter, r *http.Request) {
 	if len(r.FormValue("section")) != 4 {
 		http.NotFound(w, r)
 		return
@@ -39,24 +49,25 @@ func (sv *StudentView) Class(w http.ResponseWriter, r *http.Request) {
 	}
 
 	teacher := sv.GetTeacher(r)
-	sbs, err := sv.store.GetStarBars(teacher)
+	stars, bars, err := sv.store.GetStarBars(teacher)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 
 		return
 	}
-	classinfo := struct {
-		Stu415s  []*synergy.Stu415
-		StarBars []*comment.StarBar
-		Teacher  string
-		Title    string
-	}{
-		Stu415s:  s415s,
-		StarBars: sbs,
-		Teacher:  teacher,
-		Title:    "Class List",
+
+	// todo: put in helper function
+	list, _ := sv.store.ListClasses(teacher)
+	classinfo := &ClassInfo{
+		Stu415s:   s415s,
+		Stars:     stars,
+		Bars:      bars,
+		Teacher:   teacher,
+		ClassList: list,
+		ClassName: s415s[0].CourseIDAndTitle,
+		Title:     s415s[0].CourseIDAndTitle + " Class List",
 	}
 
 	// todo: wrap s415s in struct with class info and tags
-	sv.tmpls.Lookup("studentlist").Execute(w, classinfo)
+	sv.tmpls.Lookup("classedit").Execute(w, classinfo)
 }

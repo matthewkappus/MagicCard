@@ -21,7 +21,7 @@ type Comment struct {
 	IsActive bool `json:"is_active,omitempty"`
 }
 
-func (sv *StudentView) Add(w http.ResponseWriter, r *http.Request) {
+func (sv *StaffView) Add(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return
@@ -37,7 +37,7 @@ func (sv *StudentView) Add(w http.ResponseWriter, r *http.Request) {
 	sv.tmpls.Lookup("add.tmpl.html").Execute(w, fmt.Sprintf("awarded merrit:\n%v", c))
 }
 
-func (sv *StudentView) insertComment(r *http.Request) (*Comment, error) {
+func (sv *StaffView) insertComment(r *http.Request) (*Comment, error) {
 	// validate input: session, msg
 	// insert db & log change
 	// INSERT INTO comment(perm_id, email, comment, is_merrit, is_active) VALUES(?,?,?,?,?)

@@ -32,20 +32,29 @@ func (s *Store) AddStarBar(teacher, title, comments string, isStar bool) (*comme
 }
 
 // GetStarBars takes a staff.name and returns their StarBars or an error
-func (s *Store) GetStarBars(teacher string) ([]*comment.StarBar, error) {
+func (s *Store) GetStarBars(teacher string) (stars, bars []*comment.StarBar, err error) {
 	rows, err := s.db.Query(selectStarBarByTeacher, teacher)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	defer rows.Close()
 
-	starBars := make([]*comment.StarBar, 0)
+	stars = make([]*comment.StarBar, 0)
+	bars = make([]*comment.StarBar, 0)
 	for rows.Next() {
 		sb := new(comment.StarBar)
 		if err := rows.Scan(&sb.ID, &sb.Teacher, &sb.Title, &sb.Comment, &sb.IsStar); err != nil {
 			continue
 		}
-		starBars = append(starBars, sb)
+		if sb.IsStar {
+			stars = append(stars, sb)
+
+		} else {
+
+			bars = append(bars, sb)
+		}
 	}
-	return starBars, nil
+	return stars, bars, nil
 }
+
+

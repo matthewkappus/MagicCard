@@ -1,11 +1,10 @@
+{{ define "card" }}
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Magic Card</title>
-</head>
+    {{ template "head" }}
+
+    {{ template "nav" }}
 <body>
     {{ if .StudentName }}
         <h2>{{.StudentName}} 's Magic Card</h2>
@@ -37,6 +36,8 @@
 </body>
 </html>
 
+
+<p>TODO: replace with toolbox</p>
 <script>
     function addMerrit() {
        var form, h3, isMerrit, comment, merritBtn, demerritBtn;
@@ -57,3 +58,6 @@
     
 
 </script>
+
+
+{{ end }}

@@ -55,7 +55,7 @@ func ParseIdentity(r *http.Request) (email string, err error) {
 	return strings.ToLower(email), nil
 
 }
-func (sv *StudentView) TeacherLock(h http.HandlerFunc) http.HandlerFunc {
+func (sv *StaffView) TeacherLock(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if !sv.isTeacher(r) {
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
@@ -65,7 +65,7 @@ func (sv *StudentView) TeacherLock(h http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-func (sv *StudentView) GetTeacher(r *http.Request) string {
+func (sv *StaffView) GetTeacher(r *http.Request) string {
 	teacherCookie, err := r.Cookie("teacher")
 	if err != nil {
 		return ""
@@ -75,7 +75,7 @@ func (sv *StudentView) GetTeacher(r *http.Request) string {
 }
 
 // looks for teacher and key cookie, matches with staff db
-func (sv *StudentView) isTeacher(r *http.Request) bool {
+func (sv *StaffView) isTeacher(r *http.Request) bool {
 
 	keyCookie, err := r.Cookie("key")
 	if err != nil {
@@ -92,7 +92,7 @@ func (sv *StudentView) isTeacher(r *http.Request) bool {
 }
 
 // Login takes JWT from Google Sign In Button and sets the name, email and token values
-func (sv *StudentView) Login(w http.ResponseWriter, r *http.Request) {
+func (sv *StaffView) Login(w http.ResponseWriter, r *http.Request) {
 
 	email, err := ParseIdentity(r)
 	if err != nil {

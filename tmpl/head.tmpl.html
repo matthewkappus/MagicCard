@@ -2,6 +2,13 @@
 {{ define "head" }}
 
 <head>
+
+<!-- .Title from ClassInfo {see below} -->
+{{ if .Title }}}    
+    <title>{{ .Title }}</title> 
+    {{ else }}
+    <title>MagicCard</title>
+{{ end }}}
 <style>
 
     #myInput {
@@ -68,3 +75,12 @@
 </head>
 
 {{ end }}
+
+<!-- type ClassInfo struct {
+	Stu415s   []*synergy.Stu415
+	Stars     []*comment.StarBar
+	Bars      []*comment.StarBar
+	Teacher   string
+	ClassName string
+	Title     string
+} -->

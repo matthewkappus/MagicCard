@@ -1,10 +1,11 @@
-{{ define "studentlist" }}
+{{ define "classedit" }}
 
 <!DOCTYPE html>
 <html lang="en">
   {{ template "head" . }}
 <body>
    
+  {{ template "nav" . }}
 
   {{ template "toolbox" . }}
 
@@ -21,6 +22,18 @@
 
 {{ end }}
 <!-- 
+
+
+  type ClassInfo struct {
+	Stu415s   []*synergy.Stu415
+	Stars     []*comment.StarBar
+	Bars      []*comment.StarBar
+	Teacher   string
+	ClassName string
+	Title     string
+}
+
+
 type StarBar struct {
 	ID      int
 	Teacher string
@@ -28,4 +41,8 @@ type StarBar struct {
 	Comment string
 	// if not star, then bar
 	IsStar bool
-} -->
+} 
+
+
+
+-->
