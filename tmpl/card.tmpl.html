@@ -2,42 +2,39 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    {{ template "head" }}
+    {{ template "head" . }}
 
-    {{ template "nav" }}
+    {{ template "nav" . }}
 <body>
-    {{ if .StudentName }}
-        <h2>{{.StudentName}} 's Magic Card</h2>
-    {{ else }}
-    <!-- todo: does not show -->
-        <h2>student not found</h2>
-        <a href="search/">Search for student</a>
-    {{ end }}
+       {{ (index .Stu415s 0).StudentName }}
 
 
-    <button id="showMerrit" onclick="addMerrit()">Give Merrit</button>
-    <button id="showDemerrit">Give Demerrit</button>
-    <!-- <button id="cancel" display="none">Cancel</button> -->
+       <form action="/confirm">
+        <div id="toolbox">
+    
+            <label for="starSelect">Stars & Bars</label>
+            <select name="star" id="starSelect">
+              <optgroup label="Stars ⭐️">
+        
+                {{ range $sb := .Stars }}
+                  <option value="{{$sb.ID}}"> {{ $sb.Title }} </option>
+                {{ end }}
+                </optgroup>
+                <optgroup label="Bars ❌">
+                {{ range $sb := .Bars }}
+                  <option value="{{$sb.ID}}"> {{ $sb.Title }} </option>
+                {{ end }}
+            </select>
+    
+    
+            <button type="submit" id="saveBtn">Save</button>
+        </div>
+    
 
-
-    <form method="POST" action="addComment" id="addComment" hidden>
-        <input type="hidden" id="isMerrit" name="isMerrit">
-        <input type="hidden" id="permID" name="permID" value={{.PermID}}>
-        <!-- todo: get email from session cookie -->
-        <input type="hidden" id="studentName" name="studentName" value={{.StudentName}}>
-        <h3 id="merritType"></h3>
-
-        <!-- <input type="textarea" name="comment" id=""> -->
-        <input type="text" name="comment" id="comment">
-        <br />
-        <input type="submit" value="Submit">
-        <!-- add cancel -->
     </form>
 </body>
 </html>
 
-
-<p>TODO: replace with toolbox</p>
 <script>
     function addMerrit() {
        var form, h3, isMerrit, comment, merritBtn, demerritBtn;
@@ -61,3 +58,13 @@
 
 
 {{ end }}
+
+<!-- 
+    ci := &ClassInfo{
+		ClassList: classes,
+		Stu415s:   []*synergy.Stu415{stu415},
+		Teacher:   teacher,
+		Title:     stu415.StudentName + " Magic Card",
+		Path:      "classes",
+	}
+ -->

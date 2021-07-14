@@ -84,8 +84,22 @@ func (sv *StaffView) Card(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	classes, _ := sv.ClassList(r)
+	teacher := sv.GetTeacher(r)
+	stars, bars, _ := sv.store.GetStarBars(teacher)
+
+	ci := &ClassInfo{
+		ClassList: classes,
+		Stu415s:   []*synergy.Stu415{stu415},
+		Stars:     stars,
+		Bars:      bars,
+		Teacher:   teacher,
+		Title:     stu415.StudentName + " Magic Card",
+		Path:      "classes",
+	}
 	// todo: add email and session info
-	sv.tmpls.Lookup("card").Execute(w, stu415)
+	sv.tmpls.Lookup("card").Execute(w, ci)
 }
 func UpdateRoster() ([]*synergy.Stu415, error) {
 	// todo: get from synergy

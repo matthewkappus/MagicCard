@@ -20,22 +20,6 @@ type ClassInfo struct {
 	Path string
 }
 
-// func (sv *StaffView) ListClasses(w http.ResponseWriter, r *http.Request) {
-// 	// todo: allow all staff to magiccard
-// 	teacherCookie, err := r.Cookie("teacher")
-// 	if err != nil {
-// 		http.Error(w, err.Error(), http.StatusInternalServerError)
-// 		return
-// 	}
-
-// 	classes, err := sv.store.ListClasses(teacherCookie.Value)
-// 	if err != nil {
-// 		http.NotFound(w, r)
-// 	}
-
-// 	sv.tmpls.Lookup("classlist").Execute(w, classes)
-// }
-
 func (sv *StaffView) Profile(w http.ResponseWriter, r *http.Request) {
 	// todo: render template, add class info
 

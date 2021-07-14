@@ -26,9 +26,10 @@
 			  <option value="{{$sb.ID}}"> {{ $sb.Title }} </option>
 			{{ end }}
 		</select>
-	  </div>
-  <input type="hidden" name="selectedSB" id="selectedSB" >
 
+
+		<button type="submit" id="saveBtn">Save</button>
+	</div>
 
   <!-- <input type="text" name="" id="myInput"  placeholder="🔎" onkeyup="myFunction()"> -->
   <ul id="myUL">
@@ -46,9 +47,15 @@
 
 
   <script>
-  
+	  
+
     var starSelect = document.getElementById('starSelect');
-    var selectedSB = document.getElementById('selectedSB');
+
+	// disable tools until a selection is made
+	var selectedSB = document.getElementById('selectedSB');
+	starSelect.disabled = true;
+	var saveBtn = document.getElementById('saveBtn');
+	saveBtn.disabled = true;
 
     starSelect.addEventListener('change', function() {
       var star = starSelect.options[starSelect.selectedIndex].value;
@@ -65,8 +72,14 @@
 		} else {
 			selectedStudents.splice(selectedStudents.indexOf(e.target.name), 1);
 		}
-		console.log(selectedStudents);
-		});
+		
+		if (selectedStudents.length > 0) {
+			starSelect.disabled = false;
+			saveBtn.disabled = false;
+		} else {
+			starSelect.disabled = true;
+			saveBtn.disabled = true;
+		}});
 	});
   </script>
   
