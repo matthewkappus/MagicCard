@@ -1,0 +1,21 @@
+{{ define "toolbox" }}
+
+<div id="toolbox">
+
+    <label for="starSelect">⭐️</label>
+    <select name="star" id="starSelect">
+      
+      {{ range $sb := .StarBars }}
+        <option> {{ $sb.Title }} </option>
+      {{ end }}
+    </select>
+    <label for="barSelect">❌</label>
+    <select name="star" id="barSelect">
+      
+      {{ range $sb := .StarBars }}
+        <option> {{ $sb.Title }} </option>
+      {{ end }}
+    </select>
+  </div>
+  
+{{ end }}

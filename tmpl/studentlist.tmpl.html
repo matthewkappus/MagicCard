@@ -2,19 +2,30 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  {{ template "head" . }}}
+  {{ template "head" . }}
 <body>
-    classinfo:  {{ . }}
+   
+
+  {{ template "toolbox" . }}
 
 
-    <input type="text" name="" id="myInput" onkeyup="myFunction()">
+    <input type="text" name="" id="myInput"  placeholder="🔎" onkeyup="myFunction()">
     <ul id="myUL">
     
       {{ range  $s := .Stu415s }}
-        <li><a href="card?id={{ $s.PermID }}">{{ $s.StudentName }}</a></li> 
+       <li> <a href="card?id={{ $s.PermID }}">  <input type="checkbox" name="{{ $s.StudentName}}" id="{{  $s.PermID  }}"> {{ $s.StudentName }}</a></li> 
       {{ end }}
     </ul>
 </body>
 </html>
 
 {{ end }}
+<!-- 
+type StarBar struct {
+	ID      int
+	Teacher string
+	Title   string
+	Comment string
+	// if not star, then bar
+	IsStar bool
+} -->

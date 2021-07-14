@@ -49,10 +49,12 @@ func (sv *StudentView) Class(w http.ResponseWriter, r *http.Request) {
 		Stu415s  []*synergy.Stu415
 		StarBars []*comment.StarBar
 		Teacher  string
+		Title    string
 	}{
 		Stu415s:  s415s,
 		StarBars: sbs,
 		Teacher:  teacher,
+		Title:    "Class List",
 	}
 
 	// todo: wrap s415s in struct with class info and tags
