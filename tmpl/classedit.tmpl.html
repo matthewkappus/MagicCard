@@ -7,20 +7,75 @@
    
   {{ template "nav" . }}
 
-  {{ template "toolbox" . }}
+  <!-- {{ template "toolbox" . }} -->
 
 
-    <input type="text" name="" id="myInput"  placeholder="🔎" onkeyup="myFunction()">
-    <ul id="myUL">
-    
-      {{ range  $s := .Stu415s }}
-       <li> <a href="card?id={{ $s.PermID }}">  <input type="checkbox" name="{{ $s.StudentName}}" id="{{  $s.PermID  }}"> {{ $s.StudentName }}</a></li> 
-      {{ end }}
-    </ul>
+<form action="/confirm">
+	<div id="toolbox">
+
+		<label for="starSelect">Stars & Bars</label>
+		<select name="star" id="starSelect">
+		  <optgroup label="Stars ⭐️">
+	
+			{{ range $sb := .Stars }}
+			  <option value="{{$sb.ID}}"> {{ $sb.Title }} </option>
+			{{ end }}
+			</optgroup>
+			<optgroup label="Bars ❌">
+			{{ range $sb := .Bars }}
+			  <option value="{{$sb.ID}}"> {{ $sb.Title }} </option>
+			{{ end }}
+		</select>
+	  </div>
+  <input type="hidden" name="selectedSB" id="selectedSB" >
+
+
+  <!-- <input type="text" name="" id="myInput"  placeholder="🔎" onkeyup="myFunction()"> -->
+  <ul id="myUL">
+  
+	{{ range  $s := .Stu415s }}
+	 <li> <a href="card?id={{ $s.PermID }}">  <input type="checkbox" class="stuChecks" name="{{ $s.StudentName}}" id="{{  $s.PermID  }}"> {{ $s.StudentName }}</a></li> 
+	{{ end }}
+  </ul>
+
+</form>
+
+
+
+
+
+
+  <script>
+  
+    var starSelect = document.getElementById('starSelect');
+    var selectedSB = document.getElementById('selectedSB');
+
+    starSelect.addEventListener('change', function() {
+      var star = starSelect.options[starSelect.selectedIndex].value;
+      selectedSB.value = star;
+
+    });
+
+	var selectedStudents = [];
+	document.querySelectorAll('.stuChecks').forEach( i => {
+		i.addEventListener('change', function(e) {
+		// selectedStudents = document.getElementById("stuChecks").checked = true;
+		if (e.target.checked== true ){
+			selectedStudents.push(e.target.name);
+		} else {
+			selectedStudents.splice(selectedStudents.indexOf(e.target.name), 1);
+		}
+		console.log(selectedStudents);
+		});
+	});
+  </script>
+  
+{{ end }}
+
+
 </body>
 </html>
 
-{{ end }}
 <!-- 
 
 
