@@ -1,42 +1,80 @@
 package roster
 
 import (
+	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/matthewkappus/MagicCard/src/comment"
 )
 
 func (sv *StaffView) StarBarEdit(w http.ResponseWriter, r *http.Request) {
 
-	if r.Method == http.MethodGet {
+	teacher := sv.GetTeacher(r)
+	list, _ := sv.store.ListClasses(teacher)
+	ci := &ClassInfo{
 
-		teacher := sv.GetTeacher(r)
+		Teacher:   teacher,
+		ClassList: list,
+		Title:     "StarBar Edit",
+		Path:      "profile",
+	}
 
-		// todo: move staff templates to a separate folder
-		// sv.RenderTemplate(w, "staff/starbar_edit.html", map[string]interface{}
+	data := struct {
+		Info    *ClassInfo
+		StarBar *comment.StarBar
+	}{
+		Info: ci,
+	}
 
-		ci := &ClassInfo{
+	if r.FormValue("id") != "" {
+		data.StarBar, _ = sv.store.GetStarBarByID(r.FormValue("id"))
+	}
+	if r.Method == http.MethodPost {
 
+		idInt := 0
+		if r.PostFormValue("id") != "" {
+			idInt, _ = strconv.Atoi(r.PostFormValue("id"))
+
+		}
+
+		sb := comment.StarBar{
+			ID:      idInt,
 			Teacher: teacher,
-			Title:   "StarBar Edit",
-			Path:    "profile",
+			Title:   r.PostFormValue("title"),
+			Comment: r.PostFormValue("comment"),
+			IsStar:  r.PostFormValue("isStar") == "true",
+		}
+		if !sb.IsValid() {
+			fmt.Fprint(w, "Not a valid starbar")
 		}
 
-		sb, err := sv.store.GetStarBarByID(r.FormValue("id"))
+		// update starbar
+		if idInt > 0 {
+			err := sv.store.UpdateStarBar(sb.ID, sb.Teacher, sb.Teacher, sb.Comment, sb.IsStar)
+			ci.StatusMsg = err.Error()
+		}
+		// create starbar
+		_, err := sv.store.AddStarBar(sb.Teacher, sb.Teacher, sb.Comment, sb.IsStar)
 		if err != nil {
-			http.NotFound(w, r)
-			return
+			ci.StatusMsg = err.Error()
 		}
 
-		data := struct {
-			Info    *ClassInfo
-			StarBar *comment.StarBar
-		}{
-			Info:    ci,
-			StarBar: sb,
-		}
+		http.Redirect(w, r, "/profile", http.StatusFound)
+	} else {
+		// get starbar
 
 		sv.tmpls.Lookup("starbaredit").Execute(w, data)
+
 	}
 
 }
+
+//     type StarBar struct {
+// 	ID      int
+// 	Teacher string
+// 	Title   string
+// 	Comment string
+// 	// if not star, then bar
+// 	IsStar bool
+// }

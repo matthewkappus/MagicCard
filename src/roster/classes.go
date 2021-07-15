@@ -16,6 +16,7 @@ type ClassInfo struct {
 	Teacher   string
 	ClassName string
 	Title     string
+	StatusMsg string
 	// shoud be a css class
 	Path string
 }

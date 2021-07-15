@@ -1,9 +1,6 @@
 package db
 
 import (
-	"fmt"
-	"strconv"
-
 	"github.com/matthewkappus/MagicCard/src/comment"
 )
 
@@ -15,6 +12,7 @@ const (
 	selectStarBarByTeacher = `SELECT * FROM starbar WHERE teacher = ?`
 	selectStarBarByID      = `SELECT * FROM starbar WHERE id = ?`
 	insertStarBar          = `INSERT INTO starbar(teacher, title, comment, isStar) VALUES(?, ?, ?, ?)`
+	updateStarBar          = `UPDATE starbar SET teacher = ?, title = ?, comment = ?, isStar = ? WHERE id = ?`
 )
 
 // const ErrInvalidStarBar = "Invalid StarBar"
@@ -25,22 +23,10 @@ func (s *Store) GetStarBarByID(id string) (*comment.StarBar, error) {
 	return sb, err
 }
 
-func (s *Store) UpdateStarBar(id, teacher, title, comments string, isStar bool) (*comment.StarBar, error) {
-	idInt, err := strconv.Atoi(id)
-	if err != nil {
-		return nil, err
-	}
-	sb := &comment.StarBar{
-		ID:      idInt,
-		Teacher: teacher,
-		Title:   title,
-		Comment: comments,
-		IsStar:  isStar,
-	}
-	if !sb.IsValid() {
-		return nil, fmt.Errorf("invalid star bar")
-	}
-	return sb, nil
+func (s *Store) UpdateStarBar(id int, teacher, title, comments string, isStar bool) error {
+	// UPDATE starbar SET teacher = ?, title = ?, comment = ?, isStar = ? WHERE id = ?
+	_, err := s.db.Exec(updateStarBar, teacher, title, comments, isStar, id)
+	return err
 }
 
 // GetStarBars takes a staff.name and returns their StarBars or an error
