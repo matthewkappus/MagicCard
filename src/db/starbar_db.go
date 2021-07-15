@@ -1,34 +1,46 @@
 package db
 
-import "github.com/matthewkappus/MagicCard/src/comment"
+import (
+	"fmt"
+	"strconv"
 
+	"github.com/matthewkappus/MagicCard/src/comment"
+)
+
+// starbar_db is a database of starbars.
+// starbar_db_version = "0.1"
 const (
 	createStarBar          = `CREATE TABLE IF NOT EXISTS starbar(id INTEGER PRIMARY KEY AUTOINCREMENT, teacher, title, comment TEXT, isStar BOOLEAN, FOREIGN KEY(teacher) REFERENCES staff(name))`
 	createStarBarSave      = `INSERT OR REPLACE INTO starbar(id, teacher, title, comment, isStar) VALUES(?, ?, ?, ?, ?)`
 	selectStarBarByTeacher = `SELECT * FROM starbar WHERE teacher = ?`
+	selectStarBarByID      = `SELECT * FROM starbar WHERE id = ?`
 	insertStarBar          = `INSERT INTO starbar(teacher, title, comment, isStar) VALUES(?, ?, ?, ?)`
 )
 
-func (s *Store) AddStarBar(teacher, title, comments string, isStar bool) (*comment.StarBar, error) {
+// const ErrInvalidStarBar = "Invalid StarBar"
+
+func (s *Store) GetStarBarByID(id string) (*comment.StarBar, error) {
+	sb := &comment.StarBar{}
+	err := s.db.QueryRow(selectStarBarByID, id).Scan(&sb.ID, &sb.Teacher, &sb.Title, &sb.Comment, &sb.IsStar)
+	return sb, err
+}
+
+func (s *Store) UpdateStarBar(id, teacher, title, comments string, isStar bool) (*comment.StarBar, error) {
+	idInt, err := strconv.Atoi(id)
+	if err != nil {
+		return nil, err
+	}
 	sb := &comment.StarBar{
+		ID:      idInt,
 		Teacher: teacher,
 		Title:   title,
 		Comment: comments,
 		IsStar:  isStar,
 	}
-
-	// sb.IsValid()
-	res, err := s.db.Exec(insertStarBar, teacher, title, comments, isStar)
-	if err != nil {
-		return nil, err
-	}
-	i64, err := res.LastInsertId()
-	sb.ID = int(i64)
-	if err != nil {
-		return nil, err
+	if !sb.IsValid() {
+		return nil, fmt.Errorf("invalid star bar")
 	}
 	return sb, nil
-
 }
 
 // GetStarBars takes a staff.name and returns their StarBars or an error
@@ -57,4 +69,24 @@ func (s *Store) GetStarBars(teacher string) (stars, bars []*comment.StarBar, err
 	return stars, bars, nil
 }
 
+func (s *Store) AddStarBar(teacher, title, comments string, isStar bool) (*comment.StarBar, error) {
+	sb := &comment.StarBar{
+		Teacher: teacher,
+		Title:   title,
+		Comment: comments,
+		IsStar:  isStar,
+	}
 
+	// sb.IsValid()
+	res, err := s.db.Exec(insertStarBar, teacher, title, comments, isStar)
+	if err != nil {
+		return nil, err
+	}
+	i64, err := res.LastInsertId()
+	sb.ID = int(i64)
+	if err != nil {
+		return nil, err
+	}
+	return sb, nil
+
+}

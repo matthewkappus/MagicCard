@@ -9,3 +9,9 @@ type StarBar struct {
 	// if not star, then bar
 	IsStar bool
 }
+
+// IsValid
+// title: 1 word, non duplicate to teacher, 20 chars, Comment: 280 chars
+func (sb  *StarBar) IsValid()bool  {
+	return true
+}

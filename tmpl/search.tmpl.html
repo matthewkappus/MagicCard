@@ -11,9 +11,8 @@
     <input type="text" name="" id="myInput" onkeyup="myFunction()">
     <ul id="myUL">
       {{ range .Stu415s }}
-      <li><a href="card?id={{.PermID}}">{{.StudentName}}</a></li> 
-  {{ end }}
-
+        <li><a href="card?id={{.PermID}}">{{.StudentName}}</a></li> 
+      {{ end }}
     </ul>
  
 </body>
