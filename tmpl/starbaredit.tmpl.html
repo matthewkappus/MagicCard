@@ -7,20 +7,38 @@
     {{template "nav" .Info }}
 
             <form action="" method="patch">
-                <input type="hidden" name="id" value=" {{ .StarBar  }}">
+                <input type="hidden" name="id" value=" {{ .StarBar.ID  }}">
                 <input type="hidden" name="teacher" value="{{ .StarBar.Teacher }}">
                 
-
+                <label for="titleText">Title</label>
+                <input type="text" name="title" value="{{ .StarBar.Title }}" id="titleText" maxlength="20" size="20" minlength="2" required>
+                <br>
+            
+                <label for="commentText">Comment</label>
+                <input type="text" name="title" value="{{ .StarBar.Comment }}" id="commentText" maxlength="140" size="140" minlength="2" required>
+                <br>
+            
+                <label for="starbarOption">Comment Type</label><br>
+                <select  id="starbarOption" name="isStar" required>
+                    <option value="true" {{ if eq .StarBar.IsStar true}} selected {{ end }}>Star ⭐️</option>
+                    <option value="false" {{ if eq .StarBar.IsStar false}} selected {{ end }}>Bar ❌</option>  
+                </select>
+    
                 <input type="submit" value="Save">
             </form>
+
+
+             <a href="starbardelete?id={{ .StarBar.ID }}">Delete</a>
+
     
- 
 
 
 </body>
 
 </html>
 {{ end}}
+
+
 <!-- 
 
     type StarBar struct {

@@ -1,6 +1,8 @@
 package db
 
 import (
+	"strconv"
+
 	"github.com/matthewkappus/MagicCard/src/comment"
 )
 
@@ -12,11 +14,23 @@ const (
 	selectStarBarByTeacher = `SELECT * FROM starbar WHERE teacher = ?`
 	selectStarBarByID      = `SELECT * FROM starbar WHERE id = ?`
 	insertStarBar          = `INSERT INTO starbar(teacher, title, comment, isStar) VALUES(?, ?, ?, ?)`
+	deleteStarBarByID      = `DELETE FROM starbar WHERE id =?`
 	updateStarBar          = `UPDATE starbar SET teacher = ?, title = ?, comment = ?, isStar = ? WHERE id = ?`
 )
 
 // const ErrInvalidStarBar = "Invalid StarBar"
 
+func (s *Store) DeleteStarBarByID(id string) error {
+	idInt, err := strconv.Atoi(id)
+	if err != nil {
+		return err
+	}
+
+	
+
+	_, err = s.db.Exec(deleteStarBarByID, idInt)
+	return err
+}
 func (s *Store) GetStarBarByID(id string) (*comment.StarBar, error) {
 	sb := &comment.StarBar{}
 	err := s.db.QueryRow(selectStarBarByID, id).Scan(&sb.ID, &sb.Teacher, &sb.Title, &sb.Comment, &sb.IsStar)
