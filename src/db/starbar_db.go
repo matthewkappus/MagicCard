@@ -24,7 +24,6 @@ func (s *Store) GetStarBarByID(id string) (*comment.StarBar, error) {
 }
 
 func (s *Store) UpdateStarBar(id int, teacher, title, comments string, isStar bool) error {
-	// UPDATE starbar SET teacher = ?, title = ?, comment = ?, isStar = ? WHERE id = ?
 	_, err := s.db.Exec(updateStarBar, teacher, title, comments, isStar, id)
 	return err
 }

@@ -34,6 +34,7 @@ func main() {
 
 	http.HandleFunc("/profile", sv.TeacherLock(sv.Profile))
 	http.HandleFunc("/starbaredit", sv.TeacherLock(sv.StarBarEdit))
+	http.HandleFunc("/starbarcreate", sv.TeacherLock(sv.StarBarCreate))
 
 	http.HandleFunc("/addComment", sv.TeacherLock(sv.Add))
 	http.HandleFunc("/card", sv.TeacherLock(sv.Card))
