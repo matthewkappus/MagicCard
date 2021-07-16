@@ -12,6 +12,6 @@ type StarBar struct {
 
 // IsValid
 // title: 1 word, non duplicate to teacher, 20 chars, Comment: 280 chars
-func (sb  *StarBar) IsValid()bool  {
+func (sb *StarBar) IsValid() bool {
 	return true
 }

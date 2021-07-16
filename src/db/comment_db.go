@@ -10,8 +10,9 @@ import (
 
 // comment table
 const (
-	createComment = `CREATE TABLE IF NOT EXISTS comment (id INTEGER PRIMARY KEY, perm_id, author, comment TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, is_merrit BOOLEAN, is_active BOOLEAN DEFAULT true, FOREIGN KEY(perm_id) REFERENCES stu415(perm_id))`
-	insertComment = `INSERT INTO comment(perm_id, author, comment, is_merrit) VALUES(?,?,?,?);`
+	createComment         = `CREATE TABLE IF NOT EXISTS comment (id INTEGER PRIMARY KEY, perm_id, teacher, comment, title TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, isStar, isActive BOOLEAN DEFAULT true, FOREIGN KEY(perm_id) REFERENCES stu415(perm_id))`
+	insertComment         = `INSERT INTO comment(perm_id, teacher, comment, title, isStar) VALUES(?,?,?,?,?);`
+	selectCommentByPermID = `SELECT * FROM comment WHERE perm_id = ?`
 )
 
 func (s *Store) SelectStu415(permid string) (s415 *synergy.Stu415, err error) {
@@ -26,8 +27,9 @@ func (s *Store) CreateCommentTable() error {
 	_, err := s.db.Exec(createComment)
 	return err
 }
-func (s *Store) InsertComment(permID, author, comment string, isMerrit bool) error {
-	_, err := s.db.Exec(insertComment, permID, author, comment, isMerrit)
+func (s *Store) InsertComment(permID, teacher, comment, title string, isStar bool) error {
+	// INSERT INTO comment(perm_id, teacher, comment, title, isStar)
+	_, err := s.db.Exec(insertComment, permID, teacher, comment, title, isStar)
 	return err
 }
 

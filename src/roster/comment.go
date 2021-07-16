@@ -2,7 +2,6 @@ package roster
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 )
@@ -12,54 +11,45 @@ type Comment struct {
 	//
 	PermID string `json:"perm_id,omitempty"`
 	// staff(name)
-	Author  string `json:"author,omitempty"`
+	Teacher string `json:"teacher,omitempty"`
 	Comment string `json:"comment,omitempty"`
+	// Title is a catagory of the comment
+	Title string `json:"title,omitempty"`
 
 	Created time.Time `json:"created,omitempty"`
 	// max comment: 280
-	IsMerrit bool `json:"is_merrit,omitempty"`
+	IsStar   bool `json:"is_star,omitempty"`
 	IsActive bool `json:"is_active,omitempty"`
 }
 
-func (sv *StaffView) Add(w http.ResponseWriter, r *http.Request) {
+// IsValid checks for valid field sizes before committing to db
+func (c *Comment) IsValid() bool {
+	return c.PermID != "" && c.Teacher != "" && c.Comment != ""
+}
+
+func (sv *StaffView) AddComment(w http.ResponseWriter, r *http.Request) {
+
 	if r.Method != http.MethodPost {
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return
 	}
 
-	c, err := sv.insertComment(r)
+	c := &Comment{
+		PermID: r.PostFormValue("permID"),
+		// can this get from the session?
+		Teacher:  sv.GetTeacher(r),
+		Title:    r.PostFormValue("title"),
+		Comment:  r.PostFormValue("comment"),
+		IsStar:   r.PostFormValue("isStar") == "true",
+		Created:  time.Now(),
+		IsActive: true,
+	}
+
+	err := sv.store.InsertComment(c.PermID, c.Teacher, c.Comment, c.Title, c.IsStar)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	// display confirmation
-	sv.tmpls.Lookup("add.tmpl.html").Execute(w, fmt.Sprintf("awarded merrit:\n%v", c))
-}
-
-func (sv *StaffView) insertComment(r *http.Request) (*Comment, error) {
-	// validate input: session, msg
-	// insert db & log change
-	// INSERT INTO comment(perm_id, email, comment, is_merrit, is_active) VALUES(?,?,?,?,?)
-	r.ParseForm()
-	isMerrit := false
-	if r.FormValue("isMerrit") == "true" {
-		isMerrit = true
-	}
-
-	name, err := r.Cookie("name")
-	if err != nil {
-		log.Printf("insertComment without name. error: %v", err)
-	}
-	c := &Comment{
-		PermID: r.PostFormValue("permID"),
-		// can this get from the session?
-		Author:   name.Value,
-		Comment:  r.PostFormValue("comment"),
-		IsMerrit: isMerrit,
-	}
-
-	sv.store.InsertComment(c.PermID, c.Author, c.Comment, c.IsMerrit)
-	return c, nil
-
+	fmt.Printf("Created comment: %#v\n", *c)
+	http.Redirect(w, r, "/", http.StatusAccepted)
 }
