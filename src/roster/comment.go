@@ -4,28 +4,9 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+
+	"github.com/matthewkappus/MagicCard/src/comment"
 )
-
-type Comment struct {
-	ID int `json:"id,omitempty"`
-	//
-	PermID string `json:"perm_id,omitempty"`
-	// staff(name)
-	Teacher string `json:"teacher,omitempty"`
-	Comment string `json:"comment,omitempty"`
-	// Title is a catagory of the comment
-	Title string `json:"title,omitempty"`
-
-	Created time.Time `json:"created,omitempty"`
-	// max comment: 280
-	IsStar   bool `json:"is_star,omitempty"`
-	IsActive bool `json:"is_active,omitempty"`
-}
-
-// IsValid checks for valid field sizes before committing to db
-func (c *Comment) IsValid() bool {
-	return c.PermID != "" && c.Teacher != "" && c.Comment != ""
-}
 
 func (sv *StaffView) AddComment(w http.ResponseWriter, r *http.Request) {
 
@@ -34,7 +15,7 @@ func (sv *StaffView) AddComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	c := &Comment{
+	c := &comment.Card{
 		PermID: r.PostFormValue("permID"),
 		// can this get from the session?
 		Teacher:  sv.GetTeacher(r),
@@ -51,5 +32,5 @@ func (sv *StaffView) AddComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Printf("Created comment: %#v\n", *c)
-	http.Redirect(w, r, "/", http.StatusAccepted)
+	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }

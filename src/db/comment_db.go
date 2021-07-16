@@ -5,15 +5,36 @@ import (
 	"log"
 	"os"
 
+	"github.com/matthewkappus/MagicCard/src/comment"
 	"github.com/matthewkappus/Roster/src/synergy"
 )
 
 // comment table
 const (
-	createComment         = `CREATE TABLE IF NOT EXISTS comment (id INTEGER PRIMARY KEY, perm_id, teacher, comment, title TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, isStar, isActive BOOLEAN DEFAULT true, FOREIGN KEY(perm_id) REFERENCES stu415(perm_id))`
-	insertComment         = `INSERT INTO comment(perm_id, teacher, comment, title, isStar) VALUES(?,?,?,?,?);`
-	selectCommentByPermID = `SELECT * FROM comment WHERE perm_id = ?`
+	createComment                 = `CREATE TABLE IF NOT EXISTS comment (id INTEGER PRIMARY KEY, perm_id, teacher, comment, title TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, isStar, isActive BOOLEAN DEFAULT true, FOREIGN KEY(perm_id) REFERENCES stu415(perm_id))`
+	insertComment                 = `INSERT INTO comment(perm_id, teacher, comment, title, isStar) VALUES(?,?,?,?,?);`
+	selectCommentByPermID         = `SELECT * FROM comment WHERE perm_id = ?`
+	selectNewestCommentsByTeacher = `SELECT * FROM comment WHERE teacher=? LIMIT ?`
 )
+
+func (s *Store) GetRecentComments(teacher string, limit int) ([]*comment.Card, error) {
+	rows, err := s.db.Query(selectNewestCommentsByTeacher, teacher, limit)
+
+	if err != nil {
+		return nil, err
+	}
+
+	comments := make([]*comment.Card, 0)
+	for rows.Next() {
+		c := new(comment.Card)
+		err = rows.Scan(&c.ID, &c.PermID, &c.Teacher, &c.Comment, &c.Title, &c.Created, &c.IsStar, &c.IsActive)
+		if err != nil {
+			continue
+		}
+		comments = append(comments, c)
+	}
+	return comments, nil
+}
 
 func (s *Store) SelectStu415(permid string) (s415 *synergy.Stu415, err error) {
 	s415 = new(synergy.Stu415)

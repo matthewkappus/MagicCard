@@ -2,38 +2,43 @@
 <!DOCTYPE html>
 <html lang="en">
 
-{{ template "nav" . }}
-{{ template "head" . }}
+{{ template "head" .Info }}
 
 <body>
+    {{ template "nav" .Info }}
+
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-    <h1>MagicCard</h1>
-    
 
-    {{ if .Teacher }}
-    <h2> Wlecome {{ .Teacher }}</h2>
+    {{ if .Info.Teacher }}
+    <h2> {{ .Info.Teacher }}'s Magic Card </h2>
+
+    <ul id="myUL">
+        {{ range $c := .Comments }}
+            <li> {{ $c.Comment }}</li>
+        {{ end }}
+    </ul>
 
     {{ else }}
 
-    <div id="g_id_onload"
-    data-client_id="844922792275-q2rtvab06aegss1gjqqdhs2fqteu0at3.apps.googleusercontent.com"
-    data-context="signin"
-    data-ux_mode="popup"
-    data-login_uri="https://mymagiccard.wn.r.appspot.com/login"
-    data-auto_prompt="false">
-</div>
+                <div id="g_id_onload"
+                data-client_id="844922792275-q2rtvab06aegss1gjqqdhs2fqteu0at3.apps.googleusercontent.com"
+                data-context="signin"
+                data-ux_mode="popup"
+                data-login_uri="https://mymagiccard.wn.r.appspot.com/login"
+                data-auto_prompt="false">
+            </div>
 
-<div class="g_id_signin"
-    data-type="standard"
-    data-shape="rectangular"
-    data-theme="outline"
-    data-text="signin_with"
-    data-size="medium"
-    data-logo_alignment="left">
-</div>
+            <div class="g_id_signin"
+                data-type="standard"
+                data-shape="rectangular"
+                data-theme="outline"
+                data-text="signin_with"
+                data-size="medium"
+                data-logo_alignment="left">
+            </div>
 
-{{ end }}
+    {{ end }}
     
 </body>
 </html>

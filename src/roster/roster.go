@@ -6,6 +6,7 @@ import (
 	"os"
 	"text/template"
 
+	"github.com/matthewkappus/MagicCard/src/comment"
 	"github.com/matthewkappus/MagicCard/src/db"
 	"github.com/matthewkappus/Roster/src/synergy"
 )
@@ -65,10 +66,20 @@ func (sv *StaffView) Home(w http.ResponseWriter, r *http.Request) {
 	ci := &ClassInfo{
 		ClassList: classes,
 		Teacher:   teacher,
-		Title:     "Student Search",
+		Title:     "Magic Card",
 		Path:      "home",
 	}
-	sv.tmpls.Lookup("home").Execute(w, ci)
+
+	recent, _ := sv.store.GetRecentComments(teacher, 5)
+	data := struct {
+		Info *ClassInfo
+		// Todo: offer expanded view
+		Comments []*comment.Card
+	}{
+		Info:     ci,
+		Comments: recent,
+	}
+	sv.tmpls.Lookup("home").Execute(w, data)
 }
 
 func (sv *StaffView) Card(w http.ResponseWriter, r *http.Request) {
