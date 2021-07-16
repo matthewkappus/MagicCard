@@ -8,11 +8,41 @@ import (
 	"github.com/matthewkappus/MagicCard/src/roster"
 )
 
-// //go:embed tmpl/*tmpl.html
-// var tmpls embed.FS
-
 func main() {
 
+	s, err := db.OpenCloudStore()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer s.Close()
+
+	sv, err := roster.NewView(s)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	http.HandleFunc("/login", sv.Login)
+
+	http.HandleFunc("/search", sv.TeacherLock(sv.Search))
+	// http.HandleFunc("/matty", roster.Temp)
+	http.HandleFunc("/class", sv.TeacherLock(sv.ClassEdit))
+
+	http.HandleFunc("/profile", sv.TeacherLock(sv.Profile))
+	http.HandleFunc("/starbaredit", sv.TeacherLock(sv.StarBarEdit))
+	http.HandleFunc("/starbardelete", sv.TeacherLock(sv.StarBarDelete))
+	http.HandleFunc("/starbarcreate", sv.TeacherLock(sv.StarBarCreate))
+
+	http.HandleFunc("/addComment", sv.TeacherLock(sv.AddComment))
+	http.HandleFunc("/card", sv.TeacherLock(sv.Card))
+
+	http.HandleFunc("/", sv.Home)
+
+	http.ListenAndServe(":8080", nil)
+
+}
+
+func openStore() {
 	store, err := db.OpenStore("data/cards.db")
 	if err != nil {
 		log.Fatal(err)

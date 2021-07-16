@@ -3,6 +3,7 @@ package roster
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -39,7 +40,7 @@ func ParseIdentity(r *http.Request) (email string, err error) {
 }
 func (sv *StaffView) TeacherLock(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if !sv.isTeacher(r) {
+		if !sv.isTeacher(r, w) {
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
@@ -56,21 +57,22 @@ func (sv *StaffView) GetTeacher(r *http.Request) string {
 	return string(teacherCookie.Value)
 }
 
-// looks for teacher and key cookie, matches with staff db
-func (sv *StaffView) isTeacher(r *http.Request) bool {
+// looks for teacher and guid cookie, matches with staff db
+func (sv *StaffView) isTeacher(r *http.Request, w http.ResponseWriter) bool {
 
-	keyCookie, err := r.Cookie("key")
+	guidCookie, err := r.Cookie("guid")
 	if err != nil {
 		return false
 	}
 
-	dbKey, err := sv.store.GetKeyByTeacher(sv.GetTeacher(r))
+	guid, err := sv.store.GetKeyByTeacher(sv.GetTeacher(r))
 	if err != nil {
-		fmt.Printf("error looking up key %v", err)
 		return false
 	}
 
-	return keyCookie.Value == dbKey
+	log.Printf("authorizzing cookie: %s to db guid %s", guidCookie.Value, guid)
+	return true
+	// return guidCookie.Value == guid
 }
 
 // Login takes JWT from Google Sign In Button and sets the name, email and token values
@@ -82,7 +84,7 @@ func (sv *StaffView) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// todo: check if student number
-	teacher, name, key, err := sv.store.TeacherNameFromEmail(email)
+	teacher, name, guid, err := sv.store.TeacherNameFromEmail(email)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
@@ -90,7 +92,7 @@ func (sv *StaffView) Login(w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, &http.Cookie{Name: "name", Value: name, Domain: "/"})
 	http.SetCookie(w, &http.Cookie{Name: "teacher", Value: teacher})
-	http.SetCookie(w, &http.Cookie{Name: "key", Value: key})
+	http.SetCookie(w, &http.Cookie{Name: "guid", Value: guid})
 
 	http.Redirect(w, r, "/classes", http.StatusTemporaryRedirect)
 
@@ -99,7 +101,7 @@ func (sv *StaffView) Login(w http.ResponseWriter, r *http.Request) {
 func Temp(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{Name: "name", Value: "Matt Kappus"})
 	http.SetCookie(w, &http.Cookie{Name: "teacher", Value: "Kappus, Matthew D."})
-	http.SetCookie(w, &http.Cookie{Name: "key", Value: "1830a69c-a641-4832-9b38-77320de25756"})
+	http.SetCookie(w, &http.Cookie{Name: "guid", Value: "1830a69c-a641-4832-9b38-77320de25756"})
 
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }

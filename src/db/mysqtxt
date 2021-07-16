@@ -1,0 +1,1 @@
+CREATE TABLE  stu415 (organization_name TEXT, school_year TEXT, student_name TEXT, perm_id TEXT, gender TEXT, grade TEXT, term_name TEXT, per TEXT, term TEXT, section_id TEXT, course_id_and_title TEXT, meet_days TEXT, teacher TEXT, room TEXT, pre_scheduled TEXT)

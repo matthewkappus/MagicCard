@@ -1,1 +1,6 @@
 runtime: go115
+
+env_variables:
+  CLOUDSQL_CONNECTION_NAME: "mymagiccard:us-west4:magiccard"
+  CLOUDSQL_USER: "root"
+  CLOUDSQL_PASSWORD: "Gg0Ll080s"
