@@ -96,7 +96,7 @@ func (sv *StaffView) Login(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func Matty(w http.ResponseWriter, r *http.Request) {
+func Temp(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{Name: "name", Value: "Matt Kappus"})
 	http.SetCookie(w, &http.Cookie{Name: "teacher", Value: "Kappus, Matthew D."})
 	http.SetCookie(w, &http.Cookie{Name: "key", Value: "1830a69c-a641-4832-9b38-77320de25756"})

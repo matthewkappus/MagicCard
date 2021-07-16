@@ -28,7 +28,7 @@ func main() {
 
 	http.HandleFunc("/search", sv.TeacherLock(sv.Search))
 	// http.HandleFunc("/classes", sv.TeacherLock(sv.ListClasses))
-	http.HandleFunc("/matty", roster.Matty)
+	http.HandleFunc("/matty", roster.Temp)
 	http.HandleFunc("/class", sv.TeacherLock(sv.ClassEdit))
 	// todo: omni lock (teacher/student can access)
 
