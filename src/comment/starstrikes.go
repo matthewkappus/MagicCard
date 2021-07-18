@@ -13,7 +13,6 @@ const (
 
 type StarStrike struct {
 	ID int `json:"id,omitempty"`
-	//
 	PermID string `json:"perm_id,omitempty"`
 	// staff(name)
 	Teacher string `json:"teacher,omitempty"`

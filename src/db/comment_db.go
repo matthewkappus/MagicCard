@@ -17,16 +17,6 @@ const (
 	selectNewestCommentsByTeacher = `SELECT * FROM comment WHERE teacher=? LIMIT ?`
 )
 
-// starstrike table
-const (
-	createStarStrike                 = `CREATE TABLE IF NOT EXISTS starstrike (id INTEGER PRIMARY KEY, perm_id TEXT, teacher TEXT, comment TEXT, title TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, cat INTEGER, isActive BOOLEAN DEFAULT true, FOREIGN KEY(perm_id) REFERENCES stu415(perm_id))`
-	insertStarStrike                 = `INSERT INTO starstrike(perm_id, teacher, comment, title, cat, isActive) VALUES(?,?,?,?,?,?);`
-	selectStarStrikeByPermID         = `SELECT * FROM starstrike WHERE perm_id = ?`
-	selectNewestStarStrikesByTeacher = `SELECT * FROM starstrike WHERE teacher=? LIMIT ?`
-
-	// select count(cat) from starstrike where cat=1 and perm_id="980016917"
-	selectStarStrikesByCatCount = `SELECT COUNT(cat) FROM starstrike WHERE cat = ? AND perm_id = ?`
-)
 
 
 

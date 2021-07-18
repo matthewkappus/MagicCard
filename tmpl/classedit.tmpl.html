@@ -7,27 +7,14 @@
    
   {{ template "nav" . }}
 
-  <!-- {{ template "toolbox" . }} -->
+	
 
 
 <form action="/classComment">
 	<div id="toolbox">
 
-		<label for="starSelect">Stars & Bars</label>
-		<select name="star" id="starSelect">
-		  <optgroup label="Stars ⭐️">
 	
-			{{ range $sb := .Stars }}
-			  <option value="{{$sb.ID}}"> {{ $sb.Title }} </option>
-			{{ end }}
-			</optgroup>
-			<optgroup label="Bars ❌">
-			{{ range $sb := .Bars }}
-			  <option value="{{$sb.ID}}"> {{ $sb.Title }} </option>
-			{{ end }}
-		</select>
-
-
+<!--  -->
 		<button type="submit" id="saveBtn">Save</button>
 	</div>
 
@@ -102,14 +89,23 @@
 }
 
 
-type StarBar struct {
-	ID      int
-	Teacher string
-	Title   string
-	Comment string
-	// if not star, then bar
-	IsStar bool
-} 
+type StarStrike struct {
+	ID int `json:"id,omitempty"`
+	
+	PermID string `json:"perm_id,omitempty"`
+	// staff(name)
+	Teacher string `json:"teacher,omitempty"`
+	Comment string `json:"comment,omitempty"`
+	// Title is a catagory of the comment
+	Title string `json:"title,omitempty"`
+
+	Created time.Time `json:"created,omitempty"`
+	// 0 star 1 minor 2 strik 3 major
+	Cat      Category
+	IsActive bool `json:"is_active,omitempty"`
+}
+
+
 
 
 

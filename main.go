@@ -47,17 +47,14 @@ func main() {
 
 	// list of students
 	http.HandleFunc("/search", sv.TeacherLock(sv.Search))
-	
+
 	// old comment handlers: todo:remove
 	http.HandleFunc("/class", sv.TeacherLock(sv.ClassEdit))
 	http.HandleFunc("/classComment", sv.TeacherLock(sv.ClassAddComment))
 	http.HandleFunc("/addComment", sv.TeacherLock(sv.AddComment))
 
 	// new starststrike handlers
-	http.HandleFunc("/starstrike", sv.MagicCard)
-
-	http.HandleFunc("/card", sv.TeacherLock(sv.Card))
-
+	http.HandleFunc("/card", sv.MagicCard)
 
 	http.HandleFunc("/profile", sv.TeacherLock(sv.Profile))
 	// todo: change isSsta to starstrike category

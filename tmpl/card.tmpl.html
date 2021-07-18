@@ -26,7 +26,14 @@
         <br>
    
        
-        todo: star strike input goes here
+         
+  <table>
+	  <td>
+	  	{{ range  $str := .Strikes }}
+			<tr>{{ $str.Title }}</tr>
+		{{ end }}
+	</td>
+  </table>
 
     
      

@@ -8,6 +8,7 @@ import (
 	"github.com/matthewkappus/Roster/src/synergy"
 )
 
+// ClassInfo is teachers class info
 type ClassInfo struct {
 	Stu415s   []*synergy.Stu415
 	Stars     []*comment.StarStrike
@@ -66,7 +67,7 @@ func (sv *StaffView) ClassEdit(w http.ResponseWriter, r *http.Request) {
 	classinfo := &ClassInfo{
 		Stu415s:   s415s,
 		Stars:     stars,
-		Strikes:    stikes,
+		Strikes:   stikes,
 		Teacher:   teacher,
 		ClassList: list,
 		ClassName: s415s[0].CourseIDAndTitle,

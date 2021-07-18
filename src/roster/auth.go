@@ -25,7 +25,7 @@ func ParseIdentity(r *http.Request) (email string, err error) {
 
 	claims := jwt.MapClaims{}
 	token, _ := jwt.ParseWithClaims(credential, claims, func(token *jwt.Token) (interface{}, error) {
-		return []byte("AllYourBase"), nil
+		return []byte("D0UBel*V"), nil
 	})
 
 	cs, _ := token.Claims.(jwt.MapClaims)
