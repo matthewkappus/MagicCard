@@ -1,12 +1,17 @@
 package comment
 
-import (
-	"time"
+import "time"
+
+type Category int
+
+const (
+	Star Category = iota
+	MinorStrike
+	Strik
+	MajorStrike
 )
 
-
-// Todo: Remove card
-type Card struct {
+type StarStrike struct {
 	ID int `json:"id,omitempty"`
 	//
 	PermID string `json:"perm_id,omitempty"`
@@ -17,7 +22,7 @@ type Card struct {
 	Title string `json:"title,omitempty"`
 
 	Created time.Time `json:"created,omitempty"`
-	// max comment: 280
-	IsStar   bool `json:"is_star,omitempty"`
+	// 0 star 1 minor 2 strik 3 major
+	Cat      Category
 	IsActive bool `json:"is_active,omitempty"`
 }

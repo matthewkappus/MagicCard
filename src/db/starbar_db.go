@@ -6,8 +6,7 @@ import (
 	"github.com/matthewkappus/MagicCard/src/comment"
 )
 
-// starbar_db is a database of starbars.
-// starbar_db_version = "0.1"
+// starbar_db is a database of starbar.
 const (
 	createStarBar          = `CREATE TABLE IF NOT EXISTS starbar(id INTEGER PRIMARY KEY AUTOINCREMENT, teacher, title, comment TEXT, isStar BOOLEAN, FOREIGN KEY(teacher) REFERENCES staff(name))`
 	createStarBarSave      = `INSERT OR REPLACE INTO starbar(id, teacher, title, comment, isStar) VALUES(?, ?, ?, ?, ?)`
@@ -26,8 +25,6 @@ func (s *Store) DeleteStarBarByID(id string) error {
 		return err
 	}
 
-	
-
 	_, err = s.db.Exec(deleteStarBarByID, idInt)
 	return err
 }
@@ -42,30 +39,31 @@ func (s *Store) UpdateStarBar(id int, teacher, title, comments string, isStar bo
 	return err
 }
 
-// GetStarBars takes a staff.name and returns their StarBars or an error
-func (s *Store) GetStarBars(teacher string) (stars, bars []*comment.StarBar, err error) {
+// GetTeacherStarStrikes takes a staff.name and returns their StarBars or an error
+// depricated: todo: remove
+func (s *Store) GetTeacherStarStrikes(teacher string) (stars, strikes []*comment.StarStrike, err error) {
 	rows, err := s.db.Query(selectStarBarByTeacher, teacher)
 	if err != nil {
 		return nil, nil, err
 	}
 	defer rows.Close()
 
-	stars = make([]*comment.StarBar, 0)
-	bars = make([]*comment.StarBar, 0)
+	stars = make([]*comment.StarStrike, 0)
+	strikes = make([]*comment.StarStrike, 0)
 	for rows.Next() {
-		sb := new(comment.StarBar)
-		if err := rows.Scan(&sb.ID, &sb.Teacher, &sb.Title, &sb.Comment, &sb.IsStar); err != nil {
+		ss := new(comment.StarStrike)
+		if err := rows.Scan(&ss.ID, &ss.Teacher, &ss.Title, &ss.Comment, &ss.Cat); err != nil {
 			continue
 		}
-		if sb.IsStar {
-			stars = append(stars, sb)
+		if ss.Cat == comment.Star {
+			stars = append(stars, ss)
 
 		} else {
 
-			bars = append(bars, sb)
+			strikes = append(strikes, ss)
 		}
 	}
-	return stars, bars, nil
+	return stars, strikes, nil
 }
 
 func (s *Store) AddStarBar(teacher, title, comments string, isStar bool) (*comment.StarBar, error) {

@@ -10,8 +10,8 @@ import (
 
 type ClassInfo struct {
 	Stu415s   []*synergy.Stu415
-	Stars     []*comment.StarBar
-	Bars      []*comment.StarBar
+	Stars     []*comment.StarStrike
+	Strikes   []*comment.StarStrike
 	ClassList []*synergy.Stu415
 	Teacher   string
 	ClassName string
@@ -25,14 +25,14 @@ func (sv *StaffView) Profile(w http.ResponseWriter, r *http.Request) {
 	// todo: render template, add class info
 
 	teacher := sv.GetTeacher(r)
-	stars, bars, _ := sv.store.GetStarBars(teacher)
+	stars, strikes, _ := sv.store.GetTeacherStarStrikes(teacher)
 	list, _ := sv.store.ListClasses(teacher)
 
 	ci := &ClassInfo{
 		Path:      "profile",
 		ClassList: list,
 		Stars:     stars,
-		Bars:      bars,
+		Strikes:   strikes,
 		Title:     teacher + " Profile",
 	}
 
@@ -54,7 +54,7 @@ func (sv *StaffView) ClassEdit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	teacher := sv.GetTeacher(r)
-	stars, bars, err := sv.store.GetStarBars(teacher)
+	stars, stikes, err := sv.store.GetTeacherStarStrikes(teacher)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 
@@ -66,7 +66,7 @@ func (sv *StaffView) ClassEdit(w http.ResponseWriter, r *http.Request) {
 	classinfo := &ClassInfo{
 		Stu415s:   s415s,
 		Stars:     stars,
-		Bars:      bars,
+		Strikes:    stikes,
 		Teacher:   teacher,
 		ClassList: list,
 		ClassName: s415s[0].CourseIDAndTitle,

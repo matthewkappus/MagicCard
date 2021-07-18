@@ -26,16 +26,10 @@
         <br>
    
        
-
+        todo: star strike input goes here
 
     
-        <label for="starbarOption">Comment Type</label><br>
-        <select  id="starbarOption" name="isStar" required>
-            <option value="true">Star ⭐️</option>
-            <option value="false">Bar ❌</option>  
-        </select>
-    
-
+     
         <div id="toolbox">
     
 
@@ -45,19 +39,7 @@
             <select name="star" id="starSelect">
               <option disabled selected value> Use StarBar </option>
 
-              <optgroup label="Stars ⭐️">
-        
-                {{ range $star := .Stars }}
-                  <option value="{{ $star.Comment }}">{{ $star.Title }}</option>
-                {{ end }}
-                </optgroup>
-
-
-                <optgroup label="Bars ❌">
-                {{ range $bar := .Bars }}
-                  <option value="{{ $bar.Comment }}">{{ $bar.Title }}</option>
-                {{ end }}
-              </optgroup>
+              todo: star strike saves go here
 
             </select>
     
@@ -92,14 +74,22 @@
 		Title:     stu415.StudentName + " Magic Card",
 		Path:      "classes",
 
-type StarBar struct {
-	ID      int
-	Teacher string
-	Title   string
-	Comment string
-	// if not star, then bar
-	IsStar bool
+type StarStrike struct {
+	ID int `json:"id,omitempty"`
+	//
+	PermID string `json:"perm_id,omitempty"`
+	// staff(name)
+	Teacher string `json:"teacher,omitempty"`
+	Comment string `json:"comment,omitempty"`
+	// Title is a catagory of the comment
+	Title string `json:"title,omitempty"`
+
+	Created time.Time `json:"created,omitempty"`
+	// 0 star 1 minor 2 strik 3 major
+	Cat      Category
+	IsActive bool `json:"is_active,omitempty"`
 }
+
 
 	}
  -->
