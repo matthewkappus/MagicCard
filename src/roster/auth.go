@@ -70,9 +70,7 @@ func (sv *StaffView) isTeacher(r *http.Request, w http.ResponseWriter) bool {
 		return false
 	}
 
-	log.Printf("authorizzing cookie: %s to db guid %s", guidCookie.Value, guid)
-	return true
-	// return guidCookie.Value == guid
+	return guidCookie.Value == guid
 }
 
 // Login takes JWT from Google Sign In Button and sets the name, email and token values

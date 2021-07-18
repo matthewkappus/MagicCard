@@ -47,6 +47,7 @@ func main() {
 
 	http.HandleFunc("/search", sv.TeacherLock(sv.Search))
 	http.HandleFunc("/class", sv.TeacherLock(sv.ClassEdit))
+	http.HandleFunc("/classComment", sv.TeacherLock(sv.ClassAddComment))
 
 	http.HandleFunc("/profile", sv.TeacherLock(sv.Profile))
 	http.HandleFunc("/starbaredit", sv.TeacherLock(sv.StarBarEdit))
