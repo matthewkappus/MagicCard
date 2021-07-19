@@ -3,8 +3,9 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    {{template "head"}} 
+    {{ template "head" . }} 
 <body>
+	{{ template "nav" .}}
     <h2>classes</h2>
 
     {{ range .}}
@@ -12,6 +13,9 @@
 
             <li>
                 <a href="/class?section={{.SectionID}}">{{.CourseIDAndTitle}}</a>
+				<button id="starBtn" value="{{.PermID}}" onclick="awardStar(this.value)" class="btn starBtn"> ⭐️ Award Star</button>
+				<button id="strikeBtn" value="{{.PermID}}"  onclick="giveStrike(this.value)" class="btn strikeBtn"> ❌ Give Strike</button>
+				
             </li>
      {{ end }}
     </ul>

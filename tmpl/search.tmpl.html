@@ -2,16 +2,21 @@
 <!DOCTYPE html>
 
 <html lang="en">
-  {{ template "nav" .  }}
   {{ template "head" . }}
 
 <body>
+  {{ template "nav" .  }}
+
 
     <h1>Student List</h1>
-    <input type="text" name="" id="myInput" onkeyup="myFunction()">
+    <input type="text" name="" id="myInput" onkeyup="filterList()">
     <ul id="myUL">
       {{ range .Stu415s }}
-        <li><a href="card?id={{.PermID}}">{{.StudentName}}</a></li> 
+        <li>
+          <a href="card?id={{.PermID}}">{{.StudentName}}</a>
+          <button id="starBtn" value="{{.PermID}}" onclick="awardStar(this.value)" class="btn starBtn"> ⭐️ Award Star</button>
+          <button id="strikeBtn" value="{{.PermID}}"  onclick="giveStrike(this.value)" class="btn strikeBtn"> ❌ Give Strike</button>
+        </li> 
       {{ end }}
     </ul>
  

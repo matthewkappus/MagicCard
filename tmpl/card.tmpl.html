@@ -5,69 +5,118 @@
     {{ template "head" .Info }}
 
     {{ template "nav" .Info }}
-
-
-    <div class="container">
-      <h2>student</h2>
-    {{ .S }}
-
-    </div>
 <body>
 
+  <!-- .S.S415 info -->
+<h2>{{.S.S415.StudentName}}</h2>
+
+<button id="starBtn" value="{{ .S.S415.PermID }}" onclick="awardStar(this.value)" class="btn starBtn"> ⭐️ Award Star</button>
+<button id="strikeBtn" value="{{ .S.S415.PermID }}"  onclick="giveStrike(this.value)" class="btn strikeBtn"> ❌ Give Strike</button>
 
 
-  
-
-       <form action="/addComment" method="POST">
-        <input type="hidden" name="permID" value="{{ (index .Stu415s 0).PermID }}">
-        
-   
-        <label for="titleText">Title</label>
-        <input type="text" name="title" id="titleText" maxlength="20" size="20" minlength="2" placeholder="optional" autocomplete="off" >
-        <br> 
-
-        <label for="commentText">Comment</label>
-        <input type="text" name="comment" id="commentText" maxlength="140" size="140" minlength="2" required autocomplete="off">
-        <br>
-   
-       
-         
-  <table>
-	
-  </table>
-
+<h4>Strikes ❌</h4>
+<table id="strikeTable">
     
-     
-        <div id="toolbox">
+  <tr>
+    <!-- todo: make table headers for title, description, date, count and teacher -->
+    <th onclick="sortTable(0)">Title</th>
+    <th onclick="sortTable(1)">Count</th>
+  </tr>
+  {{ range $title, $strike := .S.StrikeMap }}
+  <tr>
+    <td>
+      {{ $title }}
+    </td>
+    <td>
+      {{ len $strike }}
+    </td>
+
+  </tr>
+  {{ end }}
+
+</table>
+
+
+<h4>Stars ⭐️</h4>
+<table id="strikeTable">
     
+  <tr>
+    <!-- todo: make table headers for title, description, date, count and teacher -->
+    <th onclick="sortTable(0)">Title</th>
+    <th onclick="sortTable(1)">Count</th>
+  </tr>
+  {{ range $title, $strike := .S.StarMap }}
+  <tr>
+    <td>
+      {{ $title }}
+    </td>
+    <td>
+      {{ len $strike }}
+    </td>
+
+  </tr>
+  {{ end }}
+
+</table>
 
 
-          <br/>
-            <label for="starSelect">Stars & Bars</label>
-            <select name="star" id="starSelect">
-              <option disabled selected value> Use StarBar </option>
 
-              todo: star strike saves go here
-
-            </select>
-    
-    
-
-            <input type="submit" value="Save">
-
-          </div>
-    
-
-    </form>
-
-
-    <script>
-      starSelect = document.getElementById("starSelect").addEventListener("change", function(e) {
-        // todo: get selected starbar
-         document.getElementById("commentText").value = e.target.value;
-     });
-   
-   </script>
+<script>
+  function sortTable(n) {
+    var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+    table = document.getElementById("myTable");
+    switching = true;
+    //Set the sorting direction to ascending:
+    dir = "asc"; 
+    /*Make a loop that will continue until
+    no switching has been done:*/
+    while (switching) {
+      //start by saying: no switching is done:
+      switching = false;
+      rows = table.rows;
+      /*Loop through all table rows (except the
+      first, which contains table headers):*/
+      for (i = 1; i < (rows.length - 1); i++) {
+        //start by saying there should be no switching:
+        shouldSwitch = false;
+        /*Get the two elements you want to compare,
+        one from current row and one from the next:*/
+        x = rows[i].getElementsByTagName("TD")[n];
+        y = rows[i + 1].getElementsByTagName("TD")[n];
+        /*check if the two rows should switch place,
+        based on the direction, asc or desc:*/
+        if (dir == "asc") {
+          if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+            //if so, mark as a switch and break the loop:
+            shouldSwitch= true;
+            break;
+          }
+        } else if (dir == "desc") {
+          if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+            //if so, mark as a switch and break the loop:
+            shouldSwitch = true;
+            break;
+          }
+        }
+      }
+      if (shouldSwitch) {
+        /*If a switch has been marked, make the switch
+        and mark that a switch has been done:*/
+        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+        switching = true;
+        //Each time a switch is done, increase this count by 1:
+        switchcount ++;      
+      } else {
+        /*If no switching has been done AND the direction is "asc",
+        set the direction to "desc" and run the while loop again.*/
+        if (switchcount == 0 && dir == "asc") {
+          dir = "desc";
+          switching = true;
+        }
+      }
+    }
+  }
+  </script>
 </body>
 </html>
 
@@ -75,7 +124,21 @@
 {{ end }}
 
 <!-- 
-
+	OrganizationName string `json:"organization_name,omitempty"`
+	SchoolYear       string `json:"school_year,omitempty"`
+	StudentName      string `json:"student_name,omitempty"`
+	PermID           string `json:"perm_id,omitempty"`
+	Gender           string `json:"gender,omitempty"`
+	Grade            string `json:"grade,omitempty"`
+	TermName         string `json:"term_name,omitempty"`
+	Per              string `json:"per,omitempty"`
+	Term             string `json:"term,omitempty"`
+	SectionID        string `json:"section_id,omitempty"`
+	CourseIDAndTitle string `json:"course_id_and_title,omitempty"`
+	MeetDays         string `json:"meet_days,omitempty"`
+	Teacher          string `json:"teacher,omitempty"`
+	Room             string `json:"room,omitempty"`
+	PreScheduled     string `json:"pre_scheduled,omitempty"`
   struct {
 		Info *ClassInfo
 		S *Student
@@ -91,12 +154,13 @@
 
 
 
-type Student struct {
-	S *synergy.Stu415
+    type Student struct {
+	S415 *synergy.Stu415
 	// Star.Title to SS
 	StarMap map[string][]*comment.StarStrike
 	// StrikeMap
 	StrikeMap map[string][]*comment.StarStrike
 }
-	}
+
+	
  -->

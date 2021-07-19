@@ -11,6 +11,29 @@
 {{ end }}
 <style>
 
+.btn {
+  border: none;
+  color: black;
+  padding: 14px 26px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+/* https://www.w3schools.com/css/tryit.asp?filename=trycss_buttons_hover */
+.starBtn:hover {
+  background-color: #e1a100; 
+  color: white;
+}
+
+.strikeBtn:hover {
+  background-color: #b60000;
+  color: white;
+}
     input {
       background-image: url('/css/searchicon.png'); /* Add a search icon to input */
       background-position: 10px 12px; /* Position the search icon */
@@ -69,7 +92,16 @@ tr:nth-child(even) {
     </style>
     
     <script>
-        function myFunction() {
+      function awardStar(perm) {
+        // star/strike buttons have permid value
+        console.log("awarding star to " + perm);
+      }
+      function giveStrike(perm) {
+        // star/strike buttons have permid value
+        console.log("giving strike to " + perm);
+      }
+
+        function filterList() {
           // Declare variables
           var input, filter, ul, li, a, i, txtValue;
           input = document.getElementById('myInput');

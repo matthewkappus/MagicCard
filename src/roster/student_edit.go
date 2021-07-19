@@ -10,7 +10,7 @@ import (
 // Student holds the Stu415 and Starbars for a template
 //  Stars and Strikes are mapped to their title for counting
 type Student struct {
-	S *synergy.Stu415
+	S415 *synergy.Stu415
 	// Star.Title to SS
 	StarMap map[string][]*comment.StarStrike
 	// StrikeMap
@@ -51,7 +51,7 @@ func (sv *StaffView) MakeStudent(stu *synergy.Stu415) (*Student, error) {
 		}
 	}
 	return &Student{
-		S:         stu,
+		S415:      stu,
 		StarMap:   starsM,
 		StrikeMap: strikesM}, nil
 }
@@ -87,10 +87,10 @@ func (sv *StaffView) MagicCard(w http.ResponseWriter, r *http.Request) {
 
 	data := struct {
 		Info *ClassInfo
-		S *Student
+		S    *Student
 	}{
 		Info: ci,
-		S: stu,
+		S:    stu,
 	}
 	// todo: add email and session info
 	sv.tmpls.Lookup("card").Execute(w, data)
