@@ -35,7 +35,9 @@ func (sv *StaffView) MakeStudent(stu *synergy.Stu415) (*Student, error) {
 				continue
 			}
 			// title exists: add to list
+
 			stars = append(stars, ss)
+			starsM[ss.Title] = stars
 		} else {
 			// ss.Cat is 1+: A strike
 			strikes, found := strikesM[ss.Title]
@@ -45,6 +47,7 @@ func (sv *StaffView) MakeStudent(stu *synergy.Stu415) (*Student, error) {
 			}
 			// strike exists: add to rest
 			strikes = append(strikes, ss)
+			strikesM[ss.Title] = strikes
 		}
 	}
 	return &Student{
@@ -83,10 +86,10 @@ func (sv *StaffView) MagicCard(w http.ResponseWriter, r *http.Request) {
 	stu, _ := sv.MakeStudent(stu415)
 
 	data := struct {
-		C *ClassInfo
+		Info *ClassInfo
 		S *Student
 	}{
-		C: ci,
+		Info: ci,
 		S: stu,
 	}
 	// todo: add email and session info

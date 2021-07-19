@@ -2,16 +2,21 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    {{ template "head" . }}
+    {{ template "head" .Info }}
 
-    {{ template "nav" . }}
-
-
+    {{ template "nav" .Info }}
 
 
+    <div class="container">
+      <h2>student</h2>
+    {{ .S }}
+
+    </div>
 <body>
-      <h1> {{ (index .Stu415s 0).StudentName }} Magic Card</h1> 
 
+
+
+  
 
        <form action="/addComment" method="POST">
         <input type="hidden" name="permID" value="{{ (index .Stu415s 0).PermID }}">
@@ -28,11 +33,7 @@
        
          
   <table>
-	  <td>
-	  	{{ range  $str := .Strikes }}
-			<tr>{{ $str.Title }}</tr>
-		{{ end }}
-	</td>
+	
   </table>
 
     
@@ -74,6 +75,13 @@
 {{ end }}
 
 <!-- 
+
+  struct {
+		Info *ClassInfo
+		S *Student
+	}
+
+
     ci := &ClassInfo{
 		ClassList: classes,
 		Stu415s:   []*synergy.Stu415{stu415},
@@ -81,22 +89,14 @@
 		Title:     stu415.StudentName + " Magic Card",
 		Path:      "classes",
 
-type StarStrike struct {
-	ID int `json:"id,omitempty"`
-	//
-	PermID string `json:"perm_id,omitempty"`
-	// staff(name)
-	Teacher string `json:"teacher,omitempty"`
-	Comment string `json:"comment,omitempty"`
-	// Title is a catagory of the comment
-	Title string `json:"title,omitempty"`
 
-	Created time.Time `json:"created,omitempty"`
-	// 0 star 1 minor 2 strik 3 major
-	Cat      Category
-	IsActive bool `json:"is_active,omitempty"`
+
+type Student struct {
+	S *synergy.Stu415
+	// Star.Title to SS
+	StarMap map[string][]*comment.StarStrike
+	// StrikeMap
+	StrikeMap map[string][]*comment.StarStrike
 }
-
-
 	}
  -->

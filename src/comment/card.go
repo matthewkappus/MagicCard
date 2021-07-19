@@ -1,9 +1,6 @@
 package comment
 
-import (
-	"time"
-)
-
+import "time"
 
 // Todo: Remove card
 type Card struct {
