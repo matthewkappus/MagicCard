@@ -3,24 +3,7 @@ package roster
 import (
 	"fmt"
 	"net/http"
-
-	"github.com/matthewkappus/MagicCard/src/comment"
-	"github.com/matthewkappus/Roster/src/synergy"
 )
-
-// ClassInfo is teachers class info
-type ClassInfo struct {
-	Stu415s   []*synergy.Stu415
-	Stars     []*comment.StarStrike
-	Strikes   []*comment.StarStrike
-	ClassList []*synergy.Stu415
-	Teacher   string
-	ClassName string
-	Title     string
-	StatusMsg string
-	// shoud be a css class
-	Path string
-}
 
 func (sv *StaffView) Profile(w http.ResponseWriter, r *http.Request) {
 	// todo: render template, add class info
@@ -29,12 +12,10 @@ func (sv *StaffView) Profile(w http.ResponseWriter, r *http.Request) {
 	stars, strikes, _ := sv.store.GetTeacherStarStrikes(teacher)
 	list, _ := sv.store.ListClasses(teacher)
 
-	ci := &ClassInfo{
-		Path:      "profile",
+	ci := &Classroom{
 		ClassList: list,
-		Stars:     stars,
-		Strikes:   strikes,
-		Title:     teacher + " Profile",
+		MyStars:     stars,
+		MyStrikes:   strikes,
 	}
 
 	sv.tmpls.Lookup("profile").Execute(w, ci)
@@ -64,14 +45,12 @@ func (sv *StaffView) ClassEdit(w http.ResponseWriter, r *http.Request) {
 
 	// todo: put in helper function
 	list, _ := sv.store.ListClasses(teacher)
-	classinfo := &ClassInfo{
+	classinfo := &Classroom{
 		Stu415s:   s415s,
-		Stars:     stars,
-		Strikes:   stikes,
+		MyStars:     stars,
+		MyStrikes:   stikes,
 		Teacher:   teacher,
 		ClassList: list,
-		ClassName: s415s[0].CourseIDAndTitle,
-		Title:     s415s[0].CourseIDAndTitle + " Class List",
 	}
 
 	// todo: wrap s415s in struct with class info and tags

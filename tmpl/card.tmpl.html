@@ -10,8 +10,7 @@
   <!-- .S.S415 info -->
 <h2>{{.S.S415.StudentName}}</h2>
 
-<button id="starBtn" value="{{ .S.S415.PermID }}" onclick="awardStar(this.value)" class="btn starBtn"> ⭐️ Award Star</button>
-<button id="strikeBtn" value="{{ .S.S415.PermID }}"  onclick="giveStrike(this.value)" class="btn strikeBtn"> ❌ Give Strike</button>
+{{ template "starstrike" .S415 }}
 
 
 <h4>Strikes ❌</h4>

@@ -7,16 +7,6 @@ import (
 	"github.com/matthewkappus/Roster/src/synergy"
 )
 
-// Student holds the Stu415 and Starbars for a template
-//  Stars and Strikes are mapped to their title for counting
-type Student struct {
-	S415 *synergy.Stu415
-	// Star.Title to SS
-	StarMap map[string][]*comment.StarStrike
-	// StrikeMap
-	StrikeMap map[string][]*comment.StarStrike
-}
-
 func (sv *StaffView) MakeStudent(stu *synergy.Stu415) (*Student, error) {
 	sss, err := sv.store.GetStarStrikesByPerm(stu.PermID)
 	if err != nil {
@@ -75,23 +65,18 @@ func (sv *StaffView) MagicCard(w http.ResponseWriter, r *http.Request) {
 	teacher := sv.GetTeacher(r)
 	stars, strikes, _ := sv.store.GetTeacherStarStrikes(teacher)
 
-	ci := &ClassInfo{
+	c := &Classroom{
 		ClassList: classes,
-		Stars:     stars,
-		Strikes:   strikes,
+		MyStars:   stars,
+		MyStrikes: strikes,
 		Teacher:   teacher,
-		Title:     stu415.StudentName + " Magic Card",
-		Path:      "classes",
 	}
 	stu, _ := sv.MakeStudent(stu415)
 
-	data := struct {
-		Info *ClassInfo
-		S    *Student
-	}{
-		Info: ci,
-		S:    stu,
+	cd := CardData{
+		Student: stu,
+		Class:   c,
 	}
 	// todo: add email and session info
-	sv.tmpls.Lookup("card").Execute(w, data)
+	sv.tmpls.Lookup("card").Execute(w, cd)
 }

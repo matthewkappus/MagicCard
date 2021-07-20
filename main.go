@@ -55,12 +55,13 @@ func main() {
 
 	// new starststrike handlers
 	http.HandleFunc("/card", sv.MagicCard)
+	http.HandleFunc("/addStartStrike", sv.AddStarStrike)
 
 	http.HandleFunc("/teacher", sv.TeacherLock(sv.Profile))
 	// todo: change isSsta to starstrike category
 	http.HandleFunc("/starbaredit", sv.TeacherLock(sv.StarBarEdit))
 	http.HandleFunc("/starbardelete", sv.TeacherLock(sv.StarBarDelete))
-	http.HandleFunc("/starbarcreate", sv.TeacherLock(sv.StarBarCreate))
+
 
 	http.HandleFunc("/", sv.Home)
 

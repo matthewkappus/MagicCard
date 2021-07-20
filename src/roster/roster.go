@@ -51,10 +51,9 @@ func (sv *StaffView) Search(w http.ResponseWriter, r *http.Request) {
 	}
 
 	classes, _ := sv.ClassList(r)
-	ci := &ClassInfo{
+	ci := &Classroom{
 		Stu415s:   stu415s,
 		ClassList: classes,
-		Title:     "Student Search",
 	}
 	sv.tmpls.Lookup("search").Execute(w, ci)
 }
@@ -63,16 +62,14 @@ func (sv *StaffView) Home(w http.ResponseWriter, r *http.Request) {
 
 	classes, _ := sv.ClassList(r)
 	teacher := sv.GetTeacher(r)
-	ci := &ClassInfo{
+	ci := &Classroom{
 		ClassList: classes,
 		Teacher:   teacher,
-		Title:     "Magic Card",
-		Path:      "home",
 	}
 
 	recent, _ := sv.store.GetRecentComments(teacher, 5)
 	data := struct {
-		Info *ClassInfo
+		Info *Classroom
 		// Todo: offer expanded view
 		Comments []*comment.Card
 	}{

@@ -1,0 +1,52 @@
+
+<!-- StarStrike expects a stu415 -->
+{{ define "starstrike"}}
+<script>
+    // star or strike mode shows message when 0, 1, 2 or 3 stars are selected
+    var mode = "";
+    var stars = document.getElementById("stars");
+    var strikes = document.getElementById("strikes");
+
+    var message = document.getElementById("message");
+    message.hidden = true;
+
+function awardStar(perm) {
+    mode = 0;
+    stars.hidden = false;
+    message.hidden = false;
+        // star/strike buttons have permid value
+        console.log("awarding star to " + perm);
+
+      }
+      function giveStrike(perm) {
+          mode = 1;
+          strikes.hidden = false;
+          message.hidden = false;
+        // star/strike buttons have permid value
+        console.log("giving strike to " + perm);
+      }
+
+</script>
+
+<div id="buttons">
+<button id="starBtn" value="{{ .S415.PermID }}" onclick="awardStar(this.value)" class="btn starBtn"> ⭐️ Award Star</button>
+<button id="strikeBtn" value="{{ .S415.PermID }}"  onclick="giveStrike(this.value)" class="btn strikeBtn"> ❌ Give Strike</button>
+</div>
+
+<div id="message" hidden>
+    <div id="stars">
+        <label for="starSelect">⭐️</label>
+        <select name="stars" id="starSelect"></select>
+    </div>  
+
+    <div id="strikes" hidden>
+        <label for="starSelect">❌</label>
+        <select name="stars" id="barSelect"></select>
+    </div>
+
+    <form action="/addStartStrike" method="post">
+    
+    </form>
+</div>
+{{ end }}
+
