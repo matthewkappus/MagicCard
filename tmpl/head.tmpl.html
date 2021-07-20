@@ -1,11 +1,26 @@
 
 {{ define "head" }}
 
+<!-- type Nav struct {
+
+  type TD struct {
+	S Student
+	C Classroom
+	N Nav
+}
+
+
+	ClassList []*synergy.Stu415
+	Path      string
+	Title     string
+	Status    string
+} -->
+
 <head>
 
 <!-- .Title from ClassInfo {see below} -->
 {{ if .Title }}    
-    <title>{{ .Title }}</title> 
+    <title>{{ .Nav.Title }}</title> 
     {{ else }}
     <title>MagicCard</title>
 {{ end }}
