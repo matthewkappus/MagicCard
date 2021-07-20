@@ -1,59 +1,35 @@
+
+
 {{ define "home" }}
+
+<!-- type Nav struct {
+	ClassList []*synergy.Stu415
+	Path      string
+	Title     string
+	Status    string
+}
+ -->
+
 <!DOCTYPE html>
 <html lang="en">
-
-{{ template "head" .Info }}
-
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
 <body>
-    {{ template "nav" .Info }}
-
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
 
 
-    {{ if .Info.Teacher }}
-    <h2> {{ .Info.Teacher }}'s Magic Card </h2>
+    {{ template "nav" .N }}
 
-    <ul id="myUL">
-        {{ range $c := .Comments }}
-            <li> {{ $c.Comment }}</li>
-        {{ end }}
-    </ul>
-
-    {{ else }}
-
-                <div id="g_id_onload"
-                data-client_id="844922792275-q2rtvab06aegss1gjqqdhs2fqteu0at3.apps.googleusercontent.com"
-                data-context="signin"
-                data-ux_mode="popup"
-                data-login_uri="https://mymagiccard.wn.r.appspot.com/login"
-                data-auto_prompt="false">
-            </div>
-
-            <div class="g_id_signin"
-                data-type="standard"
-                data-shape="rectangular"
-                data-theme="outline"
-                data-text="signin_with"
-                data-size="medium"
-                data-logo_alignment="left">
-            </div>
+    {{ if (eq .N.Title "Sign In To Magic Card") }}
+        {{ template "signin" }}
+    {{ else  }}
+        welcome to magic card!!!
 
     {{ end }}
-    
 </body>
 </html>
 
 {{ end }}
-
-<!-- 
-
-      type ClassInfo struct {
-	Stu415s   []*synergy.Stu415
-	Stars     []*comment.StarBar
-	Bars      []*comment.StarBar
-	Teacher   string
-	ClassName string
-	Title     string
-}
-
- -->

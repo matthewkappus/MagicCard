@@ -1,0 +1,16 @@
+  <ul>
+  	<li class="{{if(eq .CurrentSegment "addproperty")}}
+                           {{print "active"}}
+                        {{else}}
+                           {{print ""}}
+                        {{end}}">
+       <a href="/addproperty" class="">Add Property</a>
+       </li>
+       <li class="{{if(eq .CurrentSegment "deleteproperty")}}
+                           {{print "active"}}
+                        {{else}}
+                           {{print ""}}
+                        {{end}}">
+       <a href="/deleteproperty" class="">Delete Property</a>
+       </li>
+  </ul>

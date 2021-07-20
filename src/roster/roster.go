@@ -43,23 +43,34 @@ func NewView(store *db.Store) (*StaffView, error) {
 }
 
 func (sv *StaffView) Search(w http.ResponseWriter, r *http.Request) {
-	stu415s, err := sv.store.SelectStu415s()
+	teacher := sv.GetTeacher(r)
+	nav, err := sv.MakeNav(teacher, "students", "Student Search")
+
 	if err != nil {
-		http.Error(w, "Could not get students\n"+err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	cr, err := sv.MakeSchoolClassroom(teacher)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	classes, _ := sv.ClassList(r)
-	ci := &Classroom{
-		Stu415s:   stu415s,
-		ClassList: classes,
-	}
-	sv.tmpls.Lookup("search").Execute(w, ci)
+	sv.tmpls.Lookup("search").Execute(w, TD{N: nav, C: cr})
 }
 
 func (sv *StaffView) Home(w http.ResponseWriter, r *http.Request) {
 
-	sv.tmpls.Lookup("home").Execute(w, nil)
+	teacher := sv.GetTeacher(r)
+	nav, err := sv.MakeNav(teacher, "/home", "Magic Card")
+
+	// show sign in if no teacher cookie
+	if err != nil || teacher == "" {
+		nav.Title = "Sign In To Magic Card"
+	} else {
+		nav.Title = "Magic Card"
+	}
+	sv.tmpls.Lookup("home").Execute(w, TD{N: nav})
 }
 
 func UpdateRoster() ([]*synergy.Stu415, error) {

@@ -2,20 +2,19 @@
 <!DOCTYPE html>
 
 <html lang="en">
-  {{ template "head" . }}
 
 <body>
-  {{ template "nav" .  }}
+  {{ template "nav" .N  }}
 
 
     <h1>Student List</h1>
     <input type="text" name="" id="myInput" onkeyup="filterList()">
     <ul id="myUL">
-      {{ range .Stu415s }}
+      {{ range $s := .C.Stu415s}}
         <li>
-          <a href="card?id={{.PermID}}">{{.StudentName}}</a>
-          <button id="starBtn" value="{{.PermID}}" onclick="awardStar(this.value)" class="btn starBtn"> ⭐️ Award Star</button>
-          <button id="strikeBtn" value="{{.PermID}}"  onclick="giveStrike(this.value)" class="btn strikeBtn"> ❌ Give Strike</button>
+          <a href="card?id={{$s.PermID}}">{{.StudentName}}</a>
+          <button id="starBtn" value="{{$s.PermID}}" onclick="awardStar(this.value)" class="btn starBtn"> ⭐️ Award Star</button>
+          <button id="strikeBtn" value="{{$s.PermID}}"  onclick="giveStrike(this.value)" class="btn strikeBtn"> ❌ Give Strike</button>
         </li> 
       {{ end }}
     </ul>
@@ -27,11 +26,27 @@
 
 {{ end }}
 
-<!-- type ClassInfo struct {
+<!-- 
+  type TD struct {
+	S *Student
+	C *Classroom
+	N *Nav
+}
+
+  type Classroom struct {
 	Stu415s   []*synergy.Stu415
-	Stars     []*comment.StarBar
-	Bars      []*comment.StarBar
+	MyStars   []*comment.StarStrike
+	MyStrikes []*comment.StarStrike
+	ClassList []*synergy.Stu415
 	Teacher   string
 	ClassName string
-	Title     string
+}
+type Classroom struct {
+	Stu415s   []*synergy.Stu415
+	MyStars   []*comment.StarStrike
+	MyStrikes []*comment.StarStrike
+	ClassList []*synergy.Stu415
+	Teacher   string
+	ClassName string
+}
 } -->

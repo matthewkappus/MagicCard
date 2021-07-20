@@ -1,4 +1,15 @@
+<!-- 
+type Nav struct {
+	ClassList []*synergy.Stu415
+	Path      string
+	Title     string
+	Status    string
+} -->
+
+
+
 {{ define "nav" }}
+
 
 
 <script>
@@ -145,6 +156,8 @@ function navToggle() {
             {{ range .ClassList }}
                  <a href="/class?section={{.SectionID}}">{{.CourseIDAndTitle}}</a>
             {{ end }}
+        {{ else }}
+
 
      {{ end }}
       </div>

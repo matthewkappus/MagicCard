@@ -31,19 +31,6 @@ func (s *Store) Close() error {
 
 }
 
-// stu415 table
-const (
-	createStu415          = `CREATE TABLE IF NOT EXISTS stu415 (organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled text)`
-	dropStu415            = `DROP TABLE IF EXISTS stu415`
-	insertStu415          = `INSERT INTO stu415(organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`
-	selectStudentList     = `SELECT DISTINCT perm_id, student_name FROM stu415;`
-	selectStu415ByPermID  = `SELECT organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled FROM stu415 WHERE perm_id=? `
-	selectStu415BySection = `SELECT organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled FROM stu415 WHERE section_id=? `
-
-	//    SELECT  DISTINCT * from stu415 WHERE teacher="Susco Taylor, Kevin R.";
-	selectDistinctSectionsByTeacher = `SELECT DISTINCT section_id,  course_id_and_title from stu415 WHERE teacher=?`
-)
-
 // staff table
 const (
 	// teacher is the s415 full name and name is the Mr/Mrs version. Email is their aps gmail

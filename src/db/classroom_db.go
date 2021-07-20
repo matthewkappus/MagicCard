@@ -8,6 +8,18 @@ import (
 	"github.com/matthewkappus/Roster/src/synergy"
 )
 
+// stu415 table
+const (
+	createStu415          = `CREATE TABLE IF NOT EXISTS stu415 (organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled text)`
+	dropStu415            = `DROP TABLE IF EXISTS stu415`
+	insertStu415          = `INSERT INTO stu415(organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`
+	selectStudentList     = `SELECT DISTINCT perm_id, student_name FROM stu415;`
+	selectStu415ByPermID  = `SELECT organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled FROM stu415 WHERE perm_id=? `
+	selectStu415BySection = `SELECT organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled FROM stu415 WHERE section_id=? `
+
+	//    SELECT  DISTINCT * from stu415 WHERE teacher="Susco Taylor, Kevin R.";
+	selectDistinctSectionsByTeacher = `SELECT DISTINCT section_id,  course_id_and_title from stu415 WHERE teacher=?`
+)
 
 func (s *Store) SelectStu415(permid string) (s415 *synergy.Stu415, err error) {
 	s415 = new(synergy.Stu415)
@@ -76,6 +88,27 @@ func (s *Store) ListStudents(section string) ([]*synergy.Stu415, error) {
 	for rows.Next() {
 		s415 := new(synergy.Stu415)
 		err = rows.Scan(&s415.OrganizationName, &s415.SchoolYear, &s415.StudentName, &s415.PermID, &s415.Gender, &s415.Grade, &s415.TermName, &s415.Per, &s415.Term, &s415.SectionID, &s415.CourseIDAndTitle, &s415.MeetDays, &s415.Teacher, &s415.Room, &s415.PreScheduled)
+		if err != nil {
+			log.Printf("sql couldn't scan student: %v", err)
+			continue
+		}
+		students = append(students, s415)
+	}
+	return students, rows.Err()
+}
+
+// ListStudents returns a list of distinct stu415s
+func (s *Store) ListAllStudents() ([]*synergy.Stu415, error) {
+	rows, err := s.db.Query(selectStudentList)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	students := make([]*synergy.Stu415, 0)
+	for rows.Next() {
+		s415 := new(synergy.Stu415)
+		// SELECT DISTINCT perm_id, student_name FROM stu415
+		err = rows.Scan(&s415.PermID, &s415.StudentName)
 		if err != nil {
 			log.Printf("sql couldn't scan student: %v", err)
 			continue

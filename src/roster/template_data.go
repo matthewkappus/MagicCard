@@ -110,6 +110,36 @@ func (sv *StaffView) MakeClassroom(teacher, section string) (*Classroom, error) 
 
 }
 
+// MakeSchoolClassroom returns list of every student 
+func (sv *StaffView) MakeSchoolClassroom(teacher string) (*Classroom, error) {
+	s415s, err := sv.store.ListAllStudents()
+	if err != nil {
+		return nil, err
+	}
+	starstrikes, err := sv.store.GetMyStarStrikes(teacher)
+	if err != nil {
+		return nil, err
+	}
+
+	mystars := make([]*comment.StarStrike, 0)
+	mystrikes := make([]*comment.StarStrike, 0)
+
+	for _, ss := range starstrikes {
+		if ss.Cat == comment.Star {
+			mystars = append(mystars, ss)
+		} else {
+			mystrikes = append(mystrikes, ss)
+		}
+	}
+	return &Classroom{
+		Stu415s:   s415s,
+		MyStars:   mystars,
+		MyStrikes: mystrikes,
+		Teacher:   teacher,
+	}, nil
+
+}
+
 //
 func (sv *StaffView) MakeNav(teacher, path, title string) (*Nav, error) {
 	classlist, err := sv.store.ListClasses(teacher)
