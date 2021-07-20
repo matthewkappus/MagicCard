@@ -14,8 +14,8 @@ func (sv *StaffView) Profile(w http.ResponseWriter, r *http.Request) {
 
 	ci := &Classroom{
 		ClassList: list,
-		MyStars:     stars,
-		MyStrikes:   strikes,
+		MyStars:   stars,
+		MyStrikes: strikes,
 	}
 
 	sv.tmpls.Lookup("profile").Execute(w, ci)
@@ -47,8 +47,8 @@ func (sv *StaffView) ClassEdit(w http.ResponseWriter, r *http.Request) {
 	list, _ := sv.store.ListClasses(teacher)
 	classinfo := &Classroom{
 		Stu415s:   s415s,
-		MyStars:     stars,
-		MyStrikes:   stikes,
+		MyStars:   stars,
+		MyStrikes: stikes,
 		Teacher:   teacher,
 		ClassList: list,
 	}

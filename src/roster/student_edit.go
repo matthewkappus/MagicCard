@@ -22,6 +22,10 @@ func (sv *StaffView) MagicCard(w http.ResponseWriter, r *http.Request) {
 
 	nav, err := sv.MakeNav(sv.GetTeacher(r), "/student", fmt.Sprintf("%s Magic Card", student.S415.StudentName))
 
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	// todo: add email and session info
 	sv.tmpls.Lookup("card").Execute(w, TD{S: student, N: nav})
 }

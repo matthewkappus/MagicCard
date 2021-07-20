@@ -6,7 +6,6 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/matthewkappus/MagicCard/src/comment"
 	"github.com/matthewkappus/MagicCard/src/db"
 	"github.com/matthewkappus/Roster/src/synergy"
 )
@@ -60,23 +59,7 @@ func (sv *StaffView) Search(w http.ResponseWriter, r *http.Request) {
 
 func (sv *StaffView) Home(w http.ResponseWriter, r *http.Request) {
 
-	classes, _ := sv.ClassList(r)
-	teacher := sv.GetTeacher(r)
-	ci := &Classroom{
-		ClassList: classes,
-		Teacher:   teacher,
-	}
-
-	recent, _ := sv.store.GetRecentComments(teacher, 5)
-	data := struct {
-		Info *Classroom
-		// Todo: offer expanded view
-		Comments []*comment.Card
-	}{
-		Info:     ci,
-		Comments: recent,
-	}
-	sv.tmpls.Lookup("home").Execute(w, data)
+	sv.tmpls.Lookup("home").Execute(w, nil)
 }
 
 func UpdateRoster() ([]*synergy.Stu415, error) {

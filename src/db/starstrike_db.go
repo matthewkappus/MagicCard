@@ -10,8 +10,31 @@ const (
 	selectNewestStarStrikesByTeacher = `SELECT * FROM starstrike WHERE teacher=? LIMIT ?`
 
 	// select count(cat) from starstrike where cat=1 and perm_id="980016917"
-	selectStarStrikesByCatCount = `SELECT COUNT(cat) FROM starstrike WHERE cat = ? AND perm_id = ?`
 )
+
+// mystarstrike table holds teacher's saved starstrikes
+const (
+	createMystarStrike  = `CREATE TABLE IF NOT EXISTS mystarstrike (id INTEGER PRIMARY KEY, teacher TEXT, comment TEXT, title TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, cat INTEGER, isActive BOOLEAN DEFAULT true, FOREIGN KEY(teacher) REFERENCES stu415(teacher))`
+	selectMyStarStrikes = `SELECT * FROM mystarstrike WHERE teacher = ?`
+)
+
+func (s *Store) GetMyStarStrikes(teacher string) ([]*comment.StarStrike, error) {
+	rows, err := s.db.Query(selectMyStarStrikes, teacher)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	ss := make([]*comment.StarStrike, 0)
+	for rows.Next() {
+		// appends a new struct to ss, then scan its values into the struct
+		ss = append(ss, new(comment.StarStrike))
+		if err := rows.Scan(&ss[len(ss)-1].ID, &ss[len(ss)-1].Teacher, &ss[len(ss)-1].Title, &ss[len(ss)-1].Comment, &ss[len(ss)-1].Cat); err != nil {
+			continue
+		}
+	}
+	return ss, nil
+}
 
 func (s *Store) GetStarStrikesByPerm(id string) ([]*comment.StarStrike, error) {
 	rows, err := s.db.Query(selectStarStrikeByPermID, id)
@@ -33,17 +56,28 @@ func (s *Store) GetStarStrikesByPerm(id string) ([]*comment.StarStrike, error) {
 
 }
 
-// type StarStrike struct {
-// 	ID int `json:"id,omitempty"`
-// 	PermID string `json:"perm_id,omitempty"`
-// 	// staff(name)
-// 	Teacher string `json:"teacher,omitempty"`
-// 	Comment string `json:"comment,omitempty"`
-// 	// Title is a catagory of the comment
-// 	Title string `json:"title,omitempty"`
+// depricated: todo: remove
+func (s *Store) GetTeacherStarStrikes(teacher string) (stars, strikes []*comment.StarStrike, err error) {
+	rows, err := s.db.Query(selectMyStarStrikes, teacher)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer rows.Close()
 
-// 	Created time.Time `json:"created,omitempty"`
-// 	// 0 star 1 minor 2 strik 3 major
-// 	Cat      Category
-// 	IsActive bool `json:"is_active,omitempty"`
-// }
+	stars = make([]*comment.StarStrike, 0)
+	strikes = make([]*comment.StarStrike, 0)
+	for rows.Next() {
+		ss := new(comment.StarStrike)
+		if err := rows.Scan(&ss.ID, &ss.Teacher, &ss.Title, &ss.Comment, &ss.Cat); err != nil {
+			continue
+		}
+		if ss.Cat == comment.Star {
+			stars = append(stars, ss)
+
+		} else {
+
+			strikes = append(strikes, ss)
+		}
+	}
+	return stars, strikes, nil
+}

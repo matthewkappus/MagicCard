@@ -5,39 +5,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/matthewkappus/MagicCard/src/comment"
 	"github.com/matthewkappus/Roster/src/synergy"
 )
 
-// comment table
-const (
-	createComment                 = `CREATE TABLE IF NOT EXISTS comment (id INTEGER PRIMARY KEY, perm_id, teacher, comment, title TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, isStar, isActive BOOLEAN DEFAULT true, FOREIGN KEY(perm_id) REFERENCES stu415(perm_id))`
-	insertComment                 = `INSERT INTO comment(perm_id, teacher, comment, title, isStar) VALUES(?,?,?,?,?);`
-	selectCommentByPermID         = `SELECT * FROM comment WHERE perm_id = ?`
-	selectNewestCommentsByTeacher = `SELECT * FROM comment WHERE teacher=? LIMIT ?`
-)
-
-
-
-
-func (s *Store) GetRecentComments(teacher string, limit int) ([]*comment.Card, error) {
-	rows, err := s.db.Query(selectNewestCommentsByTeacher, teacher, limit)
-
-	if err != nil {
-		return nil, err
-	}
-
-	comments := make([]*comment.Card, 0)
-	for rows.Next() {
-		c := new(comment.Card)
-		err = rows.Scan(&c.ID, &c.PermID, &c.Teacher, &c.Comment, &c.Title, &c.Created, &c.IsStar, &c.IsActive)
-		if err != nil {
-			continue
-		}
-		comments = append(comments, c)
-	}
-	return comments, nil
-}
 
 func (s *Store) SelectStu415(permid string) (s415 *synergy.Stu415, err error) {
 	s415 = new(synergy.Stu415)
@@ -46,15 +16,6 @@ func (s *Store) SelectStu415(permid string) (s415 *synergy.Stu415, err error) {
 	err = row.Scan(&s415.OrganizationName, &s415.SchoolYear, &s415.StudentName, &s415.PermID, &s415.Gender, &s415.Grade, &s415.TermName, &s415.Per, &s415.Term, &s415.SectionID, &s415.CourseIDAndTitle, &s415.MeetDays, &s415.Teacher, &s415.Room, &s415.PreScheduled)
 
 	return
-}
-func (s *Store) CreateCommentTable() error {
-	_, err := s.db.Exec(createComment)
-	return err
-}
-func (s *Store) InsertComment(permID, teacher, comment, title string, isStar bool) error {
-	// INSERT INTO comment(perm_id, teacher, comment, title, isStar)
-	_, err := s.db.Exec(insertComment, permID, teacher, comment, title, isStar)
-	return err
 }
 
 func (s *Store) UpdateStu415(stu415CSV string) error {
