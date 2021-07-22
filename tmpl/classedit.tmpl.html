@@ -7,7 +7,7 @@
   <!-- <input type="text" name="" id="myInput"  placeholder="🔎" onkeyup="myFunction()"> -->
   <ul id="myUL">
   
-	{{ range  $s := .C.ClassList }}
+	{{ range  $s := .C.Stu415s }}
 	 <li> 
 		 <a href="card?id={{ $s.PermID }}">  <input type="checkbox" class="stuChecks" name="{{ $s.StudentName}}" id="{{  $s.PermID  }}"> {{ $s.StudentName }}</a>
 		</li> 

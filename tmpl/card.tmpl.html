@@ -1,43 +1,8 @@
 {{ define "card" }}
 
+{{ template "head" }}
 
-<!-- type Nav struct {
-
-  type TD struct {
-	S Student
-	N Nav
-}
-
-
-	ClassList []*synergy.Stu415
-	Path      string
-	Title     string
-	Status    string
-
-}
-
-
-
-type Student struct {
-	S415 *synergy.Stu415
-	// Star.Title to SS
-	StarMap map[string][]*comment.StarStrike
-	// StrikeMap
-	StrikeMap map[string][]*comment.StarStrike
-}
-
--->
-
-
-<!DOCTYPE html>
-<html lang="en">
-
-  {{ if .N }}
-    {{ template "nav" .N }}
-  {{ else }}
-    missing TD.N
-  {{ end }}
-<body>
+{{ template "nav"  .N }}
 
   {{ if .S }}
 
@@ -152,9 +117,9 @@ type Student struct {
     }
   }
   </script>
-</body>
-</html>
 
+
+{{ template "tail" }}
 
 {{ end }}
 

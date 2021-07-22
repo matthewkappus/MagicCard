@@ -1,7 +1,6 @@
 package roster
 
 import (
-	"fmt"
 	"net/http"
 )
 
@@ -29,8 +28,6 @@ func (sv *StaffView) ClassEdit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	teacher := sv.GetTeacher(r)
-
-	fmt.Printf("getting %s belonging to %s\n", r.FormValue("section"), teacher)
 
 	class, err := sv.MakeClassroom(teacher, r.FormValue("section"))
 	if err != nil {
