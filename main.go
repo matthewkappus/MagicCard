@@ -48,8 +48,7 @@ func main() {
 	// list of students
 	http.HandleFunc("/students", sv.TeacherLock(sv.Search))
 
-	// new starststrike handlers
-	http.HandleFunc("/card", sv.MagicCard)
+	http.HandleFunc("/card", sv.TeacherLock(sv.MagicCard))
 
 	http.HandleFunc("/teacher", sv.TeacherLock(sv.Profile))
 

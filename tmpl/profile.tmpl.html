@@ -1,63 +1,13 @@
 {{ define "profile" }}
 
-<!DOCTYPE html>
-<html lang="en">
+{{ template "head" }}
+    {{ template "nav" .N }}
 
-{{ template "head" . }}
-<body>
-    {{ template "nav" . }}
+    <h1>{{ .C.Teacher}} profile</h1>
 
 
-    <!-- show star bars with delete and edit buttons --> 
-    <h3>Edit Stars and Bars</h3>
-
-    <a href="/starbarcreate">Add StarBar</a>
-    <h4>Stars ⭐️</h4>
-    <ul id="myUL">
-        {{ range $s := .Stars }}
-            <li><a href="/starbaredit?id={{$s.ID}}">{{$s.Title}}</a></li>
-        {{end }}
-    </ul>
-    <h4>Bars ❌</h4>
-    <ul id="myUL">
-        {{ range $s := .Bars }}
-            <li><a href="/starbaredit?id={{$s.ID}}">{{$s.Title}}</a></li>
-        {{end }}
-    </ul>
-
-    <!-- add a starbar -->
+    <p>Show MyStars/Strikes and add button</p>
 
 
-
-    <!-- show form if addStarBar -->
-    <form action="/addStarBar" method="post" hidden=true ></form>
-
-</body>
-
-
-
-
-<script>
-    var addStarBar = false;
-</script>
-</html>
-
-
-
+{{ template "tail" }}
 {{ end }}
-<!-- 
-
-    package comment
-
-// StarBar stores comments as a category by Title and associates them with a Teacher for reuse.
-type StarBar struct {
-	ID      int
-	Teacher string
-	Title   string
-	Comment string
-	// if not star, then bar
-	IsStar bool
-}
-
-
- -->

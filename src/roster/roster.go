@@ -62,7 +62,7 @@ func (sv *StaffView) Search(w http.ResponseWriter, r *http.Request) {
 func (sv *StaffView) Home(w http.ResponseWriter, r *http.Request) {
 
 	teacher := sv.GetTeacher(r)
-	nav, err := sv.MakeNav(teacher, "/home", "Magic Card")
+	nav, err := sv.MakeNav(teacher, "home", "Magic Card")
 
 	// show sign in if no teacher cookie
 	if err != nil || teacher == "" {

@@ -6,19 +6,20 @@ import (
 )
 
 func (sv *StaffView) Profile(w http.ResponseWriter, r *http.Request) {
-	// todo: render template, add class info
 
 	teacher := sv.GetTeacher(r)
-	stars, strikes, _ := sv.store.GetTeacherStarStrikes(teacher)
-	list, _ := sv.store.ListClasses(teacher)
-
-	ci := &Classroom{
-		ClassList: list,
-		MyStars:   stars,
-		MyStrikes: strikes,
+	nav, err := sv.MakeNav(teacher, "teacher", "Student Search")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	c, err := sv.MakeSchoolClassroom(teacher)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
-	sv.tmpls.Lookup("profile").Execute(w, ci)
+	sv.tmpls.Lookup("profile").Execute(w, TD{N: nav, C: c})
 }
 
 // show class by section

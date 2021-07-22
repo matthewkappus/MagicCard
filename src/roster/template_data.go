@@ -110,7 +110,7 @@ func (sv *StaffView) MakeClassroom(teacher, section string) (*Classroom, error) 
 
 }
 
-// MakeSchoolClassroom returns list of every student 
+// MakeSchoolClassroom returns list of every unique stu415
 func (sv *StaffView) MakeSchoolClassroom(teacher string) (*Classroom, error) {
 	s415s, err := sv.store.ListAllStudents()
 	if err != nil {

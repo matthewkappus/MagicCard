@@ -1,30 +1,25 @@
 
 {{ define "head" }}
 
-<!-- type Nav struct {
-
-  type TD struct {
-	S Student
-	C Classroom
-	N Nav
-}
-
-
-	ClassList []*synergy.Stu415
-	Path      string
-	Title     string
-	Status    string
-} -->
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- .Title from ClassInfo {see below} -->
-{{ if .Title }}    
-    <title>{{ .Nav.Title }}</title> 
+{{ if .N.Title }}    
+    <title>{{ .N.Title }}</title> 
     {{ else }}
     <title>MagicCard</title>
 {{ end }}
 <style>
+/* 
+.flex-container {
+  display: flex;
+} */
+
 
 .btn {
   border: none;
@@ -70,6 +65,8 @@
     .collapsed {
       width: 5pt;
     }
+
+
     
     #myUL li a {
       border: 1px solid #ddd; /* Add a border to all links */
@@ -131,6 +128,15 @@ tr:nth-child(even) {
         </script>
 
 </head>
+
+<body>
+  
+
+</head>
+<body>
+  <div class="flex-container">
+
+
 
 {{ end }}
 
