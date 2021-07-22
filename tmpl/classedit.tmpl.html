@@ -1,32 +1,15 @@
 {{ define "classedit" }}
 
-<!DOCTYPE html>
-<html lang="en">
-  {{ template "head" . }}
-<body>
-   
-  {{ template "nav" . }}
+{{ template "head" }}
 
-	
-
-
-<form action="/classComment">
-	<div id="toolbox">
-
-	
-<!--  -->
-		<button type="submit" id="saveBtn">Save</button>
-	</div>
+{{ template "nav" .N }}
 
   <!-- <input type="text" name="" id="myInput"  placeholder="🔎" onkeyup="myFunction()"> -->
   <ul id="myUL">
   
-	{{ range  $s := .Stu415s }}
+	{{ range  $s := .C.ClassList }}
 	 <li> 
 		 <a href="card?id={{ $s.PermID }}">  <input type="checkbox" class="stuChecks" name="{{ $s.StudentName}}" id="{{  $s.PermID  }}"> {{ $s.StudentName }}</a>
-		 <button id="starBtn" value="{{ $s.PermID }}" onclick="awardStar(this.value)" class="btn starBtn"> ⭐️ Award Star</button>
-		 <button id="strikeBtn" value="{{ $s.PermID }}"  onclick="giveStrike(this.value)" class="btn strikeBtn"> ❌ Give Strike</button>
-
 		</li> 
 	{{ end }}
   </ul>
@@ -75,44 +58,8 @@
 	// });
 
   </script>
+
+  {{ template "tail" }}
   
 {{ end }}
 
-
-</body>
-</html>
-
-<!-- 
-
-
-  type ClassInfo struct {
-	Stu415s   []*synergy.Stu415
-	Stars     []*comment.StarBar
-	Bars      []*comment.StarBar
-	Teacher   string
-	ClassName string
-	Title     string
-}
-
-
-type StarStrike struct {
-	ID int `json:"id,omitempty"`
-	
-	PermID string `json:"perm_id,omitempty"`
-	// staff(name)
-	Teacher string `json:"teacher,omitempty"`
-	Comment string `json:"comment,omitempty"`
-	// Title is a catagory of the comment
-	Title string `json:"title,omitempty"`
-
-	Created time.Time `json:"created,omitempty"`
-	// 0 star 1 minor 2 strik 3 major
-	Cat      Category
-	IsActive bool `json:"is_active,omitempty"`
-}
-
-
-
-
-
--->

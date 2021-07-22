@@ -52,6 +52,8 @@ func main() {
 
 	http.HandleFunc("/teacher", sv.TeacherLock(sv.Profile))
 
+	http.HandleFunc("/class", sv.TeacherLock(sv.ClassEdit))
+
 	http.HandleFunc("/", sv.Home)
 
 	http.ListenAndServe(":8080", nil)

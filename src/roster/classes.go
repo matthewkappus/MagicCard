@@ -28,32 +28,26 @@ func (sv *StaffView) ClassEdit(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-
-	s415s, err := sv.store.ListStudents(r.FormValue("section"))
-	if err != nil {
-		http.NotFound(w, r)
-		fmt.Printf("error looking for %s:\n%v ", r.FormValue("section"), err)
-		return
-	}
-
 	teacher := sv.GetTeacher(r)
-	stars, stikes, err := sv.store.GetTeacherStarStrikes(teacher)
+
+	fmt.Printf("getting %s belonging to %s\n", r.FormValue("section"), teacher)
+
+	class, err := sv.MakeClassroom(teacher, r.FormValue("section"))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-
+		return
+	}
+	if class.Teacher != teacher {
+		http.Error(w, "Not your class", http.StatusForbidden)
 		return
 	}
 
-	// todo: put in helper function
-	list, _ := sv.store.ListClasses(teacher)
-	classinfo := &Classroom{
-		Stu415s:   s415s,
-		MyStars:   stars,
-		MyStrikes: stikes,
-		Teacher:   teacher,
-		ClassList: list,
+	nav, err := sv.MakeNav(teacher, "classroom", class.ClassName)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	// todo: wrap s415s in struct with class info and tags
-	sv.tmpls.Lookup("classedit").Execute(w, classinfo)
+	sv.tmpls.Lookup("classedit").Execute(w, TD{N: nav, C: class})
 }
