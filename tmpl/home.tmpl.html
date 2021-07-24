@@ -1,27 +1,7 @@
-
-
 {{ define "home" }}
+{{ template "head" }}
 
-<!-- type Nav struct {
-	ClassList []*synergy.Stu415
-	Path      string
-	Title     string
-	Status    string
-}
- -->
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-
-
-    {{ template "nav" .N }}
+    {{ template "navB" .N }}
 
     {{ if (eq .N.Title "Sign In To Magic Card") }}
         {{ template "signin" }}
@@ -29,7 +9,6 @@
         welcome to magic card!!!
 
     {{ end }}
-</body>
-</html>
 
+{{ template "tail" }}
 {{ end }}
