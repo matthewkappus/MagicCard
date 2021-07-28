@@ -1,6 +1,47 @@
 {{ define "navB" }}
     <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-        <a href="#" class="nabvar-brand">MagicCard</a>
+        <div class="conatainer">
+
+            <a class="navbar-brand" href="#">MagicCard</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/students">Students</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/teachers">Teachers</a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user">Class1</i></a>
+                     </li> -->
+                  </ul>
+            </div>
+        </div>
+
     </nav>
 
 {{ end }}
+
+<!-- <div class="topnav" id="myTopnav">
+      <a href="/" class="active">Home</a>
+      <a href="/students">Students</a>
+      <a href="/teacher">Teacher</a>
+      <div class="dropdown">
+        <button class="dropbtn">Classes
+          <i class="fa fa-caret-down"></i>
+        </button>
+  
+        {{ if .ClassList }}
+        <div class="dropdown-content">
+              {{ range .ClassList }}
+                   <a href="/class?section={{.SectionID}}">{{.CourseIDAndTitle}}</a>
+              {{ end }}
+          {{ else }}
+  
+  
+       {{ end }}
+        </div>
+      </div>
+      <a href="javascript:void(0);" class="icon" onclick="navToggle()">&#9776;</a>
+    </div>
+   -->

@@ -1,77 +1,100 @@
 {{ define "search" }}
-<!DOCTYPE html>
+{{ template "head" }}
 
-<html lang="en">
+<!-- starstrike modal -->
 
-<body>
-  {{ template "nav" .N  }}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		<div class="modal-body">
+		  <form>
+			<div class="mb-3">
+			  <label for="recipient-name" class="col-form-label">Recipient:</label>
+			  <input type="text" class="form-control" id="recipient-name">
+			</div>
+			<div class="mb-3">
+			  <label for="message-text" class="col-form-label">Message:</label>
+			  <textarea class="form-control" id="message-text"></textarea>
+			</div>
+		  </form>
+		</div>
+		<div class="modal-footer">
+		  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+		  <button type="button" class="btn btn-primary">Send message</button>
+		</div>
+	  </div>
+	</div>
+  </div>
+  
 
-
-    <h1>Student List</h1>
-    <input type="text" name="" id="myInput" onkeyup="filterList()">
-    <ul id="myUL">
-      {{ range $s := .C.Stu415s}}
-        <li>
-          <a href="card?id={{$s.PermID}}">{{.StudentName}}</a>
-          <button id="starBtn" value="{{$s.PermID}}" onclick="awardStar(this.value)" class="btn starBtn"> ⭐️ Award Star</button>
-          <button id="strikeBtn" value="{{$s.PermID}}"  onclick="giveStrike(this.value)" class="btn strikeBtn"> ❌ Give Strike</button>
-        </li> 
-      {{ end }}
-    </ul>
-
-	<script>
-
-function filterList() {
-  // Declare variables
-  var input, filter, ul, li, a, i, txtValue;
-  input = document.getElementById('myInput');
-  filter = input.value.toUpperCase();
-  ul = document.getElementById("myUL");
-  li = ul.getElementsByTagName('li');
-
-  // Loop through all list items, and hide those who don't match the search query
-  for (i = 0; i < li.length; i++) {
-	a = li[i].getElementsByTagName("a")[0];
-	txtValue = a.textContent || a.innerText;
-	// display list values matching filter
-	if (txtValue.toUpperCase().indexOf(filter) > -1) {
-	  li[i].style.display = "";
-	} else {
-	  li[i].style.display = "none";
-	}
-  }
-}
-</script>
-
- 
-</body>
+<div class="container">
 
 
-</html>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th scope="col">Student</th>
+			<th scope="col"></th>
 
+		</tr>
+	</thead>
+	<tbody>
+
+		{{ range .C.Stu415s }}
+		<tr>
+			<th scope="row"> {{ .StudentName }}</th>
+			<td>
+				
+
+				<div role="group" class="btn-group">
+					<button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo"> <i class="bi bi-star-fill"></i></button>
+					<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo"> <i class="bi bi-eye-fill"></i></button>
+					<button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap"> <i class="bi bi-x-circle-fill"></i></button>
+				</div>
+
+			
+				
+			</td>
+
+		</tr>
+
+		{{ end }}
+
+	</tbody>
+</table>
+</div>
+
+
+
+{{ template "tail" }}
 {{ end }}
 
+
+
 <!-- 
-  type TD struct {
+
+
+
+	type TD struct {
 	S *Student
 	C *Classroom
 	N *Nav
 }
 
-  type Classroom struct {
-	Stu415s   []*synergy.Stu415
-	MyStars   []*comment.StarStrike
-	MyStrikes []*comment.StarStrike
-	ClassList []*synergy.Stu415
-	Teacher   string
-	ClassName string
-}
+// Classroom is teachers class info
 type Classroom struct {
-	Stu415s   []*synergy.Stu415
-	MyStars   []*comment.StarStrike
-	MyStrikes []*comment.StarStrike
+	// todo: remove stu415
+	Stu415s []*synergy.Stu415
+	// StarStrikes map students to StarStrike list for button data
+	MyStars   map[*synergy.Stu415][]*comment.StarStrike
+	MyStrikes map[*synergy.Stu415][]*comment.StarStrike
 	ClassList []*synergy.Stu415
 	Teacher   string
 	ClassName string
 }
-} -->
+
+ -->

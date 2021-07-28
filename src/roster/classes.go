@@ -1,6 +1,7 @@
 package roster
 
 import (
+	"fmt"
 	"net/http"
 )
 
@@ -45,6 +46,7 @@ func (sv *StaffView) ClassEdit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println("rendering classedit")
 	// todo: wrap s415s in struct with class info and tags
 	sv.tmpls.Lookup("classedit").Execute(w, TD{N: nav, C: class})
 }

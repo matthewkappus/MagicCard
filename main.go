@@ -41,7 +41,6 @@ func main() {
 	http.HandleFunc("/login", sv.Login)
 
 	if *devMode {
-		fmt.Println("getting temp access")
 		http.HandleFunc("/temp", roster.Temp)
 	}
 

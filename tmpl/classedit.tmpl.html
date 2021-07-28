@@ -1,65 +1,15 @@
+
 {{ define "classedit" }}
 
-{{ template "head" }}
 
-{{ template "nav" .N }}
+{{ template "head"  }} 
 
-  <!-- <input type="text" name="" id="myInput"  placeholder="🔎" onkeyup="myFunction()"> -->
-  <ul id="myUL">
-  
-	{{ range  $s := .C.Stu415s }}
-	 <li> 
-		 <a href="card?id={{ $s.PermID }}">  <input type="checkbox" class="stuChecks" name="{{ $s.StudentName}}" id="{{  $s.PermID  }}"> {{ $s.StudentName }}</a>
-		</li> 
-	{{ end }}
-  </ul>
-
-</form>
+{{ template "navB" .N }}
 
 
+{{ template "studenttable" .C.Stu415s }}
 
 
-
-
-  <script>
-	  
-
-    // var starSelect = document.getElementById('starSelect');
-
-	// // disable tools until a selection is made
-	// var selectedSB = document.getElementById('selectedSB');
-	// starSelect.disabled = true;
-	// var saveBtn = document.getElementById('saveBtn');
-	// saveBtn.disabled = true;
-
-    // starSelect.addEventListener('change', function() {
-    //   var star = starSelect.options[starSelect.selectedIndex].value;
-    //   selectedSB.value = star;
-
-    // });
-
-	// var selectedStudents = [];
-	// document.querySelectorAll('.stuChecks').forEach( i => {
-	// 	i.addEventListener('change', function(e) {
-	// 	// selectedStudents = document.getElementById("stuChecks").checked = true;
-	// 	if (e.target.checked== true ){
-	// 		selectedStudents.push(e.target.name);
-	// 	} else {
-	// 		selectedStudents.splice(selectedStudents.indexOf(e.target.name), 1);
-	// 	}
-		
-	// 	if (selectedStudents.length > 0) {
-	// 		starSelect.disabled = false;
-	// 		saveBtn.disabled = false;
-	// 	} else {
-	// 		starSelect.disabled = true;
-	// 		saveBtn.disabled = true;
-	// 	}});
-	// });
-
-  </script>
-
-  {{ template "tail" }}
-  
+{{ template "tail" }}
 {{ end }}
 

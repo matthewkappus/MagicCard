@@ -10,6 +10,7 @@ type TD struct {
 	C *Classroom
 	N *Nav
 }
+
 type Nav struct {
 	ClassList []*synergy.Stu415
 	Path      string
@@ -19,9 +20,11 @@ type Nav struct {
 
 // Classroom is teachers class info
 type Classroom struct {
-	Stu415s   []*synergy.Stu415
-	MyStars   []*comment.StarStrike
-	MyStrikes []*comment.StarStrike
+	// todo: remove stu415
+	Stu415s []*synergy.Stu415
+	// StarStrikes map students to StarStrike list for button data
+	MyStars   map[*synergy.Stu415][]*comment.StarStrike
+	MyStrikes map[*synergy.Stu415][]*comment.StarStrike
 	ClassList []*synergy.Stu415
 	Teacher   string
 	ClassName string
@@ -91,16 +94,34 @@ func (sv *StaffView) MakeClassroom(teacher, section string) (*Classroom, error) 
 		return nil, err
 	}
 
-	mystars := make([]*comment.StarStrike, 0)
-	mystrikes := make([]*comment.StarStrike, 0)
+	mystars := make(map[*synergy.Stu415][]*comment.StarStrike)
+	mystrikes := make(map[*synergy.Stu415][]*comment.StarStrike)
 
 	for _, ss := range starstrikes {
 		if ss.Cat == comment.Star {
-			mystars = append(mystars, ss)
+			for _, s415 := range s415s {
+				list, exists := mystars[s415]
+				if exists {
+					list = append(list, ss)
+					mystars[s415] = list
+				} else {
+					mystars[s415] = []*comment.StarStrike{ss}
+				}
+			}
+			// append strike to student
 		} else {
-			mystrikes = append(mystrikes, ss)
+			for _, s415 := range s415s {
+				list, exists := mystrikes[s415]
+				if exists {
+					list = append(list, ss)
+					mystrikes[s415] = list
+				} else {
+					mystrikes[s415] = []*comment.StarStrike{ss}
+				}
+			}
 		}
 	}
+
 	return &Classroom{
 		Stu415s:   s415s,
 		MyStars:   mystars,
@@ -121,16 +142,34 @@ func (sv *StaffView) MakeSchoolClassroom(teacher string) (*Classroom, error) {
 		return nil, err
 	}
 
-	mystars := make([]*comment.StarStrike, 0)
-	mystrikes := make([]*comment.StarStrike, 0)
+	mystars := make(map[*synergy.Stu415][]*comment.StarStrike)
+	mystrikes := make(map[*synergy.Stu415][]*comment.StarStrike)
 
 	for _, ss := range starstrikes {
 		if ss.Cat == comment.Star {
-			mystars = append(mystars, ss)
+			for _, s415 := range s415s {
+				list, exists := mystars[s415]
+				if exists {
+					list = append(list, ss)
+					mystars[s415] = list
+				} else {
+					mystars[s415] = []*comment.StarStrike{ss}
+				}
+			}
+			// append strike to student
 		} else {
-			mystrikes = append(mystrikes, ss)
+			for _, s415 := range s415s {
+				list, exists := mystrikes[s415]
+				if exists {
+					list = append(list, ss)
+					mystrikes[s415] = list
+				} else {
+					mystrikes[s415] = []*comment.StarStrike{ss}
+				}
+			}
 		}
 	}
+
 	return &Classroom{
 		Stu415s:   s415s,
 		MyStars:   mystars,
