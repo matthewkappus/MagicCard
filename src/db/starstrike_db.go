@@ -1,6 +1,10 @@
 package db
 
-import "github.com/matthewkappus/MagicCard/src/comment"
+import (
+	"fmt"
+
+	"github.com/matthewkappus/MagicCard/src/comment"
+)
 
 // starstrike table
 const (
@@ -14,8 +18,9 @@ const (
 
 // mystarstrike table holds teacher's saved starstrikes
 const (
-	createMystarStrike  = `CREATE TABLE IF NOT EXISTS mystarstrike (id INTEGER PRIMARY KEY, teacher TEXT, comment TEXT, title TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, cat INTEGER, isActive BOOLEAN DEFAULT true, FOREIGN KEY(teacher) REFERENCES stu415(teacher))`
-	selectMyStarStrikes = `SELECT * FROM mystarstrike WHERE teacher = ?`
+	// createMystarStrike = `CREATE TABLE IF NOT EXISTS mystarstrike (id INTEGER PRIMARY KEY, teacher TEXT, comment TEXT, title TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, cat INTEGER, isActive BOOLEAN DEFAULT true, FOREIGN KEY(teacher) REFERENCES stu415(teacher))`
+	// selecting teacher="all" gets schoolwide starstrikes
+	selectMyStarStrikes = `SELECT * FROM mystarstrike WHERE teacher="all" OR teacher = ?`
 )
 
 func (s *Store) GetMyStarStrikes(teacher string) ([]*comment.StarStrike, error) {
@@ -27,11 +32,12 @@ func (s *Store) GetMyStarStrikes(teacher string) ([]*comment.StarStrike, error) 
 
 	ss := make([]*comment.StarStrike, 0)
 	for rows.Next() {
-		// appends a new struct to ss, then scan its values into the struct
-		ss = append(ss, new(comment.StarStrike))
-		if err := rows.Scan(&ss[len(ss)-1].ID, &ss[len(ss)-1].Teacher, &ss[len(ss)-1].Title, &ss[len(ss)-1].Comment, &ss[len(ss)-1].Cat); err != nil {
+		str := new(comment.StarStrike)
+		if err := rows.Scan(&str.ID,  &str.Teacher, &str.Comment, &str.Title, &str.Created, &str.Cat, &str.IsActive); err != nil {
+			fmt.Printf("ss scan err: %v\n", err)
 			continue
 		}
+		ss = append(ss, str)
 	}
 	return ss, nil
 }
@@ -46,7 +52,8 @@ func (s *Store) GetStarStrikesByPerm(id string) ([]*comment.StarStrike, error) {
 	ss := make([]*comment.StarStrike, 0)
 	for rows.Next() {
 		sb := new(comment.StarStrike)
-		if err = rows.Scan(&sb.ID, &sb.PermID, &sb.Teacher, &sb.Comment, &sb.Title, &sb.Created, &sb.Cat, &sb.IsActive); err != nil {
+		// CREATE TABLE mystarstrike (id INTEGER PRIMARY KEY, teacher TEXT, comment TEXT, title TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, cat INTEGER, isActive BOOLEAN DEFAULT true, FOREIGN KEY(teacher) REFERENCES stu415(teacher));
+		if err = rows.Scan(&sb.ID, &sb.Teacher, &sb.Comment, &sb.Title, &sb.Created, &sb.Cat, &sb.IsActive); err != nil {
 			continue
 		}
 		ss = append(ss, sb)
@@ -67,16 +74,17 @@ func (s *Store) GetTeacherStarStrikes(teacher string) (stars, strikes []*comment
 	stars = make([]*comment.StarStrike, 0)
 	strikes = make([]*comment.StarStrike, 0)
 	for rows.Next() {
-		ss := new(comment.StarStrike)
-		if err := rows.Scan(&ss.ID, &ss.Teacher, &ss.Title, &ss.Comment, &ss.Cat); err != nil {
+		sb := new(comment.StarStrike)
+		// CREATE TABLE mystarstrike (id INTEGER PRIMARY KEY, teacher TEXT, comment TEXT, title TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, cat INTEGER, isActive BOOLEAN DEFAULT true, FOREIGN KEY(teacher) REFERENCES stu415(teacher));
+		if err = rows.Scan(&sb.ID, &sb.Teacher, &sb.Comment, &sb.Title, &sb.Created, &sb.Cat, &sb.IsActive); err != nil {
 			continue
 		}
-		if ss.Cat == comment.Star {
-			stars = append(stars, ss)
+		if sb.Cat == comment.Star {
+			stars = append(stars, sb)
 
 		} else {
 
-			strikes = append(strikes, ss)
+			strikes = append(strikes, sb)
 		}
 	}
 	return stars, strikes, nil

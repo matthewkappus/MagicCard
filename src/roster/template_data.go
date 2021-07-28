@@ -1,6 +1,8 @@
 package roster
 
 import (
+	"fmt"
+
 	"github.com/matthewkappus/MagicCard/src/comment"
 	"github.com/matthewkappus/Roster/src/synergy"
 )
@@ -23,11 +25,9 @@ type Classroom struct {
 	// todo: remove stu415
 	Stu415s []*synergy.Stu415
 	// StarStrikes map students to StarStrike list for button data
-	MyStars   map[*synergy.Stu415][]*comment.StarStrike
-	MyStrikes map[*synergy.Stu415][]*comment.StarStrike
-	ClassList []*synergy.Stu415
-	Teacher   string
-	ClassName string
+	StarStrikes map[*synergy.Stu415][]*comment.StarStrike
+	Teacher     string
+	ClassName   string
 }
 
 // Student holds the Stu415 and Starbars for a template
@@ -89,44 +89,27 @@ func (sv *StaffView) MakeClassroom(teacher, section string) (*Classroom, error) 
 	if err != nil {
 		return nil, err
 	}
-	starstrikes, err := sv.store.GetMyStarStrikes(teacher)
+	myss, err := sv.store.GetMyStarStrikes(teacher)
+
 	if err != nil {
 		return nil, err
 	}
 
-	mystars := make(map[*synergy.Stu415][]*comment.StarStrike)
-	mystrikes := make(map[*synergy.Stu415][]*comment.StarStrike)
-
-	for _, ss := range starstrikes {
-		if ss.Cat == comment.Star {
-			for _, s415 := range s415s {
-				list, exists := mystars[s415]
-				if exists {
-					list = append(list, ss)
-					mystars[s415] = list
-				} else {
-					mystars[s415] = []*comment.StarStrike{ss}
-				}
-			}
-			// append strike to student
-		} else {
-			for _, s415 := range s415s {
-				list, exists := mystrikes[s415]
-				if exists {
-					list = append(list, ss)
-					mystrikes[s415] = list
-				} else {
-					mystrikes[s415] = []*comment.StarStrike{ss}
-				}
-			}
+	// starstrikes takes generic starstrikes and puts each student perm in for use with buttons
+	ss := make(map[*synergy.Stu415][]*comment.StarStrike)
+	for _, stu := range s415s {
+		s := make([]*comment.StarStrike, 0)
+		for _, mss := range myss {
+			mss.PermID = stu.PermID
+			mss.Teacher = teacher
+			s = append(s, mss)
 		}
+		ss[stu] = s
 	}
-
 	return &Classroom{
-		Stu415s:   s415s,
-		MyStars:   mystars,
-		MyStrikes: mystrikes,
-		Teacher:   teacher,
+		Stu415s:     s415s,
+		StarStrikes: ss,
+		Teacher:     teacher,
 	}, nil
 
 }
@@ -137,49 +120,35 @@ func (sv *StaffView) MakeSchoolClassroom(teacher string) (*Classroom, error) {
 	if err != nil {
 		return nil, err
 	}
-	starstrikes, err := sv.store.GetMyStarStrikes(teacher)
+	myss, err := sv.store.GetMyStarStrikes(teacher)
 	if err != nil {
 		return nil, err
 	}
 
-	mystars := make(map[*synergy.Stu415][]*comment.StarStrike)
-	mystrikes := make(map[*synergy.Stu415][]*comment.StarStrike)
-
-	for _, ss := range starstrikes {
-		if ss.Cat == comment.Star {
-			for _, s415 := range s415s {
-				list, exists := mystars[s415]
-				if exists {
-					list = append(list, ss)
-					mystars[s415] = list
-				} else {
-					mystars[s415] = []*comment.StarStrike{ss}
-				}
-			}
-			// append strike to student
-		} else {
-			for _, s415 := range s415s {
-				list, exists := mystrikes[s415]
-				if exists {
-					list = append(list, ss)
-					mystrikes[s415] = list
-				} else {
-					mystrikes[s415] = []*comment.StarStrike{ss}
-				}
-			}
-		}
+	for _, str := range myss {
+		fmt.Printf("got strkiey: %v\n", *str)
 	}
 
+	// starstrikes takes generic starstrikes and puts each student perm in for use with buttons
+	ss := make(map[*synergy.Stu415][]*comment.StarStrike)
+	for _, stu := range s415s {
+		s := make([]*comment.StarStrike, 0)
+		for _, mss := range myss {
+			mss.PermID = stu.PermID
+			mss.Teacher = teacher
+			s = append(s, mss)
+		}
+		ss[stu] = s
+	}
 	return &Classroom{
-		Stu415s:   s415s,
-		MyStars:   mystars,
-		MyStrikes: mystrikes,
-		Teacher:   teacher,
+		Stu415s:     s415s,
+		StarStrikes: ss,
+		Teacher:     teacher,
 	}, nil
 
 }
 
-//
+// MakeNav returns data struct for use in <head> / <nav>
 func (sv *StaffView) MakeNav(teacher, path, title string) (*Nav, error) {
 	classlist, err := sv.store.ListClasses(teacher)
 	if err != nil {

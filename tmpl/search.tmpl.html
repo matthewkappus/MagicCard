@@ -44,16 +44,46 @@
 	</thead>
 	<tbody>
 
-		{{ range .C.Stu415s }}
+		{{ range $stu, $ss := .C.StarStrikes }}
 		<tr>
-			<th scope="row"> {{ .StudentName }}</th>
+			<th scope="row"> {{ $stu.StudentName }}</th>
 			<td>
 				
 
+				<!-- star select -->
 				<div role="group" class="btn-group">
-					<button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo"> <i class="bi bi-star-fill"></i></button>
-					<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo"> <i class="bi bi-eye-fill"></i></button>
-					<button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap"> <i class="bi bi-x-circle-fill"></i></button>
+					<div class="btn-group">
+					<button type="button" class="btn btn-warning">Star</button>
+					<button type="button" class="btn btn-warning dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+						<span class="visually-hidden">Toggle Dropdown</span>
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+					{{ range $ss }}
+						{{if eq .Cat 0}}
+							<a class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">{{.Title}}</a>
+						{{ end}}
+					{{ end }}
+					</div>
+
+
+					</ul>
+					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo"> <i class="bi bi-eye-fill"></i></button>
+					
+					<!-- strike select -->
+					<div role="group" class="btn-group">
+						<div class="btn-group">
+						<button type="button" class="btn btn-danger">Strike</button>
+						<button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+							<span class="visually-hidden">Toggle Dropdown</span>
+						</button>
+						<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+						{{ range $ss }}
+							{{if ne .Cat 0}}
+								<a class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">{{.Title}}</a>
+							{{ end}}
+						{{ end }}
+						</div>
+
 				</div>
 
 			
