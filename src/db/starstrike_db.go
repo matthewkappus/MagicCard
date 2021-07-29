@@ -12,7 +12,6 @@ const (
 	insertStarStrike                 = `INSERT INTO starstrike(perm_id, teacher, comment, title, cat, isActive) VALUES(?,?,?,?,?,?);`
 	selectStarStrikeByPermID         = `SELECT * FROM starstrike WHERE perm_id = ?`
 	selectNewestStarStrikesByTeacher = `SELECT * FROM starstrike WHERE teacher=? LIMIT ?`
-
 	// select count(cat) from starstrike where cat=1 and perm_id="980016917"
 )
 
@@ -33,7 +32,7 @@ func (s *Store) GetMyStarStrikes(teacher string) ([]*comment.StarStrike, error) 
 	ss := make([]*comment.StarStrike, 0)
 	for rows.Next() {
 		str := new(comment.StarStrike)
-		if err := rows.Scan(&str.ID,  &str.Teacher, &str.Comment, &str.Title, &str.Created, &str.Cat, &str.IsActive); err != nil {
+		if err := rows.Scan(&str.ID, &str.Teacher, &str.Comment, &str.Title, &str.Created, &str.Cat, &str.IsActive); err != nil {
 			fmt.Printf("ss scan err: %v\n", err)
 			continue
 		}
@@ -88,4 +87,10 @@ func (s *Store) GetTeacherStarStrikes(teacher string) (stars, strikes []*comment
 		}
 	}
 	return stars, strikes, nil
+}
+
+// AddStarStrike into the store
+func (s *Store) AddStarStrike(perm_id, teacher, comment, title, cat string) error {
+	_, err := s.db.Exec(insertStarStrike, perm_id, teacher, comment, title, cat, true)
+	return err
 }

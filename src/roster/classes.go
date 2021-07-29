@@ -23,9 +23,27 @@ func (sv *StaffView) Profile(w http.ResponseWriter, r *http.Request) {
 }
 
 func (sv *StaffView) AddComment(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method != http.MethodPost {
+		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+		return
+	}
 	r.ParseForm()
 
-	fmt.Printf("comment sent:\n%v\n", r.PostForm)
+	// teacher must match session
+	t := sv.GetTeacher(r)
+	if t != r.PostFormValue("teacher") {
+		fmt.Printf("form.teacher: '%s' doesn't match session.teacher '%s'", r.PostFormValue("teacher"), t)
+	}
+
+	// perm_id, teacher, comment, title, cat, isActive
+	err := sv.store.AddStarStrike(r.PostFormValue("permid"), r.PostFormValue("teacher"), r.PostFormValue("comment"), r.PostFormValue("title"), r.PostFormValue("cat"))
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+		return
+	}
+
+	fmt.Fprintf(w, "add %s sucessfully", r.PostFormValue("title"))
 }
 
 // show class by section
