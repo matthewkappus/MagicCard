@@ -50,6 +50,7 @@ func main() {
 	http.HandleFunc("/card", sv.TeacherLock(sv.MagicCard))
 
 	http.HandleFunc("/teacher", sv.TeacherLock(sv.Profile))
+	http.HandleFunc("/addComment", sv.AddComment)
 
 	http.HandleFunc("/class", sv.TeacherLock(sv.ClassEdit))
 

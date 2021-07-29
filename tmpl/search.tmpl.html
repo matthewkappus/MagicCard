@@ -3,32 +3,38 @@
 
 <!-- starstrike modal -->
 
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-	  <div class="modal-content">
-		<div class="modal-header">
-		  <h5 class="modal-title" id="exampleModalLabel">New message</h5>
-		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-		</div>
-		<div class="modal-body">
-		  <form>
-			<div class="mb-3">
-			  <label for="recipient-name" class="col-form-label">Recipient:</label>
-			  <input type="text" class="form-control" id="recipient-name">
+<div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
+
+		<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+			<h5 class="modal-title" id="commentModalLabel">New message</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
-			<div class="mb-3">
-			  <label for="message-text" class="col-form-label">Message:</label>
-			  <textarea class="form-control" id="message-text"></textarea>
+			<div class="modal-body">
+			<form action="/addComment", method="POST">
+				<input type="hidden" name="permid" id="permInput">
+				<input type="hidden" name="teacher" id="teacherInput">
+				<input type="hidden" name="cat" id="catInput">
+				<div class="mb-3">
+				<label for="recipient-name" class="col-form-label">Recipient:</label>
+				<input type="text" class="form-control" id="recipient-name">
+				</div>
+				<div class="mb-3">
+				<label for="message-text" class="col-form-label">Message:</label>
+				<textarea class="form-control" id="message-text"></textarea>
+				</div>
+			</form>
 			</div>
-		  </form>
+			<div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			<button type="submit" class="btn btn-primary">Add Comment</button>
+
+
+			</div>
 		</div>
-		<div class="modal-footer">
-		  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-		  <button type="button" class="btn btn-primary">Send message</button>
 		</div>
-	  </div>
-	</div>
-  </div>
+ </div>
   
 
 <div class="container">
@@ -60,14 +66,14 @@
 					<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 					{{ range $ss }}
 						{{if eq .Cat 0}}
-							<a class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">{{.Title}}</a>
+							<a class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#commentModal" data-bs-whatever="@mdo">{{.Title}}</a>
 						{{ end}}
 					{{ end }}
 					</div>
 
 
 					</ul>
-					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo"> <i class="bi bi-eye-fill"></i></button>
+					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#commentModal" data-bs-whatever="@mdo"> <i class="bi bi-eye-fill"></i></button>
 					
 					<!-- strike select -->
 					<div role="group" class="btn-group">
@@ -79,7 +85,7 @@
 						<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 						{{ range $ss }}
 							{{if ne .Cat 0}}
-								<a class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-permid="{{.PermID}}" data-bs-teacher="{{.Teacher}}" data-bs-comment="{{.Comment}}" data-bs-title="{{.Title}}" data-bs-cat="{{.Cat}}">{{.Title}}</a>
+								<a class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#commentModal" data-bs-permid="{{.PermID}}" data-bs-teacher="{{.Teacher}}" data-bs-comment="{{.Comment}}" data-bs-title="{{.Title}}" data-bs-cat="{{.Cat}}">{{.Title}}</a>
 							{{ end}}
 						{{ end }}
 						</div>
@@ -98,8 +104,40 @@
 </table>
 </div>
 
+<script>
+	 var commentModal = document.getElementById('commentModal');
+	 commentModal.addEventListener('show.bs.modal', function (event) {
+		var button = event.relatedTarget;
+
+		var permid = button.getAttribute('data-bs-permid');
+		var comment = button.getAttribute('data-bs-comment');
+		var title = button.getAttribute('data-bs-title');
+		var cat = button.getAttribute('data-bs-cat');
+		var teacher = button.getAttribute('data-bs-teacher');
+
+		var modalTitle = commentModal.querySelector('.modal-title')
+		modalTitle.textContent = title;
+
+		var modalComment = document.getElementById("message-text")
+		modalComment.textContent = comment;
+	
+		var catInput = document.getElementById("catInput")
+		catInput.value = cat;
+		
+		var teacherInput = document.getElementById("teacherInput")
+		teacherInput.value = teacher;
+
+		var permInput = document.getElementById("permInput")
+		permInput.value = permid;
 
 
+	 })
+	 
+</script>
+
+
+
+	
 {{ template "tail" }}
 {{ end }}
 

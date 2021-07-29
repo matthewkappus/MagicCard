@@ -1,8 +1,6 @@
 package roster
 
 import (
-	"fmt"
-
 	"github.com/matthewkappus/MagicCard/src/comment"
 	"github.com/matthewkappus/Roster/src/synergy"
 )
@@ -123,10 +121,6 @@ func (sv *StaffView) MakeSchoolClassroom(teacher string) (*Classroom, error) {
 	myss, err := sv.store.GetMyStarStrikes(teacher)
 	if err != nil {
 		return nil, err
-	}
-
-	for _, str := range myss {
-		fmt.Printf("got strkiey: %v\n", *str)
 	}
 
 	// starstrikes takes generic starstrikes and puts each student perm in for use with buttons

@@ -22,6 +22,12 @@ func (sv *StaffView) Profile(w http.ResponseWriter, r *http.Request) {
 	sv.tmpls.Lookup("profile").Execute(w, TD{N: nav, C: c})
 }
 
+func (sv *StaffView) AddComment(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+
+	fmt.Printf("comment sent:\n%v\n", r.MultipartForm)
+}
+
 // show class by section
 func (sv *StaffView) ClassEdit(w http.ResponseWriter, r *http.Request) {
 	if len(r.FormValue("section")) != 4 {
