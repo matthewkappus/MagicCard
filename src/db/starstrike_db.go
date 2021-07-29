@@ -8,8 +8,8 @@ import (
 
 // starstrike table
 const (
-	createStarStrike                 = `CREATE TABLE IF NOT EXISTS starstrike (id INTEGER PRIMARY KEY, perm_id TEXT, teacher TEXT, comment TEXT, title TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, cat INTEGER, isActive BOOLEAN DEFAULT true, FOREIGN KEY(perm_id) REFERENCES stu415(perm_id))`
-	insertStarStrike                 = `INSERT INTO starstrike(perm_id, teacher, comment, title, cat, isActive) VALUES(?,?,?,?,?,?);`
+	createStarStrike                 = `CREATE TABLE IF NOT EXISTS starstrike (id INTEGER PRIMARY KEY, perm_id TEXT, teacher TEXT, comment TEXT, title TEXT, icon TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, cat INTEGER, isActive BOOLEAN DEFAULT true, FOREIGN KEY(perm_id) REFERENCES stu415(perm_id))`
+	insertStarStrike                 = `INSERT INTO starstrike(perm_id, teacher, comment, title, icon, cat, isActive) VALUES(?,?,?,?,?,?,?);`
 	selectStarStrikeByPermID         = `SELECT * FROM starstrike WHERE perm_id = ?`
 	selectNewestStarStrikesByTeacher = `SELECT * FROM starstrike WHERE teacher=? LIMIT ?`
 	// select count(cat) from starstrike where cat=1 and perm_id="980016917"
@@ -52,7 +52,7 @@ func (s *Store) GetStarStrikesByPerm(id string) ([]*comment.StarStrike, error) {
 	for rows.Next() {
 		sb := new(comment.StarStrike)
 		// CREATE TABLE mystarstrike (id INTEGER PRIMARY KEY, teacher TEXT, comment TEXT, title TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, cat INTEGER, isActive BOOLEAN DEFAULT true, FOREIGN KEY(teacher) REFERENCES stu415(teacher));
-		if err = rows.Scan(&sb.ID, &sb.Teacher, &sb.Comment, &sb.Title, &sb.Created, &sb.Cat, &sb.IsActive); err != nil {
+		if err = rows.Scan(&sb.ID, &sb.Teacher, &sb.Comment, &sb.Title, &sb.Icon, &sb.Created, &sb.Cat, &sb.IsActive); err != nil {
 			continue
 		}
 		ss = append(ss, sb)
@@ -75,7 +75,7 @@ func (s *Store) GetTeacherStarStrikes(teacher string) (stars, strikes []*comment
 	for rows.Next() {
 		sb := new(comment.StarStrike)
 		// CREATE TABLE mystarstrike (id INTEGER PRIMARY KEY, teacher TEXT, comment TEXT, title TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, cat INTEGER, isActive BOOLEAN DEFAULT true, FOREIGN KEY(teacher) REFERENCES stu415(teacher));
-		if err = rows.Scan(&sb.ID, &sb.Teacher, &sb.Comment, &sb.Title, &sb.Created, &sb.Cat, &sb.IsActive); err != nil {
+		if err = rows.Scan(&sb.ID, &sb.Teacher, &sb.Comment, &sb.Title, &sb.Icon, &sb.Created, &sb.Cat, &sb.IsActive); err != nil {
 			continue
 		}
 		if sb.Cat == comment.Star {
@@ -90,7 +90,7 @@ func (s *Store) GetTeacherStarStrikes(teacher string) (stars, strikes []*comment
 }
 
 // AddStarStrike into the store
-func (s *Store) AddStarStrike(perm_id, teacher, comment, title, cat string) error {
-	_, err := s.db.Exec(insertStarStrike, perm_id, teacher, comment, title, cat, true)
+func (s *Store) AddStarStrike(perm_id, teacher, comment, title, icon, cat string) error {
+	_, err := s.db.Exec(insertStarStrike, perm_id, teacher, comment, title, icon, cat, true)
 	return err
 }

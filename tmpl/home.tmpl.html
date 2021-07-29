@@ -6,8 +6,13 @@
     {{ if (eq .N.Title "Sign In To Magic Card") }}
         {{ template "signin" }}
     {{ else  }}
-        welcome to magic card!!!
+       
+        <p>
+            todo: show a teacher or student magic card
+        </p>    
 
+        {{ template "magiccard"}}
+      
     {{ end }}
 
 {{ template "tail" }}

@@ -37,13 +37,13 @@ func (sv *StaffView) AddComment(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// perm_id, teacher, comment, title, cat, isActive
-	err := sv.store.AddStarStrike(r.PostFormValue("permid"), r.PostFormValue("teacher"), r.PostFormValue("comment"), r.PostFormValue("title"), r.PostFormValue("cat"))
+	err := sv.store.AddStarStrike(r.PostFormValue("permid"), r.PostFormValue("teacher"), r.PostFormValue("comment"), r.PostFormValue("title"), r.PostFormValue("icon"),r.PostFormValue("cat"))
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return
 	}
 
-	fmt.Fprintf(w, "add %s sucessfully", r.PostFormValue("title"))
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 // show class by section
@@ -70,6 +70,6 @@ func (sv *StaffView) ClassEdit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	
+
 	sv.tmpls.Lookup("classedit").Execute(w, TD{N: nav, C: class})
 }

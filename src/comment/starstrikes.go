@@ -23,5 +23,7 @@ type StarStrike struct {
 	Created time.Time `json:"created,omitempty"`
 	// 0 star 1 minor 2 strik 3 major
 	Cat      Category
+
+	Icon string
 	IsActive bool `json:"is_active,omitempty"`
 }
