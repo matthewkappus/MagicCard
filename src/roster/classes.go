@@ -25,7 +25,7 @@ func (sv *StaffView) Profile(w http.ResponseWriter, r *http.Request) {
 func (sv *StaffView) AddComment(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
-	fmt.Printf("comment sent:\n%v\n", r.MultipartForm)
+	fmt.Printf("comment sent:\n%v\n", r.PostForm)
 }
 
 // show class by section
