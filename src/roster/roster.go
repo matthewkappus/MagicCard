@@ -69,13 +69,22 @@ func (sv *StaffView) Home(w http.ResponseWriter, r *http.Request) {
 	}
 
 	nav := &Nav{Title: "Sign In To Magic Card"}
+	mc := new(MagicCard)
 	switch scope {
 	case Teacher:
 		nav, err = sv.MakeNav(teacher, "home", "Magic Card", scope)
+
 	case Admin:
 		nav, err = sv.MakeNav(teacher, "home", "Magic Card", scope)
 	case Student:
 		nav, err = sv.MakeNav(student, "home", "Magic Card", scope)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		mc, err = sv.MakeStudentMagicCard(student)
+	case Guest:
+		nav, err = sv.MakeNav("guest", "home", "Magic Card", scope)
 	default:
 		fmt.Println("no scope found")
 	}
@@ -83,7 +92,7 @@ func (sv *StaffView) Home(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("error making nav: %v", err)
 	}
-	sv.tmpls.Lookup("home").Execute(w, TD{N: nav})
+	sv.tmpls.Lookup("home").Execute(w, TD{N: nav, M: mc})
 
 }
 

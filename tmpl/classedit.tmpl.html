@@ -19,6 +19,7 @@
                 <input type="hidden" name="cat" id="catInput">
                 <input type="hidden" name="teacher" id="teacherInput">
                 <input type="hidden" name="title" id="titleInput">
+                <input type="hidden" name="icon" id="iconInput">
                 <div class="mb-3">
                     
                 </div>
@@ -86,7 +87,7 @@
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     {{ range $ss }}
                         {{if ne .Cat 0}}
-                            <a class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#commentModal" data-bs-permid="{{.PermID}}" data-bs-teacher="{{.Teacher}}" data-bs-comment="{{.Comment}}" data-bs-title="{{.Title}}" data-bs-cat="{{.Cat}}">{{.Title}}</a>
+                            <a class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#commentModal" data-bs-permid="{{.PermID}}" data-bs-teacher="{{.Teacher}}" data-bs-comment="{{.Comment}}" data-bs-title="{{.Title}}" data-bs-cat="{{.Cat}}" data-bs-icon="{{.Icon}}">{{.Title}}</a>
                         {{ end}}
                     {{ end }}
                     </div>
@@ -114,6 +115,7 @@
     var comment = button.getAttribute('data-bs-comment');
     var title = button.getAttribute('data-bs-title');
     var cat = button.getAttribute('data-bs-cat');
+    var icon = button.getAttribute('data-bs-icon');
     var teacher = button.getAttribute('data-bs-teacher');
 
     var modalTitle = commentModal.querySelector('.modal-title')
@@ -133,6 +135,9 @@
 
     var titleInput = document.getElementById("titleInput")
     titleInput.value = title;
+
+    var iconInput = document.getElementById("iconInput")
+    iconInput.value = icon;
 
 
  })

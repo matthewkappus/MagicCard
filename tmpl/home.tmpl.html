@@ -1,24 +1,32 @@
 {{ define "home" }}
 {{ template "head" }}
+{{ template "navB" .N }}
 
 
     {{ if eq .N.Type 0}}
         <h3>hello guest</h3>
+        <!--  0: Guest. (Not signed in) -->
+        please sign in please
         {{ template "signin" }}
 
 
     {{ else if eq .N.Type 1 }}
-        <h3>hello student</h3>
+    <!-- 1: Student Page -->
+        {{ template "magiccard" .M }}
     
     {{ else if eq .N.Type 2 }}
-    {{ template "navB" .N }}
+    <!-- 2: teacher page  -->
 
         <h3>hello teacher</h3>
-   
-    {{ else if eq .N.Type 3 }}
-    {{ template "navB" .N }}
+        {{ template "magiccard" .M }}
 
+   
+    
+    {{ else if eq .N.Type 3 }}
+    <!-- 3: admin page -->
         <h3>hello admin</h3>
+        {{ template "magiccard" .M }}
+        
 
       
     {{ end }}
@@ -26,11 +34,33 @@
 {{ template "tail" }}
 {{ end }}
 
-<!-- type Nav struct {
+<!--
+    
+    type TD struct {
+	M *MagicCard
+	C *Classroom
+	N *Nav
+}
+
+type MagicCard struct {
+	Name string
+	ID   string
+
+	S415 *synergy.Stu415
+	// Star.Title to SS
+	StarMap map[string][]*comment.StarStrike
+	// StrikeMap
+	StrikeMap map[string][]*comment.StarStrike
+}
+
+
+    type Nav struct {
 	ClassList []*synergy.Stu415
 	Path      string
 	Title     string
 	Status    string
 	Type      Scope
+
 }
- -->
+ -->    {{ template "navB" .N }}
+

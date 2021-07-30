@@ -17,7 +17,7 @@ type Nav struct {
 	Title     string
 	Status    string
 	// 0 Student 1 Teacher 2 Admin
-	Type      Scope
+	Type Scope
 }
 
 // Classroom is teachers class info
@@ -33,6 +33,9 @@ type Classroom struct {
 // MagicCard holds the Stu415 and Starbars for a template
 //  My and Strikes are mapped to their title for counting
 type MagicCard struct {
+	Name string
+	ID   string
+
 	S415 *synergy.Stu415
 	// Star.Title to SS
 	StarMap map[string][]*comment.StarStrike
@@ -144,13 +147,58 @@ func (sv *StaffView) MakeSchoolClassroom(teacher string) (*Classroom, error) {
 
 }
 
+func (sv *StaffView) MakeStudentMagicCard(perm string) (*MagicCard, error) {
+
+	stu, err := sv.store.SelectStu415(perm)
+	if err != nil {
+		return nil, err
+	}
+	ss, err := sv.store.GetStarStrikesByPerm(perm)
+	if err != nil {
+		return nil, err
+	}
+
+	stars := make(map[string][]*comment.StarStrike)
+	strikes := make(map[string][]*comment.StarStrike)
+
+	for _, s := range ss {
+		// 0 star 1 minor 2 strik 3 major
+		if s.Cat == comment.Star {
+			tStars, exists := stars[s.Title]
+			if !exists {
+				stars[s.Title] = []*comment.StarStrike{s}
+				continue
+			}
+			// title exists: add to list
+			stars[s.Title] = append(tStars, s)
+		} else {
+			// ss.Cat is 1+: A strike
+			tStrikes, exists := strikes[s.Title]
+			if !exists {
+				strikes[s.Title] = []*comment.StarStrike{s}
+				continue
+			}
+			// strike exists: add to rest
+			strikes[s.Title] = append(tStrikes, s)
+		}
+	}
+
+	return &MagicCard{
+
+		Name:      stu.StudentName,
+		ID:        stu.PermID,
+		S415:      stu,
+		StarMap:   stars,
+		StrikeMap: strikes}, nil
+
+}
+
 // MakeNav returns data struct for use in <head> / <nav>
 func (sv *StaffView) MakeNav(teacher, path, title string, stype Scope) (*Nav, error) {
 	classlist, err := sv.store.ListClasses(teacher)
 	if err != nil {
 		return nil, err
 	}
-
 	n := &Nav{
 		ClassList: classlist,
 		Path:      path,

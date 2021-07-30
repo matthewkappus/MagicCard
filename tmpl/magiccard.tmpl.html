@@ -1,24 +1,63 @@
 {{ define "magiccard" }}
 
-<div class="card text-center">
-    <div class="card-header">
-      <ul class="nav nav-tabs card-header-tabs">
-        <li class="nav-item">
-          <a class="nav-link active" href="#">Active</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#">Disabled</a>
-        </li>
-      </ul>
-    </div>
+
+<!-- 
+
+  // MagicCard holds the Stu415 and Starbars for a template
+//  My and Strikes are mapped to their title for counting
+type MagicCard struct {
+	Name string
+	ID   string
+
+	S415 *synergy.Stu415
+	// Star.Title to SS
+	StarMap map[string][]*comment.StarStrike
+	// StrikeMap
+	StrikeMap map[string][]*comment.StarStrike
+}
+ -->
+
+<div class="content">
+
+
+  <h3>{{.Name}}'s Magic Card</h3>
+<h3> Stars</h3>
+<div class="card-group">
+
+  {{ range $title, $stars := .StarMap }}
+
+  <!-- range $stars -->
+  <div class="card">
+    <i class="bi bi-star-fill card-img-top"></i>
     <div class="card-body">
-      <h5 class="card-title">Special title treatment</h5>
-      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
+      <h5 class="card-title">{{ $title }}</h5>
+      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
     </div>
   </div>
+ 
+  <!-- end of stars card-group -->
+  {{ end }}
 
+<h3>Strikes</h3>
+<div class="card-group">
+
+  {{ range $title, $stars := .StrikeMap }}
+
+  <!-- range $strikes -->
+  <div class="card">
+    <i class="bi bi-star-fill card-img-top"></i>
+    <div class="card-body">
+      <h5 class="card-title">{{ $title }}</h5>
+      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+    </div>
+  </div>
+ 
+  <!-- end of stars card-group -->
+  {{ end }}
+</div>
+
+
+</div>
   {{ end }}
