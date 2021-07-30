@@ -11,10 +11,13 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
+
+// Scopes: 0 Guest 1 Student 2 Teacher 3 Admin
 type Scope int
 
 const (
-	Student Scope = iota
+	Guest Scope = iota
+	Student
 	Teacher
 	Admin
 )
@@ -72,6 +75,7 @@ func (sv *StaffView) GetStudent(r *http.Request) string {
 	if err != nil {
 		return ""
 	}
+	// todo: check status?
 
 	return string(studentCookie.Value)
 }

@@ -64,7 +64,8 @@ func (sv *StaffView) Home(w http.ResponseWriter, r *http.Request) {
 
 	scope, teacher, student, err := sv.GetSessionUser(r)
 	if err != nil {
-		scope = -1
+		// set to guest scope in not signed in
+		scope = 0
 	}
 
 	nav := &Nav{Title: "Sign In To Magic Card"}
@@ -86,30 +87,32 @@ func (sv *StaffView) Home(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// GetSessionType returns Admin, Teacher, or Student scope if exists or -1 for no session scope
+// GetSessionType returns  3 Admin, 2 Teacher, 1 Student or 0 for guest scope (not signed in)
 func (sv *StaffView) GetSessionType(r *http.Request) Scope {
 	scopeCookie, err := r.Cookie("scope")
 	if err != nil {
-		return -1
+		return 0
 	}
 
 	switch scopeCookie.Value {
 	case "0":
-		return Student
+		return Guest
 	case "1":
-		return Teacher
+		return Student
 	case "2":
+		return Teacher
+	case "3":
 		return Admin
 	default:
-		return -1
+		return 0
 	}
 }
 
 // GetSessionUser returns scope and the "student" perm or "teacher" name
 func (sv *StaffView) GetSessionUser(r *http.Request) (s Scope, teacher, student string, err error) {
 	s = sv.GetSessionType(r)
-	if s == -1 {
-		return -1, "", "", err
+	if s == 0 {
+		return 0, "", "", fmt.Errorf("not signed in")
 	}
 	teacher = sv.GetTeacher(r)
 	if teacher == "" {

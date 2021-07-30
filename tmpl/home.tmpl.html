@@ -1,19 +1,36 @@
 {{ define "home" }}
 {{ template "head" }}
 
+
+    {{ if eq .N.Type 0}}
+        <h3>hello guest</h3>
+        {{ template "signin" }}
+
+
+    {{ else if eq .N.Type 1 }}
+        <h3>hello student</h3>
+    
+    {{ else if eq .N.Type 2 }}
     {{ template "navB" .N }}
 
-    {{ if (eq .N.Title "Sign In To Magic Card") }}
-        {{ template "signin" }}
-    {{ else  }}
-       
-        <p>
-            todo: show a teacher or student magic card
-        </p>    
+        <h3>hello teacher</h3>
+   
+    {{ else if eq .N.Type 3 }}
+    {{ template "navB" .N }}
 
-        {{ template "magiccard"}}
+        <h3>hello admin</h3>
+
       
     {{ end }}
 
 {{ template "tail" }}
 {{ end }}
+
+<!-- type Nav struct {
+	ClassList []*synergy.Stu415
+	Path      string
+	Title     string
+	Status    string
+	Type      Scope
+}
+ -->
