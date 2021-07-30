@@ -6,7 +6,7 @@ import (
 )
 
 type TD struct {
-	S *Student
+	M *MagicCard
 	C *Classroom
 	N *Nav
 }
@@ -16,6 +16,7 @@ type Nav struct {
 	Path      string
 	Title     string
 	Status    string
+	Type      Scope
 }
 
 // Classroom is teachers class info
@@ -28,9 +29,9 @@ type Classroom struct {
 	ClassName   string
 }
 
-// Student holds the Stu415 and Starbars for a template
+// MagicCard holds the Stu415 and Starbars for a template
 //  My and Strikes are mapped to their title for counting
-type Student struct {
+type MagicCard struct {
 	S415 *synergy.Stu415
 	// Star.Title to SS
 	StarMap map[string][]*comment.StarStrike
@@ -38,7 +39,7 @@ type Student struct {
 	StrikeMap map[string][]*comment.StarStrike
 }
 
-func (sv *StaffView) MakeStudent(perm string) (*Student, error) {
+func (sv *StaffView) MakeStudent(perm string) (*MagicCard, error) {
 	stu, err := sv.store.SelectStu415(perm)
 	if err != nil {
 		return nil, err
@@ -76,7 +77,7 @@ func (sv *StaffView) MakeStudent(perm string) (*Student, error) {
 			strikesM[ss.Title] = strikes
 		}
 	}
-	return &Student{
+	return &MagicCard{
 		S415:      stu,
 		StarMap:   starsM,
 		StrikeMap: strikesM}, nil
@@ -143,7 +144,7 @@ func (sv *StaffView) MakeSchoolClassroom(teacher string) (*Classroom, error) {
 }
 
 // MakeNav returns data struct for use in <head> / <nav>
-func (sv *StaffView) MakeNav(teacher, path, title string) (*Nav, error) {
+func (sv *StaffView) MakeNav(teacher, path, title string, stype Scope) (*Nav, error) {
 	classlist, err := sv.store.ListClasses(teacher)
 	if err != nil {
 		return nil, err
@@ -153,6 +154,7 @@ func (sv *StaffView) MakeNav(teacher, path, title string) (*Nav, error) {
 		ClassList: classlist,
 		Path:      path,
 		Title:     title,
+		Type:      stype,
 	}
 	return n, nil
 }

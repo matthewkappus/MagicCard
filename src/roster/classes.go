@@ -8,7 +8,7 @@ import (
 func (sv *StaffView) Profile(w http.ResponseWriter, r *http.Request) {
 
 	teacher := sv.GetTeacher(r)
-	nav, err := sv.MakeNav(teacher, "teacher", "Student Search")
+	nav, err := sv.MakeNav(teacher, "teacher", "Student Search", Teacher)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -37,7 +37,7 @@ func (sv *StaffView) AddComment(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// perm_id, teacher, comment, title, cat, isActive
-	err := sv.store.AddStarStrike(r.PostFormValue("permid"), r.PostFormValue("teacher"), r.PostFormValue("comment"), r.PostFormValue("title"), r.PostFormValue("icon"),r.PostFormValue("cat"))
+	err := sv.store.AddStarStrike(r.PostFormValue("permid"), r.PostFormValue("teacher"), r.PostFormValue("comment"), r.PostFormValue("title"), r.PostFormValue("icon"), r.PostFormValue("cat"))
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return
@@ -46,7 +46,7 @@ func (sv *StaffView) AddComment(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
-// show class by section
+// ClassEdit by section
 func (sv *StaffView) ClassEdit(w http.ResponseWriter, r *http.Request) {
 	if len(r.FormValue("section")) != 4 {
 		http.NotFound(w, r)
@@ -64,12 +64,11 @@ func (sv *StaffView) ClassEdit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	nav, err := sv.MakeNav(teacher, "classroom", class.ClassName)
+	nav, err := sv.MakeNav(teacher, "classroom", class.ClassName, Teacher)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
 
 	sv.tmpls.Lookup("classedit").Execute(w, TD{N: nav, C: class})
 }

@@ -41,7 +41,8 @@ func main() {
 	http.HandleFunc("/login", sv.Login)
 
 	if *devMode {
-		http.HandleFunc("/temp", roster.Temp)
+		http.HandleFunc("/devTeacher", roster.DevTeacherLogin)
+		http.HandleFunc("/devStudent", roster.DevStudentLogin)
 	}
 
 	// list of students

@@ -75,6 +75,12 @@ func (s *Store) TeacherNameFromEmail(email string) (teacher, name, guid string, 
 	return teacher, name, guid, err
 }
 
+func (s *Store) StudentFromEmail(email string) (*synergy.Stu415, error) {
+	perm := email[:9]
+	return s.SelectStu415(perm)
+
+}
+
 func (s *Store) CreateStaff(stu415CSV string) error {
 	f, err := os.Open(stu415CSV)
 	if err != nil {
