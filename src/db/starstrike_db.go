@@ -21,7 +21,19 @@ const (
 	// insertMystarStrike = `INSERT INTO mystarstrike(teacher, comment, title, icon, cat, isActive) VALUES("Kappus, Matthew D.", "The first sample strike", "Strike 1", "bi-clock", 1, true);`
 	// selecting teacher="all" gets schoolwide starstrikes
 	selectMyStarStrikes = `SELECT * FROM mystarstrike WHERE teacher="all" OR teacher = ?`
+	insertMyStarStrike  = `INSERT INTO mystarstrike(teacher, comment, title, icon, cat, isActive) VALUES(?,?,?,?,?,true)`
 )
+
+// InsertAllMyStarStrikes adds starstrikes for teacher="all" for school-wide use
+func (s *Store) InsertAllMyStarStrikes() {
+
+}
+
+// CreateMystarStrike for teacher-create star strikes
+func (s *Store) InsertMyStarStrike(teacher, comment, title, icon string, cat int) error {
+	_, err := s.db.Exec(createMystarStrike)
+	return err
+}
 
 func (s *Store) GetMyStarStrikes(teacher string) ([]*comment.StarStrike, error) {
 	rows, err := s.db.Query(selectMyStarStrikes, teacher)

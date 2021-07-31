@@ -3,6 +3,7 @@ package roster
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 )
 
 func (sv *StaffView) Profile(w http.ResponseWriter, r *http.Request) {
@@ -71,4 +72,57 @@ func (sv *StaffView) ClassEdit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	sv.tmpls.Lookup("classedit").Execute(w, TD{N: nav, C: class})
+}
+
+// AddMyStarStrikeAll creates a starstrike for all teachers to assign
+func (sv *StaffView) AddMyStarStrikeAll(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+		return
+	}
+
+	// todo: check if Session.Type == Admin
+
+	// (id INTEGER PRIMARY KEY, teacher TEXT, comment TEXT, title TEXT, icon TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, cat INTEGER, isActive BOOLEAN DEFAULT true)
+	teacher := "all"
+	comment := r.PostFormValue("comment")
+	title := r.PostFormValue("title")
+	icon := r.PostFormValue("icon")
+
+	// todo: verify cat is 0-1
+	// switch r.PostFormValue("cat") {
+	// case "0":
+	// 	c = comment.Star
+	// case "1":
+	// 	c = comment.MinorStrike
+	// case "2":
+	// 	c = comment.MajorStrike
+	// case "3":
+	// 	c = comment.MajorStrike
+	// }
+
+	c, err := strconv.Atoi(r.PostFormValue("cat"))
+	if c < 0 || c > 3 || err != nil {
+
+		http.Error(w, "Invalid cat: "+r.PostFormValue("cat"), http.StatusNotAcceptable)
+		return
+	}
+
+	// todo: make title unique
+	err = sv.store.InsertMyStarStrike(teacher, comment, title, icon, c)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+
+}
+
+
+func (sv  *StaffView) MyStarStrikeForm(w http.ResponseWriter, r *http.Request)  {
+
+
+	sv.tmpls.Lookup("mystarstrikeform").Execute(w, nil)
+	
 }

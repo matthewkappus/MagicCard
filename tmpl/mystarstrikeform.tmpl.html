@@ -1,0 +1,47 @@
+{{ define "mystarstrikeform" }}
+
+<!-- 
+
+    teacher needed
+ -->
+{{ template "head" .N }}
+    {{ template "nav" .N }}
+
+
+ <!-- /admin/addMyStarStrike" -->
+ <h1 class="text-center mb-3">Custom Stars & Strikes</h1>
+ <form action="/admin/addMyStarStrike" method="POST">
+     <div class="row mb-1">
+
+        <!-- todo: get teacher from nav -->
+        <input type="hidden" name="teacher" value="{{.C.Teacher}}">
+         <div class="col">
+             <label class="form-label">Title</label>
+             <input type="text" name="title" class="form-control" placeholder="1-Word Title"
+                 aria-label="Comment title" required>
+         </div>
+         <div class="col">
+             <label class="form-label">Comment</label>
+             <input type="text" name="comment" class="form-control" placeholder="Default comment"
+                 aria-label="Last name" required>
+         </div>
+     </div>
+     <div class="row mb-1">
+         <div class="col">
+             <label class="form-label">Category</label>
+            
+             <select name="cat" id="catSelect">
+                 <option value="0">Star</option>
+                 <option value="1">Minor Strike</option>
+                 <option value="2">Strike</option>
+                 <option value="3">Major Strike</option>
+             </select>
+         </div>
+         <!-- todo: choose default icon with script -->
+         <input type="hidden" name="icon" value="bi-star-fill">
+     <button type="submit" class="btn btn-primary mt-2">Submit</button>
+ </form>
+
+ {{ template "tail" }}
+
+{{ end }}

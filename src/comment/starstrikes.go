@@ -7,7 +7,7 @@ type Category int
 const (
 	Star Category = iota
 	MinorStrike
-	Strik
+	Strike
 	MajorStrike
 )
 

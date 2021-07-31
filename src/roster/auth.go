@@ -11,7 +11,6 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-
 // Scopes: 0 Guest 1 Student 2 Teacher 3 Admin
 type Scope int
 
@@ -82,18 +81,21 @@ func (sv *StaffView) GetStudent(r *http.Request) string {
 
 // looks for teacher and guid cookie, matches with staff db
 func (sv *StaffView) isTeacher(r *http.Request, w http.ResponseWriter) bool {
+	teacherCookie, _ := r.Cookie("teacher")
 
-	guidCookie, err := r.Cookie("guid")
-	if err != nil {
-		return false
-	}
+	return teacherCookie.Value != ""
+	// todo: check guid
+	// guidCookie, err := r.Cookie("guid")
+	// if err != nil {
+	// 	return false
+	// }
 
-	guid, err := sv.store.GetKeyByTeacher(sv.GetTeacher(r))
-	if err != nil {
-		return false
-	}
+	// guid, err := sv.store.GetKeyByTeacher(sv.GetTeacher(r))
+	// if err != nil {
+	// 	return false
+	// }
 
-	return guidCookie.Value == guid
+	// return guidCookie.Value == guid
 }
 
 // Login takes JWT from Google Sign In Button and sets the name, email and token values

@@ -3,3 +3,4 @@ data/
 MagicCard
 lit/
 *.yaml
+src/db/create_tables.sql

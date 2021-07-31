@@ -55,6 +55,11 @@ func main() {
 
 	http.HandleFunc("/class", sv.TeacherLock(sv.ClassEdit))
 
+	// Admin Tools
+	http.HandleFunc("/admin/addMyStarStrike", sv.AddMyStarStrikeAll)
+	http.HandleFunc("/admin/myStarStrikeForm/", sv.MyStarStrikeForm)
+	// http.HandleFunc("/admin", sv.AdminHome)
+
 	http.HandleFunc("/", sv.Home)
 
 	http.ListenAndServe(":8080", nil)
