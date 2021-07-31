@@ -108,9 +108,11 @@ func (sv *StaffView) AddMyStarStrikeAll(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	fmt.Println("inserting new mystarstrike", teacher, comment, title, icon)
 	// todo: make title unique
 	err = sv.store.InsertMyStarStrike(teacher, comment, title, icon, c)
 	if err != nil {
+		fmt.Println("error insrting mystarstrike", err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -119,10 +121,8 @@ func (sv *StaffView) AddMyStarStrikeAll(w http.ResponseWriter, r *http.Request) 
 
 }
 
-
-func (sv  *StaffView) MyStarStrikeForm(w http.ResponseWriter, r *http.Request)  {
-
+func (sv *StaffView) MyStarStrikeForm(w http.ResponseWriter, r *http.Request) {
 
 	sv.tmpls.Lookup("mystarstrikeform").Execute(w, nil)
-	
+
 }

@@ -31,7 +31,7 @@ func (s *Store) InsertAllMyStarStrikes() {
 
 // CreateMystarStrike for teacher-create star strikes
 func (s *Store) InsertMyStarStrike(teacher, comment, title, icon string, cat int) error {
-	_, err := s.db.Exec(createMystarStrike)
+	_, err := s.db.Exec(insertMyStarStrike, teacher, comment, title, icon, cat)
 	return err
 }
 
