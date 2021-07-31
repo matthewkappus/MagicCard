@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-func (sv *StaffView) Profile(w http.ResponseWriter, r *http.Request) {
+func (sv *View) Profile(w http.ResponseWriter, r *http.Request) {
 
 	teacher := sv.GetTeacher(r)
 	nav, err := sv.MakeNav(teacher, "teacher", "Student Search", Teacher)
@@ -23,7 +23,7 @@ func (sv *StaffView) Profile(w http.ResponseWriter, r *http.Request) {
 	sv.tmpls.Lookup("profile").Execute(w, TD{N: nav, C: c})
 }
 
-func (sv *StaffView) AddComment(w http.ResponseWriter, r *http.Request) {
+func (sv *View) AddComment(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method != http.MethodPost {
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
@@ -31,11 +31,11 @@ func (sv *StaffView) AddComment(w http.ResponseWriter, r *http.Request) {
 	}
 	r.ParseForm()
 
-	// teacher must match session
-	t := sv.GetTeacher(r)
-	if t != r.PostFormValue("teacher") {
-		fmt.Printf("form.teacher: '%s' doesn't match session.teacher '%s'", r.PostFormValue("teacher"), t)
-	}
+	// todo: teacher must match session
+	// t := sv.GetTeacher(r)
+	// if t != r.PostFormValue("teacher") {
+	// 	fmt.Printf("form.teacher: '%s' doesn't match session.teacher '%s'", r.PostFormValue("teacher"), t)
+	// }
 
 	// perm_id, teacher, comment, title, cat, isActive
 	err := sv.store.AddStarStrike(r.PostFormValue("permid"), r.PostFormValue("teacher"), r.PostFormValue("comment"), r.PostFormValue("title"), r.PostFormValue("icon"), r.PostFormValue("cat"))
@@ -48,7 +48,7 @@ func (sv *StaffView) AddComment(w http.ResponseWriter, r *http.Request) {
 }
 
 // ClassEdit by section
-func (sv *StaffView) ClassEdit(w http.ResponseWriter, r *http.Request) {
+func (sv *View) ClassEdit(w http.ResponseWriter, r *http.Request) {
 	if len(r.FormValue("section")) != 4 {
 		http.NotFound(w, r)
 		return
@@ -75,7 +75,7 @@ func (sv *StaffView) ClassEdit(w http.ResponseWriter, r *http.Request) {
 }
 
 // AddMyStarStrikeAll creates a starstrike for all teachers to assign
-func (sv *StaffView) AddMyStarStrikeAll(w http.ResponseWriter, r *http.Request) {
+func (sv *View) AddMyStarStrikeAll(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return
@@ -121,7 +121,7 @@ func (sv *StaffView) AddMyStarStrikeAll(w http.ResponseWriter, r *http.Request) 
 
 }
 
-func (sv *StaffView) MyStarStrikeForm(w http.ResponseWriter, r *http.Request) {
+func (sv *View) MyStarStrikeForm(w http.ResponseWriter, r *http.Request) {
 
 	sv.tmpls.Lookup("mystarstrikeform").Execute(w, nil)
 

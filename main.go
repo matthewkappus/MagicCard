@@ -33,12 +33,12 @@ func main() {
 
 	defer s.Close()
 
-	sv, err := roster.NewView(s)
+	staffView, err := roster.NewView(s, "tmpl/*.tmpl.html", roster.Teacher)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	http.HandleFunc("/login", sv.Login)
+	http.HandleFunc("/login", staffView.Login)
 
 	if *devMode {
 		http.HandleFunc("/devTeacher", roster.DevTeacherLogin)
@@ -46,21 +46,22 @@ func main() {
 	}
 
 	// list of students
-	http.HandleFunc("/students", sv.TeacherLock(sv.Search))
+	http.HandleFunc("/students", staffView.TeacherLock(staffView.Search))
 
-	http.HandleFunc("/card", sv.TeacherLock(sv.MagicCard))
+	// list of students
+	http.HandleFunc("/card", staffView.MagicCard)
 
-	http.HandleFunc("/teacher", sv.TeacherLock(sv.Profile))
-	http.HandleFunc("/addComment", sv.AddComment)
+	http.HandleFunc("/teacher", staffView.TeacherLock(staffView.Profile))
+	http.HandleFunc("/addComment", staffView.AddComment)
 
-	http.HandleFunc("/class", sv.TeacherLock(sv.ClassEdit))
+	http.HandleFunc("/class", staffView.TeacherLock(staffView.ClassEdit))
 
 	// Admin Tools
-	http.HandleFunc("/admin/addMyStarStrike", sv.AddMyStarStrikeAll)
-	http.HandleFunc("/admin/myStarStrikeForm/", sv.MyStarStrikeForm)
-	// http.HandleFunc("/admin", sv.AdminHome)
+	http.HandleFunc("/admin/addMyStarStrike", staffView.AddMyStarStrikeAll)
+	http.HandleFunc("/admin/myStarStrikeForm", staffView.MyStarStrikeForm)
+	// http.HandleFunc("/admin", staffView.AdminHome)
 
-	http.HandleFunc("/", sv.Home)
+	http.HandleFunc("/", staffView.Home)
 
 	http.ListenAndServe(":8080", nil)
 

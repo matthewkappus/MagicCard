@@ -49,7 +49,7 @@ func ParseIdentity(r *http.Request) (email string, err error) {
 	return strings.ToLower(email), nil
 
 }
-func (sv *StaffView) TeacherLock(h http.HandlerFunc) http.HandlerFunc {
+func (sv *View) TeacherLock(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if !sv.isTeacher(r, w) {
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
@@ -59,7 +59,7 @@ func (sv *StaffView) TeacherLock(h http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-func (sv *StaffView) GetTeacher(r *http.Request) string {
+func (sv *View) GetTeacher(r *http.Request) string {
 	teacherCookie, err := r.Cookie("teacher")
 	if err != nil {
 		return ""
@@ -69,7 +69,7 @@ func (sv *StaffView) GetTeacher(r *http.Request) string {
 }
 
 // GetStudent returns the perm of logged in "student" cookie
-func (sv *StaffView) GetStudent(r *http.Request) string {
+func (sv *View) GetStudent(r *http.Request) string {
 	studentCookie, err := r.Cookie("student")
 	if err != nil {
 		return ""
@@ -80,7 +80,7 @@ func (sv *StaffView) GetStudent(r *http.Request) string {
 }
 
 // looks for teacher and guid cookie, matches with staff db
-func (sv *StaffView) isTeacher(r *http.Request, w http.ResponseWriter) bool {
+func (sv *View) isTeacher(r *http.Request, w http.ResponseWriter) bool {
 	return true
 	// todo: check guid
 	// guidCookie, err := r.Cookie("guid")
@@ -97,7 +97,7 @@ func (sv *StaffView) isTeacher(r *http.Request, w http.ResponseWriter) bool {
 }
 
 // Login takes JWT from Google Sign In Button and sets the name, email and token values
-func (sv *StaffView) Login(w http.ResponseWriter, r *http.Request) {
+func (sv *View) Login(w http.ResponseWriter, r *http.Request) {
 
 	email, err := ParseIdentity(r)
 	if err != nil {

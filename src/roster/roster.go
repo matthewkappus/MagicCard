@@ -11,15 +11,22 @@ import (
 	"github.com/matthewkappus/Roster/src/synergy"
 )
 
-type StaffView struct {
-	tmpls *template.Template
-	store *db.Store
+type View struct {
+	// student/admin/teacher
+	UserCookie string
+	Type       Scope
+	Nav        *Nav
+	tmpls      *template.Template
+	M          *MagicCard
+	C          *Classroom
+	N          *Nav
+	store      *db.Store
 	// store sql.DB
 }
 
 // ClassList return unique CourseIDAndTitle sections for "teacher" cookie
 // Returns error if no teacher cookie
-func (sv *StaffView) ClassList(r *http.Request) ([]*synergy.Stu415, error) {
+func (sv *View) ClassList(r *http.Request) ([]*synergy.Stu415, error) {
 	teacherCookie, err := r.Cookie("teacher")
 
 	if err != nil {
@@ -30,20 +37,21 @@ func (sv *StaffView) ClassList(r *http.Request) ([]*synergy.Stu415, error) {
 }
 
 // NewView takes a roster db and tmpl path and returns handler object
-func NewView(store *db.Store) (*StaffView, error) {
-	tmpls, err := template.ParseGlob("tmpl/*.tmpl.html")
+func NewView(store *db.Store, templateGlob string, viewType Scope) (*View, error) {
+	tmpls, err := template.ParseGlob(templateGlob)
 	if err != nil {
 		return nil, err
 	}
 
-	return &StaffView{
+	return &View{
+		Type:  viewType,
 		tmpls: tmpls,
 		store: store,
 	}, nil
 
 }
 
-func (sv *StaffView) Search(w http.ResponseWriter, r *http.Request) {
+func (sv *View) Search(w http.ResponseWriter, r *http.Request) {
 	teacher := sv.GetTeacher(r)
 	nav, err := sv.MakeNav(teacher, "students", "Student Search", Teacher)
 
@@ -60,7 +68,7 @@ func (sv *StaffView) Search(w http.ResponseWriter, r *http.Request) {
 	sv.tmpls.Lookup("search").Execute(w, TD{N: nav, C: cr})
 }
 
-func (sv *StaffView) Home(w http.ResponseWriter, r *http.Request) {
+func (sv *View) Home(w http.ResponseWriter, r *http.Request) {
 
 	scope, teacher, student, err := sv.GetSessionUser(r)
 	if err != nil {
@@ -102,7 +110,7 @@ func (sv *StaffView) Home(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetSessionType returns  3 Admin, 2 Teacher, 1 Student or 0 for guest scope (not signed in)
-func (sv *StaffView) GetSessionType(r *http.Request) Scope {
+func (sv *View) GetSessionType(r *http.Request) Scope {
 	scopeCookie, err := r.Cookie("scope")
 	if err != nil {
 		return 0
@@ -123,7 +131,7 @@ func (sv *StaffView) GetSessionType(r *http.Request) Scope {
 }
 
 // GetSessionUser returns scope and the "student" perm or "teacher" name
-func (sv *StaffView) GetSessionUser(r *http.Request) (s Scope, teacher, student string, err error) {
+func (sv *View) GetSessionUser(r *http.Request) (s Scope, teacher, student string, err error) {
 	s = sv.GetSessionType(r)
 	if s == 0 {
 		return 0, "", "", fmt.Errorf("not signed in")

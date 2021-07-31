@@ -43,7 +43,7 @@ type MagicCard struct {
 	StrikeMap map[string][]*comment.StarStrike
 }
 
-func (sv *StaffView) MakeStudent(perm string) (*MagicCard, error) {
+func (sv *View) MakeStudent(perm string) (*MagicCard, error) {
 	stu, err := sv.store.SelectStu415(perm)
 	if err != nil {
 		return nil, err
@@ -87,7 +87,7 @@ func (sv *StaffView) MakeStudent(perm string) (*MagicCard, error) {
 		StrikeMap: strikesM}, nil
 }
 
-func (sv *StaffView) MakeClassroom(teacher, section string) (*Classroom, error) {
+func (sv *View) MakeClassroom(teacher, section string) (*Classroom, error) {
 	s415s, err := sv.store.ListStudents(section)
 	if err != nil {
 		return nil, err
@@ -118,7 +118,7 @@ func (sv *StaffView) MakeClassroom(teacher, section string) (*Classroom, error) 
 }
 
 // MakeSchoolClassroom returns list of every unique stu415
-func (sv *StaffView) MakeSchoolClassroom(teacher string) (*Classroom, error) {
+func (sv *View) MakeSchoolClassroom(teacher string) (*Classroom, error) {
 	s415s, err := sv.store.ListAllStudents()
 	if err != nil {
 		return nil, err
@@ -147,7 +147,7 @@ func (sv *StaffView) MakeSchoolClassroom(teacher string) (*Classroom, error) {
 
 }
 
-func (sv *StaffView) MakeTeacherMagicCard(name string) (*MagicCard, error) {
+func (sv *View) MakeTeacherMagicCard(name string) (*MagicCard, error) {
 
 	stars, strikes, err := sv.store.SelectTeacherStarStrikes(name, 100)
 	if err != nil {
@@ -182,7 +182,7 @@ func (sv *StaffView) MakeTeacherMagicCard(name string) (*MagicCard, error) {
 		StrikeMap: stikesM}, nil
 }
 
-func (sv *StaffView) MakeStudentMagicCard(perm string) (*MagicCard, error) {
+func (sv *View) MakeStudentMagicCard(perm string) (*MagicCard, error) {
 
 	stu, err := sv.store.SelectStu415(perm)
 	if err != nil {
@@ -229,7 +229,7 @@ func (sv *StaffView) MakeStudentMagicCard(perm string) (*MagicCard, error) {
 }
 
 // MakeNav returns data struct for use in <head> / <nav>
-func (sv *StaffView) MakeNav(teacher, path, title string, stype Scope) (*Nav, error) {
+func (sv *View) MakeNav(teacher, path, title string, stype Scope) (*Nav, error) {
 	classlist, err := sv.store.ListClasses(teacher)
 	if err != nil {
 		return nil, err
