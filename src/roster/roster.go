@@ -73,6 +73,11 @@ func (sv *StaffView) Home(w http.ResponseWriter, r *http.Request) {
 	switch scope {
 	case Teacher:
 		nav, err = sv.MakeNav(teacher, "home", "Magic Card", scope)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		mc, err = sv.MakeTeacherMagicCard(teacher)
 
 	case Admin:
 		nav, err = sv.MakeNav(teacher, "home", "Magic Card", scope)

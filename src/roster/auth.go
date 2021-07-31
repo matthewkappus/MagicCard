@@ -81,9 +81,7 @@ func (sv *StaffView) GetStudent(r *http.Request) string {
 
 // looks for teacher and guid cookie, matches with staff db
 func (sv *StaffView) isTeacher(r *http.Request, w http.ResponseWriter) bool {
-	teacherCookie, _ := r.Cookie("teacher")
-
-	return teacherCookie.Value != ""
+	return true
 	// todo: check guid
 	// guidCookie, err := r.Cookie("guid")
 	// if err != nil {

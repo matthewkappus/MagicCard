@@ -24,8 +24,32 @@ const (
 	insertMyStarStrike  = `INSERT INTO mystarstrike(teacher, comment, title, icon, cat, isActive) VALUES(?,?,?,?,?,true)`
 )
 
-// InsertAllMyStarStrikes adds starstrikes for teacher="all" for school-wide use
-func (s *Store) InsertAllMyStarStrikes() {
+// SelectTeacherStarStrikes with teacher name up to query limmit
+func (s *Store) SelectTeacherStarStrikes(teacher string, limit int) (stars, strikes []*comment.StarStrike, err error) {
+	rows, err := s.db.Query(selectNewestStarStrikesByTeacher, teacher, limit)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer rows.Close()
+
+	stars = make([]*comment.StarStrike, 0)
+	strikes = make([]*comment.StarStrike, 0)
+
+	for rows.Next() {
+		strstr := new(comment.StarStrike)
+		// id  perm_id TEXT, teacher TEXT, comment TEXT, title TEXT, icon TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, cat INTEGER, isActive
+		if err := rows.Scan(&strstr.ID, &strstr.PermID, &strstr.Teacher, &strstr.Comment, &strstr.Title, &strstr.Icon, &strstr.Created, &strstr.Cat, &strstr.IsActive); err != nil {
+			fmt.Printf("ss scan err: %v\n", err)
+			continue
+		}
+		if strstr.Cat == 0 {
+			stars = append(stars, strstr)
+			continue
+		}
+		strikes = append(strikes, strstr)
+	}
+
+	return stars, strikes, nil
 
 }
 
@@ -53,32 +77,6 @@ func (s *Store) GetMyStarStrikes(teacher string) ([]*comment.StarStrike, error) 
 		ss = append(ss, strstr)
 	}
 	return ss, nil
-}
-
-func (s *Store) GetTeacherStarStrikes(teacher string) (stars, strikes []*comment.StarStrike, err error) {
-	rows, err := s.db.Query(selectMyStarStrikes, teacher)
-	if err != nil {
-		return nil, nil, err
-	}
-	defer rows.Close()
-
-	stars = make([]*comment.StarStrike, 0)
-	strikes = make([]*comment.StarStrike, 0)
-	for rows.Next() {
-		sb := new(comment.StarStrike)
-
-		if err = rows.Scan(&sb.ID, &sb.Teacher, &sb.Comment, &sb.Title, &sb.Icon, &sb.Created, &sb.Cat, &sb.IsActive); err != nil {
-			continue
-		}
-		if sb.Cat == comment.Star {
-			stars = append(stars, sb)
-
-		} else {
-
-			strikes = append(strikes, sb)
-		}
-	}
-	return stars, strikes, nil
 }
 
 // AddStarStrike into the store

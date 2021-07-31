@@ -147,6 +147,41 @@ func (sv *StaffView) MakeSchoolClassroom(teacher string) (*Classroom, error) {
 
 }
 
+func (sv *StaffView) MakeTeacherMagicCard(name string) (*MagicCard, error) {
+
+	stars, strikes, err := sv.store.SelectTeacherStarStrikes(name, 100)
+	if err != nil {
+		return nil, err
+	}
+
+	starsM := make(map[string][]*comment.StarStrike)
+	for _, ss := range stars {
+		match, exists := starsM[ss.Title]
+		if exists {
+			starsM[ss.Title] = append(match, ss)
+			continue
+		}
+		starsM[ss.Title] = []*comment.StarStrike{ss}
+	}
+
+	stikesM := make(map[string][]*comment.StarStrike)
+	for _, ss := range strikes {
+		match, exists := stikesM[ss.Title]
+		if exists {
+			stikesM[ss.Title] = append(match, ss)
+			continue
+		}
+		stikesM[ss.Title] = []*comment.StarStrike{ss}
+	}
+
+	return &MagicCard{
+
+		Name:      name,
+		ID:        name,
+		StarMap:   starsM,
+		StrikeMap: stikesM}, nil
+}
+
 func (sv *StaffView) MakeStudentMagicCard(perm string) (*MagicCard, error) {
 
 	stu, err := sv.store.SelectStu415(perm)
