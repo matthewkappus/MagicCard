@@ -92,31 +92,35 @@ func (v *View) Search(w http.ResponseWriter, r *http.Request) {
 }
 
 func (v *View) Home(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "magic card!!")
-	// switch v.Type {
-	// case Teacher:
+	scope, user, err := v.GetSessionUser(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	v.N, err = v.MakeNav(user, "home", "Magic Card", scope)
 
-	// 	v.M, err = v.MakeTeacherMagicCard(teacher)
+	fmt.Printf("v.N classes: %d\n", len(v.N.ClassList))
 
-	// case Admin:
-	// 	v.N, err = v.MakeNav(teacher, "home", "Magic Card", scope)
-	// case Student:
-	// 	v.N, err = v.MakeNav(student, "home", "Magic Card", scope)
-	// 	if err != nil {
-	// 		http.Error(w, err.Error(), http.StatusInternalServerError)
-	// 		return
-	// 	}
-	// 	v.M, err = v.MakeStudentMagicCard(student)
-	// case Guest:
-	// 	v.N, err = v.MakeNav("guest", "home", "Magic Card", scope)
-	// default:
-	// 	fmt.Println("no scope found")
-	// }
+	switch scope {
+	case Teacher:
 
-	// if err != nil {
-	// 	fmt.Printf("error making nav: %v", err)
-	// }
-	// v.tmpls.Lookup("home").Execute(w, TD{N: nav, M: mc})
+		v.M, err = v.MakeTeacherMagicCard(user)
+
+	case Admin:
+	case Student:
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		v.M, err = v.MakeStudentMagicCard(user)
+	default:
+		fmt.Println("guest view")
+	}
+
+	if err != nil {
+		fmt.Printf("error making nav: %v", err)
+	}
+	v.tmpls.Lookup("home").Execute(w, TD{N: v.N, M: v.M})
 
 }
 

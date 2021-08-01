@@ -14,7 +14,6 @@ func (v *View) Profile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("User %s classlist size %d\n", v.User, len(v.N.ClassList))
 	v.tmpls.Lookup("profile").Execute(w, TD{N: v.N, C: c})
 }
 

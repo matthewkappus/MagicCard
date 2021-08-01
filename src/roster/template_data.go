@@ -16,7 +16,7 @@ type Nav struct {
 	Path      string
 	Title     string
 	Status    string
-	// 0 Student 1 Teacher 2 Admin
+	// 0 Guest 1 Student 2 Teacher 3 Admin
 	Type Scope
 }
 

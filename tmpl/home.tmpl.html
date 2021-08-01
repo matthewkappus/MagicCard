@@ -1,34 +1,8 @@
 {{ define "home" }}
+
 {{ template "head" }}
 {{ template "nav" .N }}
-
-
-    {{ if eq .N.Type 0}}
-        <h3>hello guest</h3>
-        <!--  0: Guest. (Not signed in) -->
-        please sign in please
-        {{ template "signin" }}
-
-
-    {{ else if eq .N.Type 1 }}
-    <!-- 1: Student Page -->
-        {{ template "magiccard" .M }}
-    
-    {{ else if eq .N.Type 2 }}
-    <!-- 2: teacher page  -->
-
-        {{ template "magiccard" .M }}
-
-   
-    
-    {{ else if eq .N.Type 3 }}
-    <!-- 3: admin page -->
-        {{ template "magiccard" .M }}
-        
-
-      
-    {{ end }}
-
+	data: {{.}}
 {{ template "tail" }}
 {{ end }}
 
