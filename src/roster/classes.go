@@ -6,24 +6,19 @@ import (
 	"strconv"
 )
 
-func (sv *View) Profile(w http.ResponseWriter, r *http.Request) {
+func (v *View) Profile(w http.ResponseWriter, r *http.Request) {
 
-	teacher := sv.GetTeacher(r)
-	nav, err := sv.MakeNav(teacher, "teacher", "Student Search", Teacher)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	c, err := sv.MakeSchoolClassroom(teacher)
+	c, err := v.MakeSchoolClassroom(v.User)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	sv.tmpls.Lookup("profile").Execute(w, TD{N: nav, C: c})
+	fmt.Printf("User %s classlist size %d\n", v.User, len(v.N.ClassList))
+	v.tmpls.Lookup("profile").Execute(w, TD{N: v.N, C: c})
 }
 
-func (sv *View) AddComment(w http.ResponseWriter, r *http.Request) {
+func (v *View) AddComment(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method != http.MethodPost {
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
@@ -32,13 +27,13 @@ func (sv *View) AddComment(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
 	// todo: teacher must match session
-	// t := sv.GetTeacher(r)
+	// t := v.GetTeacher(r)
 	// if t != r.PostFormValue("teacher") {
 	// 	fmt.Printf("form.teacher: '%s' doesn't match session.teacher '%s'", r.PostFormValue("teacher"), t)
 	// }
 
 	// perm_id, teacher, comment, title, cat, isActive
-	err := sv.store.AddStarStrike(r.PostFormValue("permid"), r.PostFormValue("teacher"), r.PostFormValue("comment"), r.PostFormValue("title"), r.PostFormValue("icon"), r.PostFormValue("cat"))
+	err := v.store.AddStarStrike(r.PostFormValue("permid"), r.PostFormValue("teacher"), r.PostFormValue("comment"), r.PostFormValue("title"), r.PostFormValue("icon"), r.PostFormValue("cat"))
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return
@@ -48,34 +43,33 @@ func (sv *View) AddComment(w http.ResponseWriter, r *http.Request) {
 }
 
 // ClassEdit by section
-func (sv *View) ClassEdit(w http.ResponseWriter, r *http.Request) {
+func (v *View) ClassEdit(w http.ResponseWriter, r *http.Request) {
 	if len(r.FormValue("section")) != 4 {
 		http.NotFound(w, r)
 		return
 	}
-	teacher := sv.GetTeacher(r)
 
-	class, err := sv.MakeClassroom(teacher, r.FormValue("section"))
+	class, err := v.MakeClassroom(v.User, r.FormValue("section"))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	if class.Teacher != teacher {
+	if class.Teacher != v.User {
 		http.Error(w, "Not your class", http.StatusForbidden)
 		return
 	}
 
-	nav, err := sv.MakeNav(teacher, "classroom", class.ClassName, Teacher)
+	nav, err := v.MakeNav(v.User, "classroom", class.ClassName, Teacher)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	sv.tmpls.Lookup("classedit").Execute(w, TD{N: nav, C: class})
+	v.tmpls.Lookup("classedit").Execute(w, TD{N: nav, C: class})
 }
 
 // AddMyStarStrikeAll creates a starstrike for all teachers to assign
-func (sv *View) AddMyStarStrikeAll(w http.ResponseWriter, r *http.Request) {
+func (v *View) AddMyStarStrikeAll(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return
@@ -110,7 +104,7 @@ func (sv *View) AddMyStarStrikeAll(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("inserting new mystarstrike", teacher, comment, title, icon)
 	// todo: make title unique
-	err = sv.store.InsertMyStarStrike(teacher, comment, title, icon, c)
+	err = v.store.InsertMyStarStrike(teacher, comment, title, icon, c)
 	if err != nil {
 		fmt.Println("error insrting mystarstrike", err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -121,8 +115,8 @@ func (sv *View) AddMyStarStrikeAll(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (sv *View) MyStarStrikeForm(w http.ResponseWriter, r *http.Request) {
+func (v *View) MyStarStrikeForm(w http.ResponseWriter, r *http.Request) {
 
-	sv.tmpls.Lookup("mystarstrikeform").Execute(w, nil)
+	v.tmpls.Lookup("mystarstrikeform").Execute(w, nil)
 
 }

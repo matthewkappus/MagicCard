@@ -51,7 +51,8 @@ func main() {
 	// list of students
 	http.HandleFunc("/card", staffView.MagicCard)
 
-	http.HandleFunc("/teacher", staffView.TeacherLock(staffView.Profile))
+	staffView.HF("/teacher", staffView.Profile)
+
 	http.HandleFunc("/addComment", staffView.AddComment)
 
 	http.HandleFunc("/class", staffView.TeacherLock(staffView.ClassEdit))

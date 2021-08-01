@@ -49,9 +49,9 @@ func ParseIdentity(r *http.Request) (email string, err error) {
 	return strings.ToLower(email), nil
 
 }
-func (sv *View) TeacherLock(h http.HandlerFunc) http.HandlerFunc {
+func (v *View) TeacherLock(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if !sv.isTeacher(r, w) {
+		if !v.isTeacher(r, w) {
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
@@ -59,45 +59,44 @@ func (sv *View) TeacherLock(h http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-func (sv *View) GetTeacher(r *http.Request) string {
-	teacherCookie, err := r.Cookie("teacher")
-	if err != nil {
-		return ""
-	}
+// func (v *View) GetTeacher(r *http.Request) string {
+// 	teacherCookie, err := r.Cookie("teacher")
+// 	if err != nil {
+// 		return ""
+// 	}
 
-	return string(teacherCookie.Value)
-}
+// 	return string(teacherCookie.Value)
+// }
 
-// GetStudent returns the perm of logged in "student" cookie
-func (sv *View) GetStudent(r *http.Request) string {
-	studentCookie, err := r.Cookie("student")
-	if err != nil {
-		return ""
-	}
-	// todo: check status?
+// // GetStudent returns the perm of logged in "student" cookie
+// func (v *View) GetStudent(r *http.Request) string {
+// 	studentCookie, err := r.Cookie("student")
+// 	if err != nil {
+// 		return ""
+// 	}
+// 	// todo: check status?
 
-	return string(studentCookie.Value)
-}
+// 	return string(studentCookie.Value)
+// }
 
 // looks for teacher and guid cookie, matches with staff db
-func (sv *View) isTeacher(r *http.Request, w http.ResponseWriter) bool {
-	return true
-	// todo: check guid
-	// guidCookie, err := r.Cookie("guid")
-	// if err != nil {
-	// 	return false
-	// }
+func (v *View) isTeacher(r *http.Request, w http.ResponseWriter) bool {
+	guidCookie, err := r.Cookie("guid")
+	if err != nil {
+		return false
+	}
 
-	// guid, err := sv.store.GetKeyByTeacher(sv.GetTeacher(r))
-	// if err != nil {
-	// 	return false
-	// }
+	guid, err := v.store.GetKeyByTeacher(v.User)
+	if err != nil {
+		return false
+	}
 
-	// return guidCookie.Value == guid
+	return guidCookie.Value == guid
 }
 
 // Login takes JWT from Google Sign In Button and sets the name, email and token values
-func (sv *View) Login(w http.ResponseWriter, r *http.Request) {
+// Login sets the view Scope and session Identity on view and User cookies
+func (v *View) Login(w http.ResponseWriter, r *http.Request) {
 
 	email, err := ParseIdentity(r)
 	if err != nil {
@@ -107,7 +106,7 @@ func (sv *View) Login(w http.ResponseWriter, r *http.Request) {
 
 	if studentFormat, _ := regexp.MatchString("[0-9]+@aps.edu", email); studentFormat {
 
-		student, err := sv.store.StudentFromEmail(email)
+		student, err := v.store.StudentFromEmail(email)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
@@ -115,11 +114,11 @@ func (sv *View) Login(w http.ResponseWriter, r *http.Request) {
 
 		fmt.Printf("Setting scope %d for student %s", Student, student.PermID)
 		http.SetCookie(w, &http.Cookie{Name: "name", Value: student.StudentName, Domain: "/"})
-		http.SetCookie(w, &http.Cookie{Name: "student", Value: student.PermID})
+		http.SetCookie(w, &http.Cookie{Name: "user", Value: student.PermID})
 		http.SetCookie(w, &http.Cookie{Name: "scope", Value: fmt.Sprint(Student)})
 
 	} else {
-		teacher, name, guid, err := sv.store.TeacherNameFromEmail(email)
+		teacher, name, guid, err := v.store.TeacherNameFromEmail(email)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
@@ -127,7 +126,7 @@ func (sv *View) Login(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Setting scope %d for student %s", Student, teacher)
 
 		http.SetCookie(w, &http.Cookie{Name: "name", Value: name, Domain: "/"})
-		http.SetCookie(w, &http.Cookie{Name: "teacher", Value: teacher})
+		http.SetCookie(w, &http.Cookie{Name: "user", Value: teacher})
 		http.SetCookie(w, &http.Cookie{Name: "scope", Value: fmt.Sprint(Teacher)})
 
 		http.SetCookie(w, &http.Cookie{Name: "guid", Value: guid})
@@ -140,7 +139,7 @@ func (sv *View) Login(w http.ResponseWriter, r *http.Request) {
 
 func DevTeacherLogin(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{Name: "name", Value: "Matt Kappus"})
-	http.SetCookie(w, &http.Cookie{Name: "teacher", Value: "Kappus, Matthew D."})
+	http.SetCookie(w, &http.Cookie{Name: "user", Value: "Kappus, Matthew D."})
 	http.SetCookie(w, &http.Cookie{Name: "guid", Value: "1830a69c-a641-4832-9b38-77320de25756"})
 	http.SetCookie(w, &http.Cookie{Name: "scope", Value: fmt.Sprint(Teacher)})
 
@@ -148,7 +147,7 @@ func DevTeacherLogin(w http.ResponseWriter, r *http.Request) {
 }
 func DevStudentLogin(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{Name: "name", Value: "Abbas, Malak"})
-	http.SetCookie(w, &http.Cookie{Name: "student", Value: "980016917"})
+	http.SetCookie(w, &http.Cookie{Name: "user", Value: "980016917"})
 	http.SetCookie(w, &http.Cookie{Name: "scope", Value: fmt.Sprint(Student)})
 
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)

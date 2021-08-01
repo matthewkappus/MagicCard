@@ -43,13 +43,13 @@ type MagicCard struct {
 	StrikeMap map[string][]*comment.StarStrike
 }
 
-func (sv *View) MakeStudent(perm string) (*MagicCard, error) {
-	stu, err := sv.store.SelectStu415(perm)
+func (v *View) MakeStudent(perm string) (*MagicCard, error) {
+	stu, err := v.store.SelectStu415(perm)
 	if err != nil {
 		return nil, err
 	}
 
-	sss, err := sv.store.GetStarStrikesByPerm(stu.PermID)
+	sss, err := v.store.GetStarStrikesByPerm(stu.PermID)
 	if err != nil {
 		return nil, err
 	}
@@ -87,12 +87,12 @@ func (sv *View) MakeStudent(perm string) (*MagicCard, error) {
 		StrikeMap: strikesM}, nil
 }
 
-func (sv *View) MakeClassroom(teacher, section string) (*Classroom, error) {
-	s415s, err := sv.store.ListStudents(section)
+func (v *View) MakeClassroom(teacher, section string) (*Classroom, error) {
+	s415s, err := v.store.ListStudents(section)
 	if err != nil {
 		return nil, err
 	}
-	myss, err := sv.store.GetMyStarStrikes(teacher)
+	myss, err := v.store.GetMyStarStrikes(teacher)
 
 	if err != nil {
 		return nil, err
@@ -118,12 +118,12 @@ func (sv *View) MakeClassroom(teacher, section string) (*Classroom, error) {
 }
 
 // MakeSchoolClassroom returns list of every unique stu415
-func (sv *View) MakeSchoolClassroom(teacher string) (*Classroom, error) {
-	s415s, err := sv.store.ListAllStudents()
+func (v *View) MakeSchoolClassroom(teacher string) (*Classroom, error) {
+	s415s, err := v.store.ListAllStudents()
 	if err != nil {
 		return nil, err
 	}
-	myss, err := sv.store.GetMyStarStrikes(teacher)
+	myss, err := v.store.GetMyStarStrikes(teacher)
 	if err != nil {
 		return nil, err
 	}
@@ -147,9 +147,9 @@ func (sv *View) MakeSchoolClassroom(teacher string) (*Classroom, error) {
 
 }
 
-func (sv *View) MakeTeacherMagicCard(name string) (*MagicCard, error) {
+func (v *View) MakeTeacherMagicCard(name string) (*MagicCard, error) {
 
-	stars, strikes, err := sv.store.SelectTeacherStarStrikes(name, 100)
+	stars, strikes, err := v.store.SelectTeacherStarStrikes(name, 100)
 	if err != nil {
 		return nil, err
 	}
@@ -182,13 +182,13 @@ func (sv *View) MakeTeacherMagicCard(name string) (*MagicCard, error) {
 		StrikeMap: stikesM}, nil
 }
 
-func (sv *View) MakeStudentMagicCard(perm string) (*MagicCard, error) {
+func (v *View) MakeStudentMagicCard(perm string) (*MagicCard, error) {
 
-	stu, err := sv.store.SelectStu415(perm)
+	stu, err := v.store.SelectStu415(perm)
 	if err != nil {
 		return nil, err
 	}
-	ss, err := sv.store.GetStarStrikesByPerm(perm)
+	ss, err := v.store.GetStarStrikesByPerm(perm)
 	if err != nil {
 		return nil, err
 	}
@@ -229,8 +229,8 @@ func (sv *View) MakeStudentMagicCard(perm string) (*MagicCard, error) {
 }
 
 // MakeNav returns data struct for use in <head> / <nav>
-func (sv *View) MakeNav(teacher, path, title string, stype Scope) (*Nav, error) {
-	classlist, err := sv.store.ListClasses(teacher)
+func (v *View) MakeNav(teacher, path, title string, stype Scope) (*Nav, error) {
+	classlist, err := v.store.ListClasses(teacher)
 	if err != nil {
 		return nil, err
 	}
