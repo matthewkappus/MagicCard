@@ -46,20 +46,20 @@ func main() {
 	}
 
 	// list of students
-	http.HandleFunc("/studentSearch", staffView.TeacherLock(staffView.Search))
+	staffView.HF("/studentSearch", staffView.Search)
 
 	// list of students
-	http.HandleFunc("/card", staffView.MagicCard)
+	staffView.HF("/card", staffView.MagicCard)
 
 	staffView.HF("/teacher", staffView.Profile)
 
-	http.HandleFunc("/addComment", staffView.AddComment)
+	staffView.HF("/addComment", staffView.AddComment)
 
-	http.HandleFunc("/class", staffView.TeacherLock(staffView.ClassEdit))
+	staffView.HF("/class", staffView.ClassEdit)
 
 	// Admin Tools
-	http.HandleFunc("/admin/addMyStarStrike", staffView.AddMyStarStrikeAll)
-	http.HandleFunc("/admin/myStarStrikeForm", staffView.MyStarStrikeForm)
+	// http.HandleFunc("/admin/addMyStarStrike", staffView.AddMyStarStrikeAll)
+	// http.HandleFunc("/admin/myStarStrikeForm", staffView.MyStarStrikeForm)
 	// http.HandleFunc("/admin", staffView.AdminHome)
 
 	http.HandleFunc("/", staffView.Home)

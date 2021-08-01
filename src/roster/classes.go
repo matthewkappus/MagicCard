@@ -25,11 +25,9 @@ func (v *View) AddComment(w http.ResponseWriter, r *http.Request) {
 	}
 	r.ParseForm()
 
-	// todo: teacher must match session
-	// t := v.GetTeacher(r)
-	// if t != r.PostFormValue("teacher") {
-	// 	fmt.Printf("form.teacher: '%s' doesn't match session.teacher '%s'", r.PostFormValue("teacher"), t)
-	// }
+	if v.User != r.PostFormValue("teacher") {
+		fmt.Printf("form.teacher: '%s' doesn't match session.teacher '%s'", r.PostFormValue("teacher"), v.User)
+	}
 
 	// perm_id, teacher, comment, title, cat, isActive
 	err := v.store.AddStarStrike(r.PostFormValue("permid"), r.PostFormValue("teacher"), r.PostFormValue("comment"), r.PostFormValue("title"), r.PostFormValue("icon"), r.PostFormValue("cat"))
