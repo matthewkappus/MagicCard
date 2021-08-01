@@ -51,7 +51,7 @@ func main() {
 	// list of students
 	staffView.HF("/card", staffView.MagicCard)
 
-	staffView.HF("/teacher", staffView.Profile)
+	staffView.HF("/profile", staffView.Profile)
 
 	staffView.HF("/addComment", staffView.AddComment)
 

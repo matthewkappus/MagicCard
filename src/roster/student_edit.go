@@ -18,6 +18,7 @@ func (v *View) MagicCard(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 	// todo: add email and session info
 	v.tmpls.Lookup("studentmagiccard").Execute(w, TD{M: mc, N: v.N})
 }
