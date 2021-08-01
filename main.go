@@ -46,7 +46,7 @@ func main() {
 	}
 
 	// list of students
-	http.HandleFunc("/students", staffView.TeacherLock(staffView.Search))
+	http.HandleFunc("/studentSearch", staffView.TeacherLock(staffView.Search))
 
 	// list of students
 	http.HandleFunc("/card", staffView.MagicCard)

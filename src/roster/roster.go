@@ -39,7 +39,7 @@ func NewView(store *db.Store, templateGlob string, viewType Scope) (*View, error
 
 }
 
-// Handle registers handler to provided path and provides handler
+// HF registers handler to provided path and provides handler
 // with  Nav and authentication
 func (v *View) HF(path string, h http.HandlerFunc) {
 
