@@ -8,33 +8,5 @@
 {{ template "tail" }}
 {{ end }}
 
-<!--
-    
-    type TD struct {
-	M *MagicCard
-	C *Classroom
-	N *Nav
-}
-
-type MagicCard struct {
-	Name string
-	ID   string
-
-	S415 *synergy.Stu415
-	// Star.Title to SS
-	StarMap map[string][]*comment.StarStrike
-	// StrikeMap
-	StrikeMap map[string][]*comment.StarStrike
-}
-
-
-    type Nav struct {
-	ClassList []*synergy.Stu415
-	Path      string
-	Title     string
-	Status    string
-	Type      Scope
-
-}
- -->    {{ template "nav" .N }}
+ {{ template "nav" .N }}
 

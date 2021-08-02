@@ -58,7 +58,7 @@ func (v *View) HF(path string, h http.HandlerFunc) {
 
 		v.User = user
 		// todo: normalize path to <title>
-		v.N, err = v.MakeNav(user, path, path, v.Type)
+		v.N, err = v.MakeNav(user, path, path, v.Type, w, r)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -98,7 +98,6 @@ func (v *View) Home(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	v.N, err = v.MakeNav(user, "home", "Magic Card", scope)
 
 	switch scope {
 	case Teacher:

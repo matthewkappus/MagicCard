@@ -2,6 +2,7 @@ package roster
 
 import (
 	"fmt"
+	"net/http"
 	"sort"
 	"strings"
 
@@ -224,7 +225,7 @@ func formatClassList(classlist []*synergy.Stu415) {
 }
 
 // MakeNav returns data struct for use in <head> / <nav>
-func (v *View) MakeNav(user, path, title string, stype Scope) (n *Nav, err error) {
+func (v *View) MakeNav(user, path, title string, stype Scope, w http.ResponseWriter, r *http.Request) (n *Nav, err error) {
 	// user is teacher name: try getting classes
 	classlist, err := v.store.ListClasses(user)
 	if err != nil {
@@ -232,13 +233,17 @@ func (v *View) MakeNav(user, path, title string, stype Scope) (n *Nav, err error
 	}
 
 	formatClassList(classlist)
-
+	a, err := v.ReadAlert(w, r)
+	if err != nil {
+		fmt.Printf("error reading alert %v\n", err)
+	}
 	n = &Nav{
 		User:      user,
 		ClassList: classlist,
 		Path:      path,
 		Title:     title,
 		Type:      stype,
+		Alert:     a,
 	}
 	return n, nil
 }

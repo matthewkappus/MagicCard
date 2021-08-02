@@ -31,7 +31,6 @@ func (v *View) AddComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(r.PostFormValue("permid"), r.PostFormValue("teacher"), r.PostFormValue("comment"), r.PostFormValue("title"), r.PostFormValue("icon"), r.PostFormValue("cat"))
 	// perm_id, teacher, comment, title, cat, isActive
 	err := v.store.AddStarStrike(r.PostFormValue("permid"), r.PostFormValue("teacher"), r.PostFormValue("comment"), r.PostFormValue("title"), r.PostFormValue("icon"), r.PostFormValue("cat"))
 	if err != nil {
@@ -39,6 +38,7 @@ func (v *View) AddComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// SendAlert corresponds to ReadAlert in the referrer handler
 	v.SendAlert(w, &Alert{Message: "StarStrike added", Type: "success"})
 	http.Redirect(w, r, r.Referer(), http.StatusSeeOther)
 }
@@ -60,17 +60,12 @@ func (v *View) ClassEdit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	nav, err := v.MakeNav(v.User, "classroom", class.ClassName, Teacher)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	a, _ := v.ReadAlert(w, r)
-
-	fmt.Println(" the nav alert looks like", a)
-	nav.Alert = a
-	v.tmpls.Lookup("classedit").Execute(w, TD{N: nav, C: class})
+	v.tmpls.Lookup("classedit").Execute(w, TD{N: v.N, C: class})
 }
 
 // AddMyStarStrikeAll creates a starstrike for all teachers to assign
@@ -93,7 +88,6 @@ func (v *View) AddMyStarStrikeAll(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("inserting new mystarstrike", teacher, comment, title, icon)
 	// todo: make title unique
 	err = v.store.InsertMyStarStrike(teacher, comment, title, icon, c)
 	if err != nil {
