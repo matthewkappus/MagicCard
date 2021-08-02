@@ -1,6 +1,9 @@
 package roster
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/matthewkappus/MagicCard/src/comment"
 	"github.com/matthewkappus/Roster/src/synergy"
 )
@@ -18,6 +21,18 @@ type Nav struct {
 	Status    string
 	// 0 Guest 1 Student 2 Teacher 3 Admin
 	Type Scope
+}
+
+// formatMame from L, F MI. to F L
+func formatName(name string) string {
+	n := strings.Split(name, " ")
+
+	// If no  first & last name, return original
+	if len(n) < 2 {
+		return name
+	}
+	// return
+	return fmt.Sprintf("%s %s", n[1], n[0][:len(n[0])-1])
 }
 
 // Classroom is teachers class info
@@ -43,49 +58,52 @@ type MagicCard struct {
 	StrikeMap map[string][]*comment.StarStrike
 }
 
-func (v *View) MakeStudent(perm string) (*MagicCard, error) {
-	stu, err := v.store.SelectStu415(perm)
-	if err != nil {
-		return nil, err
-	}
+// // StudentCard return the magic card of the given perm
+// func (v *View) StudentCard(perm string) (*MagicCard, error) {
+// 	stu, err := v.store.SelectStu415(perm)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	sss, err := v.store.GetStarStrikesByPerm(stu.PermID)
-	if err != nil {
-		return nil, err
-	}
+// 	stu.StudentName = formatName(stu.StudentName)
+// 	fmt.Println("formatted name to", stu.StudentName)
+// 	sss, err := v.store.GetStarStrikesByPerm(stu.PermID)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	starsM := make(map[string][]*comment.StarStrike)
-	strikesM := make(map[string][]*comment.StarStrike)
-	for _, ss := range sss {
-		// 0 star 1 minor 2 strik 3 major
-		if ss.Cat == comment.Star {
-			// todo: make titles lowercase, space-trimmed
-			stars, found := starsM[ss.Title]
-			if !found {
-				starsM[ss.Title] = []*comment.StarStrike{ss}
-				continue
-			}
-			// title exists: add to list
+// 	starsM := make(map[string][]*comment.StarStrike)
+// 	strikesM := make(map[string][]*comment.StarStrike)
+// 	for _, ss := range sss {
+// 		// 0 star 1 minor 2 strik 3 major
+// 		if ss.Cat == comment.Star {
+// 			// todo: make titles lowercase, space-trimmed
+// 			stars, found := starsM[ss.Title]
+// 			if !found {
+// 				starsM[ss.Title] = []*comment.StarStrike{ss}
+// 				continue
+// 			}
+// 			// title exists: add to list
 
-			stars = append(stars, ss)
-			starsM[ss.Title] = stars
-		} else {
-			// ss.Cat is 1+: A strike
-			strikes, found := strikesM[ss.Title]
-			if !found {
-				strikesM[ss.Title] = []*comment.StarStrike{ss}
-				continue
-			}
-			// strike exists: add to rest
-			strikes = append(strikes, ss)
-			strikesM[ss.Title] = strikes
-		}
-	}
-	return &MagicCard{
-		S415:      stu,
-		StarMap:   starsM,
-		StrikeMap: strikesM}, nil
-}
+// 			stars = append(stars, ss)
+// 			starsM[ss.Title] = stars
+// 		} else {
+// 			// ss.Cat is 1+: A strike
+// 			strikes, found := strikesM[ss.Title]
+// 			if !found {
+// 				strikesM[ss.Title] = []*comment.StarStrike{ss}
+// 				continue
+// 			}
+// 			// strike exists: add to rest
+// 			strikes = append(strikes, ss)
+// 			strikesM[ss.Title] = strikes
+// 		}
+// 	}
+// 	return &MagicCard{
+// 		S415:      stu,
+// 		StarMap:   starsM,
+// 		StrikeMap: strikesM}, nil
+// }
 
 func (v *View) MakeClassroom(teacher, section string) (*Classroom, error) {
 	s415s, err := v.store.ListStudents(section)
@@ -188,6 +206,7 @@ func (v *View) MakeStudentMagicCard(perm string) (*MagicCard, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	ss, err := v.store.GetStarStrikesByPerm(perm)
 	if err != nil {
 		return nil, err
@@ -220,7 +239,7 @@ func (v *View) MakeStudentMagicCard(perm string) (*MagicCard, error) {
 
 	return &MagicCard{
 
-		Name:      stu.StudentName,
+		Name:      formatName(stu.StudentName),
 		ID:        stu.PermID,
 		S415:      stu,
 		StarMap:   stars,
