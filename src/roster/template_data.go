@@ -19,6 +19,8 @@ type Nav struct {
 	Path      string
 	Title     string
 	Status    string
+	// permID or teacher(name)
+	User string
 	// 0 Guest 1 Student 2 Teacher 3 Admin
 	Type Scope
 }
@@ -254,6 +256,7 @@ func (v *View) MakeNav(teacher, path, title string, stype Scope) (*Nav, error) {
 		return nil, err
 	}
 	n := &Nav{
+		User:      teacher,
 		ClassList: classlist,
 		Path:      path,
 		Title:     title,
