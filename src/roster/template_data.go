@@ -2,6 +2,7 @@ package roster
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/matthewkappus/MagicCard/src/comment"
@@ -249,14 +250,29 @@ func (v *View) MakeStudentMagicCard(perm string) (*MagicCard, error) {
 
 }
 
-// MakeNav returns data struct for use in <head> / <nav>
-func (v *View) MakeNav(teacher, path, title string, stype Scope) (*Nav, error) {
-	classlist, err := v.store.ListClasses(teacher)
-	if err != nil {
-		return nil, err
+func formatClassList(classlist []*synergy.Stu415) {
+	for _, c := range classlist {
+		idT := strings.Split(c.CourseIDAndTitle, "- ")
+		c.CourseIDAndTitle = fmt.Sprintf("%s %s", c.Per, idT[1])
 	}
-	n := &Nav{
-		User:      teacher,
+
+	sort.Slice(classlist, func(i, j int) bool {
+		return classlist[i].Per < classlist[j].Per
+	})
+}
+
+// MakeNav returns data struct for use in <head> / <nav>
+func (v *View) MakeNav(user, path, title string, stype Scope) (n *Nav, err error) {
+	// user is teacher name: try getting classes
+	classlist, err := v.store.ListClasses(user)
+	if err != nil {
+		fmt.Printf("Nav couldn't make classlist for %s: %v", user, err)
+	}
+
+	formatClassList(classlist)
+
+	n = &Nav{
+		User:      user,
 		ClassList: classlist,
 		Path:      path,
 		Title:     title,

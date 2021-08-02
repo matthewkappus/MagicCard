@@ -18,7 +18,7 @@ const (
 	selectStu415BySection = `SELECT organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled FROM stu415 WHERE section_id=? `
 
 	//    SELECT  DISTINCT * from stu415 WHERE teacher="Susco Taylor, Kevin R.";
-	selectDistinctSectionsByTeacher = `SELECT DISTINCT section_id,  course_id_and_title from stu415 WHERE teacher=?`
+	selectDistinctSectionsByTeacher = `SELECT DISTINCT section_id, course_id_and_title, per from stu415 WHERE teacher=?`
 )
 
 func (s *Store) SelectStu415(permid string) (s415 *synergy.Stu415, err error) {
@@ -127,9 +127,9 @@ func (s *Store) ListClasses(teacher string) ([]*synergy.Stu415, error) {
 	defer rows.Close()
 	classes := make([]*synergy.Stu415, 0)
 	for rows.Next() {
-		// SELECT DISTINCT section_id,  course_id_and_title from stu415 WHERE teacher=?
+		// SELECT DISTINCT section_id, course_id_and_title, per from stu415 WHERE teacher=?
 		stu := new(synergy.Stu415)
-		err = rows.Scan(&stu.SectionID, &stu.CourseIDAndTitle)
+		err = rows.Scan(&stu.SectionID, &stu.CourseIDAndTitle, &stu.Per)
 		if err != nil {
 			log.Printf("error listing classes: %v", err)
 			continue
