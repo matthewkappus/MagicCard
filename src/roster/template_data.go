@@ -15,6 +15,14 @@ type TD struct {
 	N *Nav
 }
 
+// Alert is a struct for use in <head> / <nav>
+type Alert struct {
+	// Types: primary secondary success warning danger info light dark
+	Type    string
+	Message string
+	Link    string
+}
+
 type Nav struct {
 	ClassList []*synergy.Stu415
 	Path      string
@@ -23,7 +31,8 @@ type Nav struct {
 	// permID or teacher(name)
 	User string
 	// 0 Guest 1 Student 2 Teacher 3 Admin
-	Type Scope
+	Type  Scope
+	Alert *Alert
 }
 
 // formatMame from L, F MI. to F L
@@ -60,53 +69,6 @@ type MagicCard struct {
 	// StrikeMap
 	StrikeMap map[string][]*comment.StarStrike
 }
-
-// // StudentCard return the magic card of the given perm
-// func (v *View) StudentCard(perm string) (*MagicCard, error) {
-// 	stu, err := v.store.SelectStu415(perm)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	stu.StudentName = formatName(stu.StudentName)
-// 	fmt.Println("formatted name to", stu.StudentName)
-// 	sss, err := v.store.GetStarStrikesByPerm(stu.PermID)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	starsM := make(map[string][]*comment.StarStrike)
-// 	strikesM := make(map[string][]*comment.StarStrike)
-// 	for _, ss := range sss {
-// 		// 0 star 1 minor 2 strik 3 major
-// 		if ss.Cat == comment.Star {
-// 			// todo: make titles lowercase, space-trimmed
-// 			stars, found := starsM[ss.Title]
-// 			if !found {
-// 				starsM[ss.Title] = []*comment.StarStrike{ss}
-// 				continue
-// 			}
-// 			// title exists: add to list
-
-// 			stars = append(stars, ss)
-// 			starsM[ss.Title] = stars
-// 		} else {
-// 			// ss.Cat is 1+: A strike
-// 			strikes, found := strikesM[ss.Title]
-// 			if !found {
-// 				strikesM[ss.Title] = []*comment.StarStrike{ss}
-// 				continue
-// 			}
-// 			// strike exists: add to rest
-// 			strikes = append(strikes, ss)
-// 			strikesM[ss.Title] = strikes
-// 		}
-// 	}
-// 	return &MagicCard{
-// 		S415:      stu,
-// 		StarMap:   starsM,
-// 		StrikeMap: strikesM}, nil
-// }
 
 func (v *View) MakeClassroom(teacher, section string) (*Classroom, error) {
 	s415s, err := v.store.ListStudents(section)

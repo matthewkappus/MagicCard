@@ -44,6 +44,7 @@ func NewView(store *db.Store, templateGlob string, viewType Scope) (*View, error
 func (v *View) HF(path string, h http.HandlerFunc) {
 
 	http.HandleFunc(path, func(w http.ResponseWriter, r *http.Request) {
+
 		userScope, user, err := v.GetSessionUser(r)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -165,5 +166,46 @@ func UpdateRoster() ([]*synergy.Stu415, error) {
 	}
 
 	return synergy.ReadStu415sFromCSV(f)
+
+}
+
+func (v *View) SendAlert(w http.ResponseWriter, a *Alert) {
+
+	http.SetCookie(w, &http.Cookie{
+		Name:  "alert_msg",
+		Value: a.Message,
+		Path:  "/",
+	})
+
+	http.SetCookie(w, &http.Cookie{
+		Name:  "alert_type",
+		Value: a.Type,
+		Path:  "/",
+	})
+}
+
+func (v *View) ReadAlert(w http.ResponseWriter, r *http.Request) (*Alert, error) {
+	alertCookie, err := r.Cookie("alert_msg")
+	if err != nil {
+		return nil, err
+	}
+	if alertCookie.Value == "" {
+		return nil, nil
+	}
+	alertTypeCookie, err := r.Cookie("alert_type")
+	if err != nil {
+		return nil, err
+	}
+	a := &Alert{
+		Message: alertCookie.Value,
+		Type:    alertTypeCookie.Value,
+	}
+
+	// expire  cooReadAlertkies
+	alertCookie.MaxAge = -1
+	alertTypeCookie.MaxAge = -1
+	http.SetCookie(w, alertCookie)
+	http.SetCookie(w, alertTypeCookie)
+	return a, nil
 
 }

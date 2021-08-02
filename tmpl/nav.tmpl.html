@@ -36,6 +36,12 @@
 
        </div>
    </nav>
+
+   {{ if .Alert }}
+   <div class="alert alert-{{.Alert.Type}}" role="alert">
+    {{.Alert.Message}}
+  </div>
+   {{ end }}
 {{ end }}
 
 <!-- 

@@ -39,6 +39,7 @@ func (v *View) AddComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	v.SendAlert(w, &Alert{Message: "StarStrike added", Type: "success"})
 	http.Redirect(w, r, r.Referer(), http.StatusSeeOther)
 }
 
@@ -65,6 +66,10 @@ func (v *View) ClassEdit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	a, _ := v.ReadAlert(w, r)
+
+	fmt.Println(" the nav alert looks like", a)
+	nav.Alert = a
 	v.tmpls.Lookup("classedit").Execute(w, TD{N: nav, C: class})
 }
 
@@ -75,25 +80,11 @@ func (v *View) AddMyStarStrikeAll(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// todo: check if Session.Type == Admin
-
 	// (id INTEGER PRIMARY KEY, teacher TEXT, comment TEXT, title TEXT, icon TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, cat INTEGER, isActive BOOLEAN DEFAULT true)
 	teacher := "all"
 	comment := r.PostFormValue("comment")
 	title := r.PostFormValue("title")
 	icon := r.PostFormValue("icon")
-
-	// todo: verify cat is 0-1
-	// switch r.PostFormValue("cat") {
-	// case "0":
-	// 	c = comment.Star
-	// case "1":
-	// 	c = comment.MinorStrike
-	// case "2":
-	// 	c = comment.MajorStrike
-	// case "3":
-	// 	c = comment.MajorStrike
-	// }
 
 	c, err := strconv.Atoi(r.PostFormValue("cat"))
 	if c < 0 || c > 3 || err != nil {
