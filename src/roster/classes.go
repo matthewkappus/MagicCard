@@ -27,8 +27,11 @@ func (v *View) AddComment(w http.ResponseWriter, r *http.Request) {
 
 	if v.User != r.PostFormValue("teacher") {
 		fmt.Printf("form.teacher: '%s' doesn't match session.teacher '%s'", r.PostFormValue("teacher"), v.User)
+		http.Error(w, "Not your class", http.StatusForbidden)
+		return
 	}
 
+	fmt.Println(r.PostFormValue("permid"), r.PostFormValue("teacher"), r.PostFormValue("comment"), r.PostFormValue("title"), r.PostFormValue("icon"), r.PostFormValue("cat"))
 	// perm_id, teacher, comment, title, cat, isActive
 	err := v.store.AddStarStrike(r.PostFormValue("permid"), r.PostFormValue("teacher"), r.PostFormValue("comment"), r.PostFormValue("title"), r.PostFormValue("icon"), r.PostFormValue("cat"))
 	if err != nil {
@@ -36,7 +39,7 @@ func (v *View) AddComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	http.Redirect(w, r, r.Referer(), http.StatusSeeOther)
 }
 
 // ClassEdit by section

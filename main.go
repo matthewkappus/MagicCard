@@ -48,11 +48,8 @@ func main() {
 	// list of students
 	staffView.HF("/studentSearch", staffView.Search)
 
-	// list of students
 	staffView.HF("/card", staffView.MagicCard)
-
 	staffView.HF("/profile", staffView.Profile)
-
 	staffView.HF("/addComment", staffView.AddComment)
 
 	staffView.HF("/class", staffView.ClassEdit)
