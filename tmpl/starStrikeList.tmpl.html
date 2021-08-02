@@ -63,7 +63,7 @@
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 {{ range $ss }}
                     {{if eq .Cat 0}}
-                    <a class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#commentModal" data-bs-permid="{{.PermID}}" data-bs-comment="{{.Comment}}" data-bs-title="{{.Title}}" data-bs-cat="{{.Cat}}">{{.Title}}</a>
+                    <a class="dropdown-item {{if .Icon}} {{.Icon}} {{end}}"  data-bs-toggle="modal" data-bs-target="#commentModal" data-bs-permid="{{.PermID}}" data-bs-comment="{{.Comment}}" data-bs-title="{{.Title}}" data-bs-cat="{{.Cat}}">{{.Title}}</a>
                     {{ end}}
                 {{ end }}
                 </div>
@@ -83,7 +83,7 @@
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     {{ range $ss }}
                         {{if ne .Cat 0}}
-                            <a class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#commentModal" data-bs-permid="{{.PermID}}" data-bs-comment="{{.Comment}}" data-bs-title="{{.Title}}" data-bs-cat="{{.Cat}}">{{.Title}}</a>
+                            <a class="dropdown-item {{if .Icon}} {{.Icon}} {{end}}"  data-bs-toggle="modal" data-bs-target="#commentModal" data-bs-permid="{{.PermID}}" data-bs-comment="{{.Comment}}" data-bs-title="{{.Title}}" data-bs-cat="{{.Cat}}">{{.Title}}</a>
                         {{ end}}
                     {{ end }}
                     </div>

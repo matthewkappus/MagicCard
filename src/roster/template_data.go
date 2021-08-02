@@ -233,10 +233,8 @@ func (v *View) MakeNav(user, path, title string, stype Scope, w http.ResponseWri
 	}
 
 	formatClassList(classlist)
-	a, err := v.ReadAlert(w, r)
-	if err != nil {
-		fmt.Printf("error reading alert %v\n", err)
-	}
+	a, _ := v.ReadAlert(w, r)
+
 	n = &Nav{
 		User:      user,
 		ClassList: classlist,
