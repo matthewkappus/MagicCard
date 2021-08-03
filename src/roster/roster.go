@@ -99,6 +99,7 @@ func (v *View) Home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	v.N, err = v.MakeNav(user, "/", "home", scope, w, r)
 	switch scope {
 	case Teacher:
 		v.M, err = v.MakeTeacherMagicCard(user)

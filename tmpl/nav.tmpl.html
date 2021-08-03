@@ -39,17 +39,9 @@
    </nav>
 
    {{ if .Alert }}
-   <div class="alert alert-{{.Alert.Type}}" role="alert">
-    {{.Alert.Message}}
-  </div>
+    <div class="alert alert-{{.Alert.Type}}" role="alert">
+        {{.Alert.Message}}
+    </div>
    {{ end }}
-{{ end }}
 
-<!-- 
-    type Nav struct {
-	ClassList []*synergy.Stu415
-	Path      string
-	Title     string
-	Status    string
-}
--->
+{{ end }}
