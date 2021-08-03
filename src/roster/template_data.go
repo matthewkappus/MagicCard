@@ -76,10 +76,9 @@ func (v *View) MakeClassroom(teacher, section string) (*Classroom, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Println("sort that class with good names")
+	// sortStudents by fomatting StudentName to F Mi L and ascending order by L
 	sortStudents(s415s)
-	
+
 	myss, err := v.store.GetMyStarStrikes(teacher)
 
 	if err != nil {
@@ -106,7 +105,7 @@ func (v *View) MakeClassroom(teacher, section string) (*Classroom, error) {
 }
 
 // sortStudents by last name
-// todo: fix Jrs:  John C. Jr Anderson	
+// todo: fix Jrs:  John C. Jr Anderson
 func sortStudents(s415s []*synergy.Stu415) {
 	sort.Slice(s415s, func(i, j int) bool {
 		return s415s[i].StudentName < s415s[j].StudentName
@@ -114,7 +113,9 @@ func sortStudents(s415s []*synergy.Stu415) {
 
 	for _, c := range s415s {
 		flm := strings.Split(c.StudentName, ", ")
+		flm[1] = strings.Split(flm[1], " ")[0]
 		if len(flm) > 1 {
+
 			c.StudentName = fmt.Sprintf("%s %s", flm[1], flm[0])
 		}
 	}
@@ -128,12 +129,12 @@ func (v *View) MakeSchoolClassroom(teacher string) (*Classroom, error) {
 		return nil, err
 	}
 
-	fmt.Println("sortem guh")
-
 	myss, err := v.store.GetMyStarStrikes(teacher)
 	if err != nil {
 		return nil, err
 	}
+
+	// sortStudents by fomatting StudentName to F Mi L and ascending order by L
 	sortStudents(s415s)
 
 	// starstrikes takes generic starstrikes and puts each student perm in for use with buttons
