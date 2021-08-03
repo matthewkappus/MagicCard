@@ -2,11 +2,13 @@
 
 {{ template "head" }}
     {{ template "nav" .N }}
-    <div class="content">
+
+    <div class="container">
     <h1>{{ .C.Teacher}} profile</h1>
 
 
-    <p>Show MyStars/Strikes and add button</p>
+    
+    {{ template "mystarstrikeform" }}
 
 </div>
 {{ template "tail" }}

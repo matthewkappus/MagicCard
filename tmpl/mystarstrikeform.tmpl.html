@@ -1,14 +1,12 @@
 {{ define "mystarstrikeform" }}
 
-<!-- 
+{{ template "head"}}
 
-    teacher needed
- -->
-{{ template "head" .N }}
+{{ template "selectIcon" }}
 
 
  <!-- /admin/addMyStarStrike" -->
- <h1 class="text-center mb-3">Custom Stars & Strikes</h1>
+ <h4 class="text-center mb-3">Custom Stars & Strikes</h4>
  <form action="/admin/addMyStarStrike" method="POST">
      <div class="row mb-1">
 
@@ -16,7 +14,7 @@
         <input type="hidden" name="teacher" value="{{.N.User}}">
          <div class="col">
              <label class="form-label">Title</label>
-             <input type="text" name="title" class="form-control" placeholder="1-Word Title"
+             <input type="text" name="title" class="form-control" placeholder="Title"
                  aria-label="Comment title" required>
          </div>
          <div class="col">
@@ -36,11 +34,26 @@
                  <option value="3">Major Strike</option>
              </select>
          </div>
+
+     <div class="row mb-1">
+         <div class="col">
+             <label class="form-label">Icon <i class="bi bi-x-circle-fill"></i></label>
+            
+             <select name="icon" id="iconSelect">
+                 <option class="bi bi-star-fill" value="bi bi-star-fill"> Star</option>
+                 <option class="bi bi-x-circle-fill" value="bi bi-x-circle-fill"> Strike</option>
+                 <option>Custom</option>
+             </select>
+         </div>
+
+
          <!-- todo: choose default icon with script -->
          <input type="hidden" name="icon" value="bi-star-fill">
      <button type="submit" class="btn btn-primary mt-2">Submit</button>
  </form>
 
- {{ template "tail" }}
 
+
+ 
+ {{ template "tail" }}
 {{ end }}
