@@ -6,33 +6,63 @@
     
     <h3 class="py-3">{{.M.Name}}'s Magic Card</h3>
 
-    <div class="row">
-        <div class="col-md">
-            <h5>Strikes</h5>
-            <ul class="list-group col">
-                {{ range $title, $ss := .M.StrikeMap }}
+    <div class="container-md">
 
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span class="{{ (index $ss 0).Icon }}"> {{ $title }}</span> 
-                    <span class="badge rounded-pill {{ if gt (len $ss) 2 }} bg-danger {{ else }} bg-primary {{ end }}"> {{ len $ss }}</span>
-                </li>
-                {{ end}}
-            </ul>
-        </div>
 
-        <div class="col-md">
-            <h5>Stars</h5>
-            <ul class="list-group col">
-                {{ range $title, $ss := .M.StarMap }}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span class="{{ (index $ss 0).Icon }}"> {{ $title }}</span> 
-                    <span class="badge rounded-pill {{ if gt (len $ss) 2 }} bg-danger {{ else }} bg-primary {{ end }}"> {{ len $ss }}</span>
-                </li>
-                {{ end}}
-            </ul>
+        <div class="row">
+          <!-- todo: justify content: https://getbootstrap.com/docs/5.0/components/list-group/ -->
+          <div class="accordion accordion-flush col-md" id="strikeAccordion">
+            {{ range $title, $ss := .M.StrikeMap }}
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  <span class="p-2 {{ (index $ss 0).Icon }}"> {{ $title }}</span> 
+                  <span class="m-2 badge rounded-pill {{ if gt (len $ss) 2 }} bg-danger {{ else }} bg-primary {{ end }}"> {{ len $ss }}</span>
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#strikeAccordion">
+                <div class="accordion-body">
+                  <!-- ID PermID Teacher Comment Created CAt Icon IsActive -->
+                  <ul class="list-group list-group-flush">
+                    {{ range $ss }}
+                    <li class="list-group-item">{{ .Comment }}  {{.Teacher}} {{ .Created }}</li>
+                    {{ end }}
+                  </ul>
+                </div>
+              </div>
+            </div>
+            {{ end}}
+          </div>
+      
+      
+          <div class="accordion accordion-flush col-md" id="starsAccordion">
+            {{ range $title, $ss := .M.StarMap }}
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  <span class="p-2 {{ (index $ss 0).Icon }}"> {{ $title }}</span> 
+                  <span class="m-2 badge rounded-pill {{ if gt (len $ss) 2 }} bg-danger {{ else }} bg-primary {{ end }}"> {{ len $ss }}</span>
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#starsAccordion">
+                <div class="accordion-body">
+                  <!-- ID PermID Teacher Comment Created CAt Icon IsActive -->
+                  <ul class="list-group list-group-flush">
+                    {{ range $ss }}
+                    <li class="list-group-item">{{ .Comment }}  {{.Teacher}} {{ .Created }}</li>
+                    {{ end }}
+                  </ul>
+                </div>
+              </div>
+            </div>
+            {{ end}}
+          </div>
+      
+        <!-- end .row -->
         </div>
-    
-    </div>
+        <!-- end -->
+      
+      </div>
 
 </div>
 {{ template "tail" }}
