@@ -22,7 +22,7 @@
         <!-- todo: get teacher from nav -->
         <input type="hidden" name="teacher" value="{{.N.User}}">
          <div class="col">
-             <label class="form-label">Title</label>
+             <label class="form-label" id="iconLabel"> Title</label>
              <input type="text" name="title" class="form-control" placeholder="Title"
                  aria-label="Comment title" required>
          </div>
@@ -44,11 +44,8 @@
              </select>
          </div>
 
-     <div class="row mb-1">
-         <div class="col">
-             <label  id="iconLabel" for="icon" class="form-label"></label>
+
              <input type="hidden" name="icon" id="iconInput">
-         </div>
 
          <button class="btn btn-primary form-control" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Select Icon</button>
 
@@ -68,12 +65,11 @@
 
             var iconClass = "bi bi-"+iconName
             // <i class="bi bi-eye-fill"></i>
-            var i = document.createElement("i")
-            i.setAttribute("class", iconClass);
-            label.appendChild(i);
-            iconInput.value = iconClass
+           
+            label.setAttribute("class", iconClass);
+            iconInput.value = iconClass;
             // changeIcon is the 'bi bi-NAME' class for a bootstrap icon diaplay
-            console.log("icon changed to "+iconClass)
+            console.log("icon changed to "+iconClass);
         }
 
         function defaultIcon(cat) {

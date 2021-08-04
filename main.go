@@ -55,7 +55,7 @@ func main() {
 	staffView.HF("/class", staffView.ClassEdit)
 
 	// Admin Tools
-	// http.HandleFunc("/admin/addMyStarStrike", staffView.AddMyStarStrikeAll)
+	http.HandleFunc("/admin/addMyStarStrike", staffView.AddMyStarStrikeAll)
 	// http.HandleFunc("/admin/myStarStrikeForm", staffView.MyStarStrikeForm)
 	// http.HandleFunc("/admin", staffView.AdminHome)
 

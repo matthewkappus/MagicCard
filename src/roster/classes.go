@@ -96,7 +96,9 @@ func (v *View) AddMyStarStrikeAll(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+// SendAlert corresponds to ReadAlert in the referrer handler
+v.SendAlert(w, &Alert{Message: title +" added", Type: "success"})
+http.Redirect(w, r, r.Referer(), http.StatusSeeOther)
 
 }
 
