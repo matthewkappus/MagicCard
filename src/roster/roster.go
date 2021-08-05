@@ -99,6 +99,8 @@ func (v *View) Home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Printf("scope: %d\nuser: %s\n err: %v", scope, user, err)
+
 	v.N, err = v.MakeNav(user, "/", "home", scope, w, r)
 	switch scope {
 	case Teacher:
@@ -147,7 +149,7 @@ func (v *View) GetSessionType(r *http.Request) Scope {
 func (v *View) GetSessionUser(r *http.Request) (s Scope, user string, err error) {
 	s = v.GetSessionType(r)
 	if s == 0 {
-		return 0, "", fmt.Errorf("not signed in")
+		return 0, "guest", nil
 	}
 
 	userCookie, err := r.Cookie("user")
