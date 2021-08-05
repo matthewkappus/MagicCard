@@ -7,7 +7,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/google/uuid"
 	"github.com/matthewkappus/Roster/src/synergy"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -34,11 +33,9 @@ func (s *Store) Close() error {
 // staff table
 const (
 	// teacher is the s415 full name and name is the Mr/Mrs version. Email is their aps gmail
-	createStaff = `CREATE TABLE IF NOT EXISTS staff(teacher NOT NULL UNIQUE, full_name, staff_email, guid NOT NULL UNIQUE, FOREIGN KEY(teacher) REFERENCES stu415(teacher))`
-	// guid is a uuid for session
-	insertStaff              = `INSERT INTO staff(teacher, full_name, staff_email, guid) VALUES(?,?,?,?)`
-	selectTeacherNameByEmail = `SELECT teacher, full_name, guid FROM staff WHERE staff_email=?`
-	selectKeyByTeacher       = `SELECT guid FROM staff WHERE teacher=?`
+	createStaff              = `CREATE TABLE IF NOT EXISTS staff(teacher NOT NULL UNIQUE, full_name, staff_email TEXT)`
+	insertStaff              = `INSERT INTO staff(teacher, full_name, staff_email) VALUES(?,?,?)`
+	selectTeacherNameByEmail = `SELECT teacher, full_name FROM staff WHERE staff_email=?`
 )
 
 func (s *Store) SelectStu415s() ([]*synergy.Stu415, error) {
@@ -61,18 +58,10 @@ func (s *Store) SelectStu415s() ([]*synergy.Stu415, error) {
 	return students, rows.Err()
 }
 
-func (s *Store) GetKeyByTeacher(teacher string) (guid string, err error) {
-	err = s.db.QueryRow(selectKeyByTeacher, teacher).Scan(&guid)
-	if err != nil {
-		return "", err
-	}
-	return guid, nil
-}
-
 // TeacherNameFromEmail returns the "teacher" associated with stu415s and their formal name
-func (s *Store) TeacherNameFromEmail(email string) (teacher, name, guid string, err error) {
-	err = s.db.QueryRow(selectTeacherNameByEmail, strings.ToLower(email)).Scan(&teacher, &name, &guid)
-	return teacher, name, guid, err
+func (s *Store) TeacherNameFromEmail(email string) (teacher, name string, err error) {
+	err = s.db.QueryRow(selectTeacherNameByEmail, strings.ToLower(email)).Scan(&teacher, &name)
+	return teacher, name, err
 }
 
 func (s *Store) StudentFromEmail(email string) (*synergy.Stu415, error) {
@@ -114,9 +103,8 @@ func (s *Store) CreateStaff(stu415CSV string) error {
 	defer stmt.Close()
 	for _, stu := range s415s {
 		name, email := toNameEmail(stu.Teacher)
-		guid := uuid.Must(uuid.NewRandom()).String()
-		// INSERT INTO staff(teacher, name, staff_email, guid) VALUES(?,?,?,?)
-		_, err = stmt.Exec(stu.Teacher, name, email, guid)
+		// INSERT INTO staff(teacher, name, staff_email) VALUES(?,?,?)
+		_, err = stmt.Exec(stu.Teacher, name, email)
 		if err != nil {
 			log.Printf("error inserting %s: %v", stu.Teacher, err)
 		}

@@ -8,6 +8,6 @@ CREATE TABLE  stu415 (organization_name TEXT, school_year TEXT, student_name TEX
 
 -- CREATE TABLE  staff(teacher  TEXT, name TEXT, staff_email TEXT, key TEXT);
 
-CREATE TABLE staff(teacher TEXT, full_name TEXT, staff_email TEXT, guid TEXT)
-CREATE TABLE starstrike (id INTEGER PRIMARY KEY, perm_id TEXT, teacher TEXT, comment TEXT, title TEXT, icon TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, cat INTEGER, isActive BOOLEAN DEFAULT true)
-CREATE TABLE IF NOT EXISTS mystarstrike (id INTEGER PRIMARY KEY, teacher TEXT, comment TEXT, title TEXT, icon TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, cat INTEGER, isActive BOOLEAN DEFAULT true)
+CREATE TABLE IF NOT EXISTS staff(teacher TEXT, full_name TEXT, staff_email TEXT);
+CREATE TABLE IF NOT EXISTS starstrike (id INTEGER PRIMARY KEY, perm_id TEXT, teacher TEXT, comment TEXT, title TEXT, icon TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, cat INTEGER, isActive BOOLEAN DEFAULT true);
+CREATE TABLE IF NOT EXISTS mystarstrike (id INTEGER PRIMARY KEY, teacher TEXT, comment TEXT, title TEXT, icon TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, cat INTEGER, isActive BOOLEAN DEFAULT true);

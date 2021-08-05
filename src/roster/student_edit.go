@@ -37,7 +37,6 @@ func (v *View) StudentCard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// todo: validate with GUID
 	mc, err := v.MakeStudentMagicCard(user)
 
 	if err != nil {

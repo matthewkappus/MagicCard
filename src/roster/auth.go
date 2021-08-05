@@ -89,30 +89,6 @@ func ParseIdentity(r *http.Request) (email string, err error) {
 	return strings.ToLower(email), nil
 
 }
-func (v *View) TeacherLock(h http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if !v.isTeacher(r, w) {
-			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-			return
-		}
-		h(w, r)
-	}
-}
-
-// looks for teacher and guid cookie, matches with staff db
-func (v *View) isTeacher(r *http.Request, w http.ResponseWriter) bool {
-	guidCookie, err := r.Cookie("guid")
-	if err != nil {
-		return false
-	}
-
-	guid, err := v.store.GetKeyByTeacher(v.User)
-	if err != nil {
-		return false
-	}
-
-	return guidCookie.Value == guid
-}
 
 // Login takes JWT from Google Sign In Button and sets the name, email and token values
 // Login sets the view Scope and session Identity on view and User cookies
@@ -133,8 +109,7 @@ func (v *View) Login(w http.ResponseWriter, r *http.Request) {
 		v.StartSession(stu.PermID, formatName(stu.StudentName), Student, w)
 	} else {
 		// teacher format
-		// ignore store guid for now
-		teacher, name, _, err := v.store.TeacherNameFromEmail(email)
+		teacher, name, err := v.store.TeacherNameFromEmail(email)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return

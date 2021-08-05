@@ -100,6 +100,7 @@ func (v *View) HF(path string, h http.HandlerFunc) {
 		name, user, sid, scope, _ := sessionCookies(r)
 		// todo: What happens if err != nil? (lacks user cookies)
 
+		v.User = user
 		sesh, found := Sessions[sid]
 		if !found {
 			// todo; create new session
@@ -164,12 +165,13 @@ func (v *View) Search(w http.ResponseWriter, r *http.Request) {
 }
 
 func (v *View) Home(w http.ResponseWriter, r *http.Request) {
-	name, user, _, scope, err := sessionCookies(r)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	name, user, _, scope, _ := sessionCookies(r)
+	// if err != nil {
+	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
+	// 	return
+	// }
 
+	var err error
 	v.N, err = v.MakeNav(user, "/", "home", name, scope, w, r)
 	switch scope {
 	case Teacher:
