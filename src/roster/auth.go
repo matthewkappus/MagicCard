@@ -9,7 +9,20 @@ import (
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/google/uuid"
 )
+
+type permGuid map[string]string
+
+var StudentSessions = make(permGuid)
+
+// Start a student session
+func (pg permGuid) Start(perm string, w http.ResponseWriter) {
+	guid := uuid.NewString()
+	pg[perm] = guid
+	http.SetCookie(w, &http.Cookie{Name: "user", Value: perm})
+	http.SetCookie(w, &http.Cookie{Name: "guid", Value: guid})
+}
 
 // Scopes: 0 Guest 1 Student 2 Teacher 3 Admin
 type Scope int
@@ -59,26 +72,6 @@ func (v *View) TeacherLock(h http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-// func (v *View) GetTeacher(r *http.Request) string {
-// 	teacherCookie, err := r.Cookie("teacher")
-// 	if err != nil {
-// 		return ""
-// 	}
-
-// 	return string(teacherCookie.Value)
-// }
-
-// // GetStudent returns the perm of logged in "student" cookie
-// func (v *View) GetStudent(r *http.Request) string {
-// 	studentCookie, err := r.Cookie("student")
-// 	if err != nil {
-// 		return ""
-// 	}
-// 	// todo: check status?
-
-// 	return string(studentCookie.Value)
-// }
-
 // looks for teacher and guid cookie, matches with staff db
 func (v *View) isTeacher(r *http.Request, w http.ResponseWriter) bool {
 	guidCookie, err := r.Cookie("guid")
@@ -112,10 +105,10 @@ func (v *View) Login(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		fmt.Printf("Setting scope %d for student %s", Student, student.PermID)
 		http.SetCookie(w, &http.Cookie{Name: "name", Value: student.StudentName, Domain: "/"})
-		http.SetCookie(w, &http.Cookie{Name: "user", Value: student.PermID})
 		http.SetCookie(w, &http.Cookie{Name: "scope", Value: fmt.Sprint(Student)})
+		// create a guid for student
+		StudentSessions.Start(student.PermID, w)
 
 	} else {
 		teacher, name, guid, err := v.store.TeacherNameFromEmail(email)
@@ -157,7 +150,8 @@ func DevTeacherLogin(w http.ResponseWriter, r *http.Request) {
 
 func DevStudentLogin(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{Name: "name", Value: "Abbas, Malak"})
-	http.SetCookie(w, &http.Cookie{Name: "user", Value: "980016917"})
+	StudentSessions.Start("980016917", w)
+
 	http.SetCookie(w, &http.Cookie{Name: "scope", Value: fmt.Sprint(Student)})
 
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)

@@ -33,6 +33,13 @@ func main() {
 
 	defer s.Close()
 
+	studentView, err := roster.NewView(s, "tmpl/*.tmpl.html", roster.Student)
+	if err != nil {
+		log.Fatal(err)
+	}
+	studentView.HF("/magiccard", studentView.StudentCard)
+
+
 	staffView, err := roster.NewView(s, "tmpl/*.tmpl.html", roster.Teacher)
 	if err != nil {
 		log.Fatal(err)

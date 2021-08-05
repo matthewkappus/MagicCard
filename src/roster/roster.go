@@ -58,6 +58,14 @@ func (v *View) HF(path string, h http.HandlerFunc) {
 			return
 		}
 
+		// check guid match
+		if !v.GuidMatches(w, user, userScope) {
+			http.Error(w, "GUID mismatch", http.StatusUnauthorized)
+			return
+		}
+
+		// todo: limit ip guessing
+
 		v.User = user
 		// todo: normalize path to <title>
 		v.N, err = v.MakeNav(user, path, path, v.Type, w, r)
