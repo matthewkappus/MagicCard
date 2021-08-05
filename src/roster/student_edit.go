@@ -26,19 +26,19 @@ func (v *View) MagicCard(w http.ResponseWriter, r *http.Request) {
 // StudentCard shows magic card belonging to student user by their cookie
 func (v *View) StudentCard(w http.ResponseWriter, r *http.Request) {
 
-	s, u, err := v.GetSessionUser(r)
+	_, user, _, scope, err := sessionCookies(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	if s != Student {
+	if scope != Student {
 		http.Error(w, "User Not in Student Scope", http.StatusUnauthorized)
 		return
 	}
 
 	// todo: validate with GUID
-	mc, err := v.MakeStudentMagicCard(u)
+	mc, err := v.MakeStudentMagicCard(user)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

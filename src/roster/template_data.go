@@ -31,9 +31,17 @@ type Nav struct {
 	Status    string
 	// permID or teacher(name)
 	User string
+	// formatted name
+	Name string
 	// 0 Guest 1 Student 2 Teacher 3 Admin
 	Type  Scope
 	Alert *Alert
+}
+
+// pathToTitle returns the title of the page
+func pathToTitle(path string) string {
+	path = strings.Replace(path, "/", " ", -1)
+	return strings.Title(path)
 }
 
 // formatMame from L, F MI. to F L
@@ -250,7 +258,7 @@ func formatClassList(classlist []*synergy.Stu415) {
 }
 
 // MakeNav returns data struct for use in <head> / <nav>
-func (v *View) MakeNav(user, path, title string, stype Scope, w http.ResponseWriter, r *http.Request) (n *Nav, err error) {
+func (v *View) MakeNav(user, path, title, name string, stype Scope, w http.ResponseWriter, r *http.Request) (n *Nav, err error) {
 	// user is teacher name: try getting classes
 	classlist, err := v.store.ListClasses(user)
 	if err != nil {
@@ -262,6 +270,7 @@ func (v *View) MakeNav(user, path, title string, stype Scope, w http.ResponseWri
 
 	n = &Nav{
 		User:      user,
+		Name:      name,
 		ClassList: classlist,
 		Path:      path,
 		Title:     title,

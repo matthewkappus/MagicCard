@@ -39,7 +39,6 @@ func main() {
 	}
 	studentView.HF("/magiccard", studentView.StudentCard)
 
-
 	staffView, err := roster.NewView(s, "tmpl/*.tmpl.html", roster.Teacher)
 	if err != nil {
 		log.Fatal(err)
@@ -48,9 +47,9 @@ func main() {
 	http.HandleFunc("/login", staffView.Login)
 
 	if *devMode {
-		http.HandleFunc("/devTeacher", roster.DevTeacherLogin)
-		http.HandleFunc("/devStudent", roster.DevStudentLogin)
-		http.HandleFunc("/devAdmin", roster.DevAdminLogin)
+		http.HandleFunc("/devTeacher", staffView.DevTeacherLogin)
+		http.HandleFunc("/devStudent", studentView.DevStudentLogin)
+		http.HandleFunc("/devAdmin", staffView.DevAdminLogin)
 	}
 
 	// list of students
@@ -59,7 +58,6 @@ func main() {
 	staffView.HF("/profile", staffView.Profile)
 	staffView.HF("/addComment", staffView.AddComment)
 	staffView.HF("/class", staffView.ClassEdit)
-
 
 	adminView, err := roster.NewView(s, "tmpl/*.tmpl.html", roster.Admin)
 	if err != nil {

@@ -6,14 +6,19 @@ import (
 	"net/http"
 	"os"
 	"text/template"
+	"time"
 
 	"github.com/matthewkappus/MagicCard/src/db"
 	"github.com/matthewkappus/Roster/src/synergy"
 )
 
 type View struct {
-	// student/admin/teacher
-	User  string
+	// 	Sessions map[SID]*Session
+	Sessions map[string]*Session
+	// teacher name or student perm
+	User string
+	// F L-formatted name
+	Name  string
 	Type  Scope
 	tmpls *template.Template
 	store *db.Store
@@ -32,11 +37,53 @@ func NewView(store *db.Store, templateGlob string, viewType Scope) (*View, error
 	}
 
 	return &View{
-		Type:  viewType,
-		tmpls: tmpls,
-		store: store,
+		Sessions: make(map[string]*Session),
+		Type:     viewType,
+		tmpls:    tmpls,
+		store:    store,
 	}, nil
 
+}
+
+// sessionCookies returns name, user, sid and scope of cookies
+func sessionCookies(r *http.Request) (name string, user string, sid string, scope Scope, err error) {
+	// return string(r.Cookie("name").Value), string(r.Cookie("sid").Value), getSessionType(r)
+	nameCookie, err := r.Cookie("name")
+	if err != nil {
+		return "", "", "", 0, err
+	}
+	name = string(nameCookie.Value)
+
+	userCookie, err := r.Cookie("user")
+	if err != nil {
+		return "", "", "", 0, err
+	}
+	user = string(userCookie.Value)
+
+	sidCookie, err := r.Cookie("sid")
+	if err != nil {
+		return "", "", "", 0, err
+	}
+	sid = string(sidCookie.Value)
+
+	scopeCookie, err := r.Cookie("scope")
+	if err != nil {
+		return "", "", "", 0, err
+	}
+
+	switch scopeCookie.Value {
+	case "0":
+		scope = Guest
+	case "1":
+		scope = Student
+	case "2":
+		scope = Teacher
+	case "3":
+		scope = Admin
+	default:
+		scope = Guest
+	}
+	return name, user, sid, scope, nil
 }
 
 // HF registers handler to provided path and provides handler
@@ -45,30 +92,40 @@ func (v *View) HF(path string, h http.HandlerFunc) {
 
 	http.HandleFunc(path, func(w http.ResponseWriter, r *http.Request) {
 
-		userScope, user, err := v.GetSessionUser(r)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+		name, user, sid, scope, _ := sessionCookies(r)
+		// todo: What happens if err != nil? (lacks user cookies)
+
+		sesh, found := v.Sessions[sid]
+		if !found {
+			// todo; create new session
+			http.Error(w, "Session not found for "+sid, http.StatusUnauthorized)
 			return
 		}
 
-		// 0 guest < 1 student < 2 teacher < 3 admin
-		if userScope < v.Type {
-			fmt.Printf("HF: v.Type %v != cookie.Type %v\n", v.Type, userScope)
+		if sesh.Expires.Before(time.Now()) {
+			// todo; create new session
+			http.Error(w, "Session expired", http.StatusUnauthorized)
+			return
+		}
+
+		if sesh.User != user {
+			http.Error(w, "User not in a session "+user, http.StatusUnauthorized)
+			return
+		}
+
+		fmt.Println("authorized to gooooo")
+
+		// check if user has enough scope
+		if scope < v.Type {
+			fmt.Printf("HF: v.Type %v != cookie.Type %v\n", v.Type, scope)
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
 
-		// check guid match
-		if !v.GuidMatches(w, user, userScope) {
-			http.Error(w, "GUID mismatch", http.StatusUnauthorized)
-			return
-		}
+		// 0 guest < 1 student < 2 teacher < 3 admin
 
-		// todo: limit ip guessing
-
-		v.User = user
-		// todo: normalize path to <title>
-		v.N, err = v.MakeNav(user, path, path, v.Type, w, r)
+		var err error
+		v.N, err = v.MakeNav(user, path, pathToTitle(path), name, scope, w, r)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -103,13 +160,13 @@ func (v *View) Search(w http.ResponseWriter, r *http.Request) {
 }
 
 func (v *View) Home(w http.ResponseWriter, r *http.Request) {
-	scope, user, err := v.GetSessionUser(r)
+	name, user, _, scope, err := sessionCookies(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	v.N, err = v.MakeNav(user, "/", "home", scope, w, r)
+	v.N, err = v.MakeNav(user, "/", "home", name, scope, w, r)
 	switch scope {
 	case Teacher:
 		v.M, err = v.MakeTeacherMagicCard(user)
@@ -132,42 +189,6 @@ func (v *View) Home(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// GetSessionType returns  3 Admin, 2 Teacher, 1 Student or 0 for guest scope (not signed in)
-func (v *View) GetSessionType(r *http.Request) Scope {
-	scopeCookie, err := r.Cookie("scope")
-	if err != nil {
-		return 0
-	}
-
-	switch scopeCookie.Value {
-	case "0":
-		return Guest
-	case "1":
-		return Student
-	case "2":
-		return Teacher
-	case "3":
-		return Admin
-	default:
-		return 0
-	}
-}
-
-// GetSessionUser returns scope and the "student" perm or "teacher" name
-func (v *View) GetSessionUser(r *http.Request) (s Scope, user string, err error) {
-	s = v.GetSessionType(r)
-	if s == 0 {
-		return 0, "guest", nil
-	}
-
-	userCookie, err := r.Cookie("user")
-	if err != nil {
-		return 0, "", err
-	}
-
-	return s, string(userCookie.Value), nil
-
-}
 func UpdateRoster() ([]*synergy.Stu415, error) {
 	// todo: get from synergy
 	f, err := os.Open("data/stu415.csv")

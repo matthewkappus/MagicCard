@@ -7,22 +7,11 @@ import (
 	"net/url"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
 )
-
-type permGuid map[string]string
-
-var StudentSessions = make(permGuid)
-
-// Start a student session
-func (pg permGuid) Start(perm string, w http.ResponseWriter) {
-	guid := uuid.NewString()
-	pg[perm] = guid
-	http.SetCookie(w, &http.Cookie{Name: "user", Value: perm})
-	http.SetCookie(w, &http.Cookie{Name: "guid", Value: guid})
-}
 
 // Scopes: 0 Guest 1 Student 2 Teacher 3 Admin
 type Scope int
@@ -33,6 +22,43 @@ const (
 	Teacher
 	Admin
 )
+
+type Session struct {
+	// student perm or teacher name
+	User      string
+	Expires time.Time
+	Scope   Scope
+}
+
+func (v *View) StartSession(id string, name string, s Scope, w http.ResponseWriter) {
+	sid := uuid.NewString()
+	exp := time.Now().Add(8 * time.Hour)
+	var scope string
+	switch s {
+	case Guest:
+		scope = "0"
+	case Student:
+		scope = "1"
+	case Teacher:
+		scope = "2"
+	case Admin:
+		scope = "3"
+	}
+
+	v.Sessions[sid] = &Session{
+		User:      id,
+		Expires: exp,
+		Scope:   s,
+	}
+
+	http.SetCookie(w, &http.Cookie{Name: "sid", Value: sid, Domain: "/", Expires: exp})
+	http.SetCookie(w, &http.Cookie{Name: "name", Value: name, Domain: "/", Expires: exp})
+	http.SetCookie(w, &http.Cookie{Name: "user", Value: id, Domain: "/", Expires: exp})
+	http.SetCookie(w, &http.Cookie{Name: "scope", Value: scope, Domain: "/", Expires: exp})
+
+}
+
+// todo: refresh session by removing expired
 
 func ParseIdentity(r *http.Request) (email string, err error) {
 	body, err := ioutil.ReadAll(r.Body)
@@ -98,61 +124,39 @@ func (v *View) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if studentFormat, _ := regexp.MatchString("[0-9]+@aps.edu", email); studentFormat {
-
-		student, err := v.store.StudentFromEmail(email)
+		stu, err := v.store.StudentFromEmail(email)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
-
-		http.SetCookie(w, &http.Cookie{Name: "name", Value: student.StudentName, Domain: "/"})
-		http.SetCookie(w, &http.Cookie{Name: "scope", Value: fmt.Sprint(Student)})
-		// create a guid for student
-		StudentSessions.Start(student.PermID, w)
-
+		v.StartSession(stu.PermID, formatName(stu.StudentName), Student, w)
 	} else {
-		teacher, name, guid, err := v.store.TeacherNameFromEmail(email)
+		// teacher format
+		// ignore store guid for now
+		teacher, name, _, err := v.store.TeacherNameFromEmail(email)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
-		fmt.Printf("Setting scope %d for student %s", Student, teacher)
-
-		http.SetCookie(w, &http.Cookie{Name: "name", Value: name, Domain: "/"})
-		http.SetCookie(w, &http.Cookie{Name: "user", Value: teacher})
-		http.SetCookie(w, &http.Cookie{Name: "scope", Value: fmt.Sprint(Teacher)})
-
-		http.SetCookie(w, &http.Cookie{Name: "guid", Value: guid})
-
+		v.StartSession(teacher, name, Teacher, w)
 	}
 
-	http.Redirect(w, r, "/classes", http.StatusTemporaryRedirect)
+	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 
 }
 
-func DevAdminLogin(w http.ResponseWriter, r *http.Request) {
-	http.SetCookie(w, &http.Cookie{Name: "name", Value: "Madison Admin"})
-	http.SetCookie(w, &http.Cookie{Name: "user", Value: "Madison Admin"})
-	http.SetCookie(w, &http.Cookie{Name: "guid", Value: "1430a69c-a641-4832-9b38-77320de25756"})
-	http.SetCookie(w, &http.Cookie{Name: "scope", Value: fmt.Sprint(Admin)})
-
+func (v *View) DevAdminLogin(w http.ResponseWriter, r *http.Request) {
+	v.StartSession("Madison Admin", "Madison Admin", Admin, w)
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }
 
-func DevTeacherLogin(w http.ResponseWriter, r *http.Request) {
-	http.SetCookie(w, &http.Cookie{Name: "name", Value: "Matt Kappus"})
-	http.SetCookie(w, &http.Cookie{Name: "user", Value: "Kappus, Matthew D."})
-	http.SetCookie(w, &http.Cookie{Name: "guid", Value: "1830a69c-a641-4832-9b38-77320de25756"})
-	http.SetCookie(w, &http.Cookie{Name: "scope", Value: fmt.Sprint(Teacher)})
+func (v *View) DevTeacherLogin(w http.ResponseWriter, r *http.Request) {
 
+	v.StartSession("Kappus, Matthew D.", "Matt Kappus", Teacher, w)
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }
 
-func DevStudentLogin(w http.ResponseWriter, r *http.Request) {
-	http.SetCookie(w, &http.Cookie{Name: "name", Value: "Abbas, Malak"})
-	StudentSessions.Start("980016917", w)
-
-	http.SetCookie(w, &http.Cookie{Name: "scope", Value: fmt.Sprint(Student)})
-
+func (v *View) DevStudentLogin(w http.ResponseWriter, r *http.Request) {
+	v.StartSession("980016917", "Abbas, Malak", Student, w)
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }
