@@ -99,8 +99,6 @@ func (v *View) Home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("scope: %d\nuser: %s\n err: %v", scope, user, err)
-
 	v.N, err = v.MakeNav(user, "/", "home", scope, w, r)
 	switch scope {
 	case Teacher:
