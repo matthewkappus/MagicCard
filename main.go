@@ -43,19 +43,23 @@ func main() {
 	if *devMode {
 		http.HandleFunc("/devTeacher", roster.DevTeacherLogin)
 		http.HandleFunc("/devStudent", roster.DevStudentLogin)
+		http.HandleFunc("/devAdmin", roster.DevAdminLogin)
 	}
 
 	// list of students
 	staffView.HF("/studentSearch", staffView.Search)
-
 	staffView.HF("/card", staffView.MagicCard)
 	staffView.HF("/profile", staffView.Profile)
 	staffView.HF("/addComment", staffView.AddComment)
-
 	staffView.HF("/class", staffView.ClassEdit)
 
+
+	adminView, err := roster.NewView(s, "tmpl/*.tmpl.html", roster.Admin)
+	if err != nil {
+		log.Fatal(err)
+	}
 	// Admin Tools
-	http.HandleFunc("/admin/addMyStarStrike", staffView.AddMyStarStrikeAll)
+	adminView.HF("/admin/addMyStarStrike", staffView.AddMyStarStrikeAll)
 	// http.HandleFunc("/admin/myStarStrikeForm", staffView.MyStarStrikeForm)
 	// http.HandleFunc("/admin", staffView.AdminHome)
 

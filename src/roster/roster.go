@@ -50,7 +50,9 @@ func (v *View) HF(path string, h http.HandlerFunc) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		if v.Type != userScope {
+
+		// 0 guest < 1 student < 2 teacher < 3 admin
+		if userScope < v.Type {
 			fmt.Printf("HF: v.Type %v != cookie.Type %v\n", v.Type, userScope)
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return

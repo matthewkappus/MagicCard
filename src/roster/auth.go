@@ -137,6 +137,15 @@ func (v *View) Login(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func DevAdminLogin(w http.ResponseWriter, r *http.Request) {
+	http.SetCookie(w, &http.Cookie{Name: "name", Value: "Madison Admin"})
+	http.SetCookie(w, &http.Cookie{Name: "user", Value: "Madison Admin"})
+	http.SetCookie(w, &http.Cookie{Name: "guid", Value: "1430a69c-a641-4832-9b38-77320de25756"})
+	http.SetCookie(w, &http.Cookie{Name: "scope", Value: fmt.Sprint(Admin)})
+
+	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+}
+
 func DevTeacherLogin(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{Name: "name", Value: "Matt Kappus"})
 	http.SetCookie(w, &http.Cookie{Name: "user", Value: "Kappus, Matthew D."})
@@ -145,6 +154,7 @@ func DevTeacherLogin(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }
+
 func DevStudentLogin(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{Name: "name", Value: "Abbas, Malak"})
 	http.SetCookie(w, &http.Cookie{Name: "user", Value: "980016917"})
