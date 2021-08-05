@@ -25,7 +25,7 @@ const (
 
 type Session struct {
 	// student perm or teacher name
-	User      string
+	User    string
 	Expires time.Time
 	Scope   Scope
 }
@@ -45,16 +45,17 @@ func (v *View) StartSession(id string, name string, s Scope, w http.ResponseWrit
 		scope = "3"
 	}
 
-	v.Sessions[sid] = &Session{
-		User:      id,
+	fmt.Println("starting session with sid", sid)
+	Sessions[sid] = &Session{
+		User:    id,
 		Expires: exp,
 		Scope:   s,
 	}
 
-	http.SetCookie(w, &http.Cookie{Name: "sid", Value: sid, Domain: "/", Expires: exp})
-	http.SetCookie(w, &http.Cookie{Name: "name", Value: name, Domain: "/", Expires: exp})
-	http.SetCookie(w, &http.Cookie{Name: "user", Value: id, Domain: "/", Expires: exp})
-	http.SetCookie(w, &http.Cookie{Name: "scope", Value: scope, Domain: "/", Expires: exp})
+	http.SetCookie(w, &http.Cookie{Name: "sid", Value: sid, Expires: exp})
+	http.SetCookie(w, &http.Cookie{Name: "name", Value: name, Expires: exp})
+	http.SetCookie(w, &http.Cookie{Name: "user", Value: id, Expires: exp})
+	http.SetCookie(w, &http.Cookie{Name: "scope", Value: scope, Expires: exp})
 
 }
 

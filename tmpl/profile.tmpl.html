@@ -3,13 +3,10 @@
 {{ template "head" }}
     {{ template "nav" .N }}
 
-    <div class="container">
-    <h1>{{ .C.Teacher}} profile</h1>
-
-
-    
+    <div class="content">
+        <h1>{{ .N.Name}}'s profile</h1>
     {{ template "mystarstrikeform" }}
 
-</div>
+    </div>
 {{ template "tail" }}
 {{ end }}

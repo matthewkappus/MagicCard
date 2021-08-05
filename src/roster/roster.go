@@ -12,9 +12,10 @@ import (
 	"github.com/matthewkappus/Roster/src/synergy"
 )
 
+var Sessions map[string]*Session
+
 type View struct {
 	// 	Sessions map[SID]*Session
-	Sessions map[string]*Session
 	// teacher name or student perm
 	User string
 	// F L-formatted name
@@ -36,11 +37,15 @@ func NewView(store *db.Store, templateGlob string, viewType Scope) (*View, error
 		return nil, err
 	}
 
+	if Sessions == nil {
+		fmt.Println("creating new sessions")
+		Sessions = make(map[string]*Session)
+	}
 	return &View{
-		Sessions: make(map[string]*Session),
-		Type:     viewType,
-		tmpls:    tmpls,
-		store:    store,
+
+		Type:  viewType,
+		tmpls: tmpls,
+		store: store,
 	}, nil
 
 }
@@ -95,10 +100,11 @@ func (v *View) HF(path string, h http.HandlerFunc) {
 		name, user, sid, scope, _ := sessionCookies(r)
 		// todo: What happens if err != nil? (lacks user cookies)
 
-		sesh, found := v.Sessions[sid]
+		sesh, found := Sessions[sid]
 		if !found {
 			// todo; create new session
 			http.Error(w, "Session not found for "+sid, http.StatusUnauthorized)
+			fmt.Println(Sessions)
 			return
 		}
 
@@ -112,8 +118,6 @@ func (v *View) HF(path string, h http.HandlerFunc) {
 			http.Error(w, "User not in a session "+user, http.StatusUnauthorized)
 			return
 		}
-
-		fmt.Println("authorized to gooooo")
 
 		// check if user has enough scope
 		if scope < v.Type {
