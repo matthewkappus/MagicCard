@@ -96,14 +96,49 @@ func (v *View) AddMyStarStrikeAll(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-// SendAlert corresponds to ReadAlert in the referrer handler
-v.SendAlert(w, &Alert{Message: title +" added", Type: "success"})
-http.Redirect(w, r, r.Referer(), http.StatusSeeOther)
+	// SendAlert corresponds to ReadAlert in the referrer handler
+	v.SendAlert(w, &Alert{Message: title + " added", Type: "success"})
+	http.Redirect(w, r, r.Referer(), http.StatusSeeOther)
 
 }
 
 func (v *View) MyStarStrikeForm(w http.ResponseWriter, r *http.Request) {
 
 	v.tmpls.Lookup("mystarstrikeform").Execute(w, nil)
+
+}
+
+func (v *View) StaffEdit(w http.ResponseWriter, r *http.Request) {
+	staff, err := v.store.GetTeachers()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	fmt.Println("showing staffedit")
+
+	v.tmpls.Lookup("staffedit").Execute(w, TD{N: v.N, T: staff})
+}
+
+func (v *View) StaffAdd(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+		return
+	}
+	r.ParseForm()
+
+	teacher := r.PostFormValue("teacher")
+	fullName := r.PostFormValue("full_name")
+	staffEmail := r.PostFormValue("staff_email")
+
+	err := v.store.InsertStaff(teacher, fullName, staffEmail)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// SendAlert corresponds to ReadAlert in the referrer handler
+	v.SendAlert(w, &Alert{Message: teacher + "  added", Type: "success"})
+	http.Redirect(w, r, "/admin/staffView", http.StatusSeeOther)
 
 }

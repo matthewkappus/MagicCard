@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/matthewkappus/MagicCard/src/comment"
+	"github.com/matthewkappus/MagicCard/src/db"
 	"github.com/matthewkappus/Roster/src/synergy"
 )
 
@@ -14,6 +15,7 @@ type TD struct {
 	M *MagicCard
 	C *Classroom
 	N *Nav
+	T []*db.Teacher
 }
 
 // Alert is a struct for use in <head> / <nav>

@@ -11,6 +11,40 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+// staff table
+const (
+	// teacher is the s415 full name and name is the Mr/Mrs version. Email is their aps gmail
+	createStaff              = `CREATE TABLE IF NOT EXISTS staff(teacher NOT NULL UNIQUE, full_name, staff_email TEXT)`
+	insertStaff              = `INSERT INTO staff(teacher, full_name, staff_email) VALUES(?,?,?)`
+	selectTeacherNameByEmail = `SELECT teacher, full_name FROM staff WHERE staff_email=?`
+	selectStaff              = `SELECT teacher, full_name, staff_email FROM staff`
+)
+
+type Teacher struct {
+	Teacher    string
+	FullName   string
+	StaffEmail string
+}
+
+func (s *Store) GetTeachers() ([]*Teacher, error) {
+	rows, err := s.db.Query(selectStaff)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	teachers := make([]*Teacher, 0)
+	for rows.Next() {
+		t := new(Teacher)
+		err := rows.Scan(&t.Teacher, &t.FullName, &t.StaffEmail)
+		if err != nil {
+			log.Printf("sql couldn't scan teacher: %v", err)
+			continue
+		}
+		teachers = append(teachers, t)
+	}
+	return teachers, rows.Err()
+}
+
 type Store struct {
 	db *sql.DB
 }
@@ -29,14 +63,6 @@ func (s *Store) Close() error {
 	return s.db.Close()
 
 }
-
-// staff table
-const (
-	// teacher is the s415 full name and name is the Mr/Mrs version. Email is their aps gmail
-	createStaff              = `CREATE TABLE IF NOT EXISTS staff(teacher NOT NULL UNIQUE, full_name, staff_email TEXT)`
-	insertStaff              = `INSERT INTO staff(teacher, full_name, staff_email) VALUES(?,?,?)`
-	selectTeacherNameByEmail = `SELECT teacher, full_name FROM staff WHERE staff_email=?`
-)
 
 func (s *Store) SelectStu415s() ([]*synergy.Stu415, error) {
 	rows, err := s.db.Query(selectStudentList)
@@ -70,7 +96,12 @@ func (s *Store) StudentFromEmail(email string) (*synergy.Stu415, error) {
 
 }
 
-func (s *Store) CreateStaff(stu415CSV string) error {
+func (s *Store) InsertStaff(teacher, fullName, email string) error {
+	_, err := s.db.Exec(insertStaff, teacher, fullName, email)
+	return err
+}
+
+func (s *Store) CreateStaffFromStu415s(stu415CSV string) error {
 	f, err := os.Open(stu415CSV)
 	if err != nil {
 		return err
