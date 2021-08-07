@@ -57,7 +57,10 @@ func main() {
 	staffView.HF("/card", staffView.MagicCard)
 	staffView.HF("/profile", staffView.Profile)
 	staffView.HF("/addComment", staffView.AddComment)
+	staffView.HF("/contact", staffView.ContactForm)
+	staffView.HF("/addContact", staffView.AddContact)
 	staffView.HF("/class", staffView.ClassEdit)
+
 
 	adminView, err := roster.NewView(s, "tmpl/*.tmpl.html", roster.Admin)
 	if err != nil {
@@ -65,7 +68,7 @@ func main() {
 	}
 	// Admin Tools
 	adminView.HF("/admin/addMyStarStrike", staffView.AddMyStarStrikeAll)
-	adminView.HF("/admin/staffView", staffView.StaffEdit)
+	// adminView.HF("/admin/staffView", staffView.StaffEdit)
 	adminView.HF("/admin/staffAdd", staffView.StaffAdd)
 	// http.HandleFunc("/admin/myStarStrikeForm", staffView.MyStarStrikeForm)
 	// http.HandleFunc("/admin", staffView.AdminHome)

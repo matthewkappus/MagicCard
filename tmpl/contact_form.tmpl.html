@@ -1,0 +1,33 @@
+{{ define "contact_form" }}
+{{ template "head" }}
+{{ template "nav" .N}}
+
+<div class="content">
+
+    <input type="hidden" name="teacher" {{.N.User}}>
+    <input type="hidden" name="full_name" {{.N.Name}}>
+    <!-- todo: get ss_id from request form -->
+    <input type="hidden" name="ss_id" >
+    <h1 class="text-center mb-3">Contact Me</h1>
+    <form method="POST" action="/addContact">
+        <div class="row mb-1">
+            <div class="col">
+                <label class="form-label">Respondent</label>
+                <input type="text" name="respondent" class="form-control" placeholder="First name"
+                    aria-label="First name" required>
+            </div>
+       
+    
+  
+        <div class="row mb-1">
+            <div class="col">
+                <label class="form-label">Message</label>
+                <textarea type="text" name="message" class="form-control" placeholder="Message"
+                    aria-label="Message" required></textarea>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">Submit</button>
+    </form>
+</div>
+{{ template "tail" }}
+{{end}}

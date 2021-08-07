@@ -7,57 +7,9 @@ import (
 	"net/url"
 	"regexp"
 	"strings"
-	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/google/uuid"
 )
-
-// Scopes: 0 Guest 1 Student 2 Teacher 3 Admin
-type Scope int
-
-const (
-	Guest Scope = iota
-	Student
-	Teacher
-	Admin
-)
-
-type Session struct {
-	// student perm or teacher name
-	User    string
-	Expires time.Time
-	Scope   Scope
-}
-
-func (v *View) StartSession(id string, name string, s Scope, w http.ResponseWriter) {
-	sid := uuid.NewString()
-	exp := time.Now().Add(8 * time.Hour)
-	var scope string
-	switch s {
-	case Guest:
-		scope = "0"
-	case Student:
-		scope = "1"
-	case Teacher:
-		scope = "2"
-	case Admin:
-		scope = "3"
-	}
-
-	fmt.Println("starting session with sid", sid)
-	Sessions[sid] = &Session{
-		User:    id,
-		Expires: exp,
-		Scope:   s,
-	}
-
-	http.SetCookie(w, &http.Cookie{Name: "sid", Value: sid, Expires: exp})
-	http.SetCookie(w, &http.Cookie{Name: "name", Value: name, Expires: exp})
-	http.SetCookie(w, &http.Cookie{Name: "user", Value: id, Expires: exp})
-	http.SetCookie(w, &http.Cookie{Name: "scope", Value: scope, Expires: exp})
-
-}
 
 // todo: refresh session by removing expired
 
@@ -106,7 +58,7 @@ func (v *View) Login(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
-		v.StartSession(stu.PermID, formatName(stu.StudentName), Student, w)
+		v.StartSession(stu.PermID, formatName(stu.StudentName), Student, w, r)
 	} else {
 		// teacher format
 		teacher, name, err := v.store.TeacherNameFromEmail(email)
@@ -114,7 +66,7 @@ func (v *View) Login(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
-		v.StartSession(teacher, name, Teacher, w)
+		v.StartSession(teacher, name, Teacher, w, r)
 	}
 
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
@@ -122,17 +74,17 @@ func (v *View) Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (v *View) DevAdminLogin(w http.ResponseWriter, r *http.Request) {
-	v.StartSession("Madison Admin", "Madison Admin", Admin, w)
+	v.StartSession("Madison Admin", "Madison Admin", Admin, w, r)
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }
 
 func (v *View) DevTeacherLogin(w http.ResponseWriter, r *http.Request) {
 
-	v.StartSession("Kappus, Matthew D.", "Matt Kappus", Teacher, w)
+	v.StartSession("Kappus, Matthew D.", "Matt Kappus", Teacher, w, r)
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }
 
 func (v *View) DevStudentLogin(w http.ResponseWriter, r *http.Request) {
-	v.StartSession("980016917", "Abbas, Malak", Student, w)
+	v.StartSession("980016917", "Abbas, Malak", Student, w, r)
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }

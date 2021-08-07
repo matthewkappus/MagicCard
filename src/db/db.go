@@ -6,10 +6,22 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/matthewkappus/Roster/src/synergy"
 	_ "github.com/mattn/go-sqlite3"
 )
+
+type Store struct {
+	db *sql.DB
+}
+
+// todo: move to comment
+type Teacher struct {
+	Teacher    string
+	FullName   string
+	StaffEmail string
+}
 
 // staff table
 const (
@@ -18,35 +30,32 @@ const (
 	insertStaff              = `INSERT INTO staff(teacher, full_name, staff_email) VALUES(?,?,?)`
 	selectTeacherNameByEmail = `SELECT teacher, full_name FROM staff WHERE staff_email=?`
 	selectStaff              = `SELECT teacher, full_name, staff_email FROM staff`
+	selectEmailByTeacher     = `SELECT staff_email FROM staff WHERE teacher=?`
 )
 
-type Teacher struct {
-	Teacher    string
-	FullName   string
-	StaffEmail string
+// session table
+const (
+	createSession      = `CREATE TABLE IF NOT EXISTS session(user TEXT, sid TEXT, expires DATETIME, scope INT)`
+	insertSession      = `INSERT INTO session(user, sid, expires, scope) VALUES(?,?,?,?)`
+	deleteOldSessions  = `DELETE FROM session WHERE user = ?`
+	selectSessionBySID = `SELECT * FROM session where sid=?`
+)
+
+func (s *Store) GetStaffEmail(teacher string) (email string, err error) {
+	err = s.db.QueryRow(selectTeacherNameByEmail, teacher).Scan(&email)
+	return email, err
 }
 
-func (s *Store) GetTeachers() ([]*Teacher, error) {
-	rows, err := s.db.Query(selectStaff)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	teachers := make([]*Teacher, 0)
-	for rows.Next() {
-		t := new(Teacher)
-		err := rows.Scan(&t.Teacher, &t.FullName, &t.StaffEmail)
-		if err != nil {
-			log.Printf("sql couldn't scan teacher: %v", err)
-			continue
-		}
-		teachers = append(teachers, t)
-	}
-	return teachers, rows.Err()
+func (s *Store) CreateSessions() error {
+	_, err := s.db.Exec(createSession)
+	return err
 }
 
-type Store struct {
-	db *sql.DB
+// InsertSession takes a userid an expiration and scope (0 guest, 1 student 2 teacher 3 admin)
+func (s *Store) InsertSession(user string, sid string, expires time.Time, scope int) error {
+	_, err := s.db.Exec(insertSession, user, sid, expires, scope)
+	return err
+
 }
 
 // OpenStore creates store from provided sqllite db path
@@ -161,4 +170,39 @@ func toNameEmail(teacherName string) (name, email string) {
 	email = strings.ToLower(fmt.Sprintf("%s.%s@aps.edu", fl[1], fl[0]))
 
 	return name, email
+}
+
+func (s *Store) GetTeachers() ([]*Teacher, error) {
+	rows, err := s.db.Query(selectStaff)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	teachers := make([]*Teacher, 0)
+	for rows.Next() {
+		t := new(Teacher)
+		err := rows.Scan(&t.Teacher, &t.FullName, &t.StaffEmail)
+		if err != nil {
+			log.Printf("sql couldn't scan teacher: %v", err)
+			continue
+		}
+		teachers = append(teachers, t)
+	}
+	return teachers, rows.Err()
+}
+
+// GetSession by cookie "sid"
+func (s *Store) GetSession(sid string) (user, sessionID string, expires time.Time, scope int, err error) {
+	{
+		row := s.db.QueryRow(selectSessionBySID, sid)
+
+		err = row.Scan(&user, &sid, &expires, &scope)
+		return user, sessionID, expires, scope, err
+
+	}
+}
+
+func (s *Store) DeleteOldSessions(user string) error {
+	_, err := s.db.Exec(deleteOldSessions, user)
+	return err
 }

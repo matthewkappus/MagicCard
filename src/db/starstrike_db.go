@@ -12,6 +12,7 @@ const (
 	insertStarStrike                 = `INSERT INTO starstrike(perm_id, teacher, comment, title, icon, cat, isActive) VALUES(?,?,?,?,?,?,?);`
 	selectStarStrikeByPermID         = `SELECT * FROM starstrike WHERE perm_id = ?`
 	selectNewestStarStrikesByTeacher = `SELECT * FROM starstrike WHERE teacher=? LIMIT ?`
+	selectStarStrikeByID             = `SELECT * FROM starstrike WHERE id = ?`
 	// select count(cat) from starstrike where cat=1 and perm_id="980016917"
 )
 
@@ -23,6 +24,11 @@ const (
 	selectMyStarStrikes = `SELECT * FROM mystarstrike WHERE teacher="all" OR teacher = ?`
 	insertMyStarStrike  = `INSERT INTO mystarstrike(teacher, comment, title, icon, cat, isActive) VALUES(?,?,?,?,?,true)`
 )
+
+func (s *Store) CreateMyStarStrikeTable() error {
+	_, err := s.db.Exec(createMystarStrike)
+	return err
+}
 
 // SelectTeacherStarStrikes with teacher name up to query limmit
 func (s *Store) SelectTeacherStarStrikes(teacher string, limit int) (stars, strikes []*comment.StarStrike, err error) {
@@ -104,5 +110,13 @@ func (s *Store) GetStarStrikesByPerm(id string) ([]*comment.StarStrike, error) {
 		ss = append(ss, strstr)
 	}
 	return ss, nil
+
+}
+
+func (s *Store) GetStarStrike(id int) (*comment.StarStrike, error) {
+
+	strstr := new(comment.StarStrike)
+	err := s.db.QueryRow(selectStarStrikeByID, id).Scan(&strstr.ID, &strstr.PermID, &strstr.Teacher, &strstr.Comment, &strstr.Title, &strstr.Icon, &strstr.Created, &strstr.Cat, &strstr.IsActive)
+	return strstr, err
 
 }
