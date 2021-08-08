@@ -3,16 +3,15 @@
 
 <div class="content">
 
-    <input type="hidden" name="teacher" {{.N.User}}>
-    <input type="hidden" name="full_name" {{.N.Name}}>
-    <!-- todo: get ss_id from request form -->
+    <input type="hidden" name="teacher" value="{{.N.User}}">
+    <input type="hidden" name="full_name" value="{{.N.Name}}">
     <input type="hidden" name="ss_id" >
     <h1 class="text-center mb-3">Contact Me</h1>
     <form method="POST" action="/addContact">
         <div class="row mb-1">
             <div class="col">
                 <label class="form-label">Respondent</label>
-                <input type="text" name="respondent" class="form-control" placeholder="First name"
+                <input type="text" name="respondent" class="form-control" placeholder="Parent/Guardian"
                     aria-label="respondent" required>
             </div>
        
