@@ -20,7 +20,7 @@ func (v *View) MagicCard(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// todo: add email and session info
-	v.tmpls.Lookup("studentmagiccard").Execute(w, TD{M: mc, N: v.N})
+	v.tmpls.Lookup("teachermagiccard").Execute(w, TD{M: mc, N: v.N})
 }
 
 // StudentCard shows magic card belonging to student user by their cookie

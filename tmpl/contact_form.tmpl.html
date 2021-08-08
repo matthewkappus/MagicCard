@@ -1,6 +1,5 @@
 {{ define "contact_form" }}
-{{ template "head" }}
-{{ template "nav" .N}}
+
 
 <div class="content">
 
@@ -14,7 +13,7 @@
             <div class="col">
                 <label class="form-label">Respondent</label>
                 <input type="text" name="respondent" class="form-control" placeholder="First name"
-                    aria-label="First name" required>
+                    aria-label="respondent" required>
             </div>
        
     
@@ -29,5 +28,4 @@
         <button type="submit" class="btn btn-primary mt-2">Submit</button>
     </form>
 </div>
-{{ template "tail" }}
 {{end}}

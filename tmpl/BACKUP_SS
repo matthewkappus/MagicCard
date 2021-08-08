@@ -48,8 +48,8 @@
 <tbody>
 
     {{ range $stu, $ss := .C.StarStrikes }}
-    <tr >
-        <th class="studentRows" scope="row"> {{ $stu.StudentName }}</th>
+    <tr>
+        <th scope="row"> {{ $stu.StudentName }}</th>
         <td>
             
 

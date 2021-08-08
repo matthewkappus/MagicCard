@@ -19,16 +19,21 @@ func (v *View) AddContact(w http.ResponseWriter, r *http.Request) {
 
 	// todo add validation
 	// sender_name, sender_fullname, sender_email, student_name, sent, respondent, starstrike, message
-	i, err := strconv.Atoi(r.PostFormValue("ss_id"))
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	ss, err := v.store.GetStarStrike(i)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	ssid := r.PostFormValue("ss_id")
+	ss := new(comment.StarStrike)
+	if ssid != "" {
 
-		return
+		i, err := strconv.Atoi(r.PostFormValue("ss_id"))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		ss, err = v.store.GetStarStrike(i)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+
+			return
+		}
 	}
 
 	c := &comment.Contact{

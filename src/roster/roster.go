@@ -177,7 +177,6 @@ func (v *View) Home(w http.ResponseWriter, r *http.Request) {
 		}
 		v.M, err = v.MakeStudentMagicCard(user)
 	default:
-		fmt.Println("guest view")
 	}
 
 	if err != nil {
