@@ -52,6 +52,12 @@ func (v *View) AddContact(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, "/", http.StatusFound)
 }
-func (v *View) ContactForm(w http.ResponseWriter, r *http.Request) {
-	v.tmpls.ExecuteTemplate(w, "contact_form", TD{N: v.N})
+func (v *View) ContactLog(w http.ResponseWriter, r *http.Request) {
+
+	c, err := v.store.GetContacts(r.URL.Query().Get("id"))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	v.tmpls.ExecuteTemplate(w, "contact_log", ContactData{N: v.N, C: c})
 }

@@ -64,7 +64,7 @@
                 {{ range $ss }}
                 <!-- if Cat is star -->
                     {{if eq .Cat 0}}
-                        <a id="star-{{ $stu.PermID }}-{{ .Title }}" onclick="select(this.id)" class="dropdown-item {{if .Icon}} {{.Icon}} {{end}}"  data-bs-toggle="modal" data-bs-target="#commentModal" data-bs-permid="{{$stu.PermID}}" data-bs-comment="{{.Comment}}" data-bs-title="{{.Title}}" data-bs-cat="{{.Cat}}">  {{.Title}}</a>
+                        <a id="star-{{ $stu.PermID }}-{{ .Title }}" onclick="select(this.id)" class="dropdown-item {{if .Icon}} bi bi-{{.Icon}} {{end}}"  data-bs-toggle="modal" data-bs-target="#commentModal" data-bs-permid="{{$stu.PermID}}" data-bs-comment="{{.Comment}}" data-bs-title="{{.Title}}" data-bs-cat="{{.Cat}}">  {{.Title}}</a>
                     {{ end}}
                 {{ end }}
                 </div>

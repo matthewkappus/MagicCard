@@ -17,6 +17,11 @@ type TD struct {
 	// T []*Teacher
 }
 
+type ContactData struct {
+	N *Nav
+	C []comment.Contact
+}
+
 // Alert is a struct for use in <head> / <nav>
 type Alert struct {
 	// Types: primary secondary success warning danger info light dark

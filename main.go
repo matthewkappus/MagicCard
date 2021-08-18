@@ -57,7 +57,7 @@ func main() {
 	staffView.HF("/card", staffView.MagicCard)
 	staffView.HF("/profile", staffView.Profile)
 	staffView.HF("/addComment", staffView.AddComment)
-	staffView.HF("/contact", staffView.ContactForm)
+	staffView.HF("/contact", staffView.ContactLog)
 	staffView.HF("/addContact", staffView.AddContact)
 	staffView.HF("/class", staffView.ClassEdit)
 

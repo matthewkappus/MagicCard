@@ -1,0 +1,26 @@
+{{ define "contact_log" }}
+
+{{ template "head" }}
+
+{{ template "nav" .N }}
+<!-- 	createComment  
+    contact(id INTEGER PRIMARY KEY
+    sender_name STRING
+    sender_fullname TEXT
+    sender_email TEXT
+    student_name TEXT
+    perm_id TEXT
+    sent DATETIME
+    respondent TEXT
+    starstrike INT
+    message TEXT)` -->
+
+
+    <h4>contact data</h4>
+    <div class="content">
+        <!-- todo: put each id/sender_name/_fullname/_email/student/perm_id/sent/reespondent/starstrike/message into list item -->
+        {{.C}}
+    </div>
+
+    {{ template "tail" }}
+{{ end }}

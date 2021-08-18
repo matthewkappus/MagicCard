@@ -17,6 +17,9 @@ type Contact struct {
 
 	StudentName string
 
+	// student id
+	PermID string
+
 	// when contacted
 	Sent time.Time
 
