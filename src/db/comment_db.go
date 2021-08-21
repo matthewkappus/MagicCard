@@ -33,12 +33,30 @@ func (s *Store) GetContacts(perm_id string) ([]comment.Contact, error) {
 	defer rows.Close()
 	var contacts []comment.Contact
 	for rows.Next() {
-		var c comment.Contact
-		err := rows.Scan(&c.ID, &c.Sender.Teacher, &c.Sender.FullName, &c.Sender.StaffEmail, &c.StudentName, &c.PermID, &c.Sent, &c.Respondent, &c.StarStrike.ID, &c.Message)
+		c := comment.Contact{
+			StarStrike: &comment.StarStrike{},
+		}
+
+		err := rows.Scan(&c.ID,
+			&c.Sender.Teacher,
+			&c.Sender.FullName,
+			&c.Sender.StaffEmail,
+			&c.StudentName,
+			&c.PermID,
+			&c.Sent,
+			&c.Respondent,
+			&c.StarStrike.ID,
+			&c.Message)
 		if err != nil {
-			return nil, err
+			continue
 		}
 		contacts = append(contacts, c)
+	}
+
+	for _, c := range contacts {
+		if c.StarStrike.ID != 0 {
+			c.StarStrike, _ = s.GetStarStrike(c.StarStrike.ID)
+		}
 	}
 	return contacts, nil
 }
