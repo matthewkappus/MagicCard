@@ -1,6 +1,10 @@
 package db
 
-import "github.com/matthewkappus/MagicCard/src/comment"
+import (
+	"fmt"
+
+	"github.com/matthewkappus/MagicCard/src/comment"
+)
 
 // contact table
 const (
@@ -53,9 +57,14 @@ func (s *Store) GetContacts(perm_id string) ([]comment.Contact, error) {
 		contacts = append(contacts, c)
 	}
 
-	for _, c := range contacts {
+	for id, c := range contacts {
 		if c.StarStrike.ID != 0 {
-			c.StarStrike, _ = s.GetStarStrike(c.StarStrike.ID)
+			contacts[id].StarStrike, err = s.GetStarStrike(c.StarStrike.ID)
+			if err != nil {
+				fmt.Println("ss scann err", err.Error())
+			}
+		} else {
+			contacts[id].StarStrike = nil
 		}
 	}
 	return contacts, nil

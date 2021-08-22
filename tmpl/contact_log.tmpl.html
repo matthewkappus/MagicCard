@@ -19,8 +19,44 @@
     <h4>contact data</h4>
     <div class="content">
         <!-- todo: put each id/sender_name/_fullname/_email/student/perm_id/sent/reespondent/starstrike/message into list item -->
-        {{.C}}
+        
+
+        <ul>
+       {{ range .C }}
+            <li>{{ . }}
+
+
+                {{ if .StarStrike}}
+
+                <p>
+                  <!-- <a class="btn btn-primary" data-bs-toggle="collapse" href="#collaps{{.StarStrike.ID}}" role="button" aria-expanded="false" aria-controls="collaps{{.StarStrike.ID}}">
+                    Link with href
+                  </a> -->
+                  <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collaps{{.StarStrike.ID}}" aria-expanded="false" aria-controls="collaps{{.StarStrike.ID}}">
+                    {{.StarStrike.Title}}
+                  </button>
+                </p>
+                <div class="collapse" id="collaps{{.StarStrike.ID}}">
+                  <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                      <h5 class="card-title">{{.StarStrike.Title}}</h5>
+                      <h6 class="card-subtitle mb-2 text-muted">{{.StarStrike.Teacher}}</h6>
+                      <p class="card-text">{{.StarStrike.Comment}}</p>
+                      <a href="#" class="card-link">Card link</a>
+                      <a href="#" class="card-link">Another link</a>
+                    </div>
+                  </div>
+                </div>
+
+                
+               {{ end }}
+            </li>
+       {{ end }}
+     </ul>
+
     </div>
+
+
 
     {{ template "tail" }}
 {{ end }}
