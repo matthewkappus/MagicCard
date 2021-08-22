@@ -22,21 +22,18 @@
         
 
         <ul>
-       {{ range .C }}
+       {{ range $i, $c := .C }}
             <li>{{ . }}
 
 
                 {{ if .StarStrike}}
-
                 <p>
-                  <!-- <a class="btn btn-primary" data-bs-toggle="collapse" href="#collaps{{.StarStrike.ID}}" role="button" aria-expanded="false" aria-controls="collaps{{.StarStrike.ID}}">
-                    Link with href
-                  </a> -->
-                  <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collaps{{.StarStrike.ID}}" aria-expanded="false" aria-controls="collaps{{.StarStrike.ID}}">
+               
+                  <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{$i}}" aria-expanded="false" aria-controls="collapse{{$i}}">
                     {{.StarStrike.Title}}
                   </button>
                 </p>
-                <div class="collapse" id="collaps{{.StarStrike.ID}}">
+                <div class="collapse" id="collapse{{$i}}">
                   <div class="card" style="width: 18rem;">
                     <div class="card-body">
                       <h5 class="card-title">{{.StarStrike.Title}}</h5>
