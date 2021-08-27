@@ -36,7 +36,6 @@
                       </div>
                   </div>
               </div>
-
             {{ end}}
             </div>
   
@@ -44,26 +43,28 @@
           <div class="accordion accordion-flush col-md" id="starsAccordion">
             <h3>Stars</h3>
             {{ range $title, $star := .M.StarMap }}
-            <div class="accordion-item">
-              <h2 class="accordion-header" id="headingOne">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="true" aria-controls="collapse2">
-                  <span class="p-2 {{  (index $star 0).Icon }} "> {{ $title }}</span> 
-                  <span class="m-2 badge rounded-pill {{if eq (len $star ) 2 }}  bg-warning {{ else if gt (len $star) 2 }} bg-danger {{ else }} bg-primary {{ end }}"> {{ len $star }}</span>
-                </button>
-              </h2>
-              <div id="collapse2" class="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#starsAccordion">
-                <div class="accordion-body">
-                  <!-- ID PermID Teacher Comment Created CAt Icon IsActive -->
-                  <ul class="list-group list-group-flush">
-                    {{ range $star }}
-                    <li class="list-group-item ">{{ .Comment }}  {{.Teacher}} {{ .Created }} </li>
-                    {{ end }}
-                  </ul>
-                </div>
-              </div>
-            </div>
 
-            
+            {{ $id := urlquery $title }}
+              <div class="accordion accordion-flush" id="accordStrike">
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ (index $star 0).ID }}" aria-expanded="true" aria-controls="collapse{{ (index $star 0).ID }}">
+                            <span class="p-2 {{  (index $star 0).Icon }} "> {{ $title }}</span> 
+                            <span class="m-2 badge rounded-pill {{if eq (len $star ) 2 }}  bg-warning {{ else if gt (len $star) 2 }} bg-danger {{ else }} bg-primary {{ end }}"> {{ len $star }}</span>
+
+                          </button>
+                      </h2>
+                      <div id="collapse{{ (index $star 0).ID }}" class="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#accordStrike">
+                          <div class="accordion-body">
+                            <ul class="list-group list-group-flush">
+                              {{ range $star }}
+                                <li class="list-group-item ">{{ .Comment }}  {{.Teacher}} {{ .Created }} </li>
+                              {{ end }}
+                            </ul>
+                          </div>
+                      </div>
+                  </div>
+              </div>
             {{ end}}
           </div>
       
