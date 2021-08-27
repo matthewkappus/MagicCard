@@ -1,0 +1,42 @@
+{{ define "teachermagiccard"}}
+
+{{ template "head" .N}}
+{{ template "nav" .N}}
+<div class="container-md">
+    
+    <h3 class="py-3">{{.M.Name}}'s Magic Card</h3>
+
+    <div class="container-md">
+      
+        <div class="row">
+          <div class="accordion accordion-flush col-md" id="strikeAccordion">
+
+
+            <h3>Strikes</h3>
+            {{ range $title, $strike := .M.StrikeMap }}
+
+            {{ $id := urlquery $title }}
+              <div class="accordion accordion-flush" id="accordStrike">
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ (index $strike 0).ID }}" aria-expanded="true" aria-controls="collapse{{ (index $strike 0).ID }}">
+                             {{$title}}
+                          </button>
+                      </h2>
+                      <div id="collapse{{ (index $strike 0).ID }}" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordStrike">
+                          <div class="accordion-body">
+                              <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+            {{ end}}
+            <!-- end or star row -->
+            </div>
+
+        </div>
+    </div>
+
+{{ template "tail" }}
+{{ end }}
