@@ -14,8 +14,6 @@
 
             <h3>Strikes</h3>
              {{ range $title, $strike := .M.StrikeMap }}
-
-            {{ $id := urlquery $title }}
               <div class="accordion accordion-flush" id="accordStrike">
                   <div class="accordion-item">
                       <h2 class="accordion-header" id="headingOne">
@@ -32,7 +30,7 @@
                               <div class="card" style="width: 18rem;">
                                 <div class="card-body">
                                   <h5 class="card-title bi bi-{{.Icon}}"> </h5>
-                                  <h6 class="card-subtitle mb-2 text-muted">{{ .Created }} </h6>
+                                  <h6 class="card-subtitle mb-2 text-muted">{{  .Created.Format "Jan 02 2006"  }} </h6>
                                   <p class="card-text">{{ .Comment }} </p>
                                   <a href="#" class="card-link">{{.Teacher}}</a>
                                 </div>
@@ -50,8 +48,6 @@
           <div class="accordion accordion-flush col-md" id="starsAccordion">
             <h3>Stars</h3>
             {{ range $title, $star := .M.StarMap }}
-
-            {{ $id := urlquery $title }}
               <div class="accordion accordion-flush" id="accordStrike">
                   <div class="accordion-item">
                       <h2 class="accordion-header" id="headingOne">
@@ -68,7 +64,7 @@
                               <div class="card" style="width: 10rem;">
                                 <div class="card-body">
                                   <h5 class="card-title bi bi-{{.Icon}}"> </h5>
-                                  <h6 class="card-subtitle mb-2 text-muted">{{ .Created }} </h6>
+                                  <h6 class="card-subtitle mb-2 text-muted">{{ .Created.Format "Jan 02 2006" }} </h6>
                                   <p class="card-text">{{ .Comment }} </p>
                                   <a href="#" class="card-link">{{.Teacher}}</a>
                                 </div>
