@@ -29,7 +29,14 @@
                           <div class="accordion-body">
                             <ul class="list-group list-group-flush">
                               {{ range $strike }}
-                                <li class="list-group-item ">{{ .Comment }}  {{.Teacher}} {{ .Created }} </li>
+                              <div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                  <h5 class="card-title bi bi-{{.Icon}}"> </h5>
+                                  <h6 class="card-subtitle mb-2 text-muted">{{ .Created }} </h6>
+                                  <p class="card-text">{{ .Comment }} </p>
+                                  <a href="#" class="card-link">{{.Teacher}}</a>
+                                </div>
+                              </div>
                               {{ end }}
                             </ul>
                           </div>
@@ -58,7 +65,14 @@
                           <div class="accordion-body">
                             <ul class="list-group list-group-flush">
                               {{ range $star }}
-                                <li class="list-group-item ">{{ .Comment }}  {{.Teacher}} {{ .Created }} </li>
+                              <div class="card" style="width: 10rem;">
+                                <div class="card-body">
+                                  <h5 class="card-title bi bi-{{.Icon}}"> </h5>
+                                  <h6 class="card-subtitle mb-2 text-muted">{{ .Created }} </h6>
+                                  <p class="card-text">{{ .Comment }} </p>
+                                  <a href="#" class="card-link">{{.Teacher}}</a>
+                                </div>
+                              </div>
                               {{ end }}
                             </ul>
                           </div>
