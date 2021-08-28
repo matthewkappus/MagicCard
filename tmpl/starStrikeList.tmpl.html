@@ -15,6 +15,7 @@
                 <input type="hidden" name="teacher" id="teacherInput" value="{{.N.User}}">
                 <input type="hidden" name="cat" id="catInput">
                 <input type="hidden" name="title" id="titleInput">
+                <input type="hidden" name="icon" id="iconInput" >
                 <div class="mb-3">
                     
                 </div>
@@ -64,7 +65,7 @@
                 {{ range $ss }}
                 <!-- if Cat is star -->
                     {{if eq .Cat 0}}
-                        <a id="star-{{ $stu.PermID }}-{{ .Title }}" onclick="select(this.id)" class="dropdown-item {{if .Icon}} bi bi-{{.Icon}} {{end}}"  data-bs-toggle="modal" data-bs-target="#commentModal" data-bs-permid="{{$stu.PermID}}" data-bs-comment="{{.Comment}}" data-bs-title="{{.Title}}" data-bs-cat="{{.Cat}}">  {{.Title}}</a>
+                        <a id="star-{{ $stu.PermID }}-{{ .Title }}" onclick="select(this.id)" class="dropdown-item {{if .Icon}} {{.Icon}} {{end}}"  data-bs-toggle="modal" data-bs-target="#commentModal" data-bs-permid="{{$stu.PermID}}" data-bs-comment="{{.Comment}}" data-bs-title="{{.Title}}" data-bs-cat="{{.Cat}}" data-bs-icon="{{.Icon}}">  {{.Title}}</a>
                     {{ end}}
                 {{ end }}
                 </div>
@@ -83,7 +84,7 @@
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     {{ range $ss }}
                         {{if ne .Cat 0}}
-                            <a id="strike-{{ $stu.PermID }}-{{ .Title }}" onclick="select(this.id)" class="dropdown-item {{if .Icon}} {{.Icon}} {{end}}"  data-bs-toggle="modal" data-bs-target="#commentModal" data-bs-permid="{{$stu.PermID}}" data-bs-comment="{{.Comment}}" data-bs-title="{{.Title}}" data-bs-cat="{{.Cat}}">  {{.Title}}</a>
+                            <a id="strike-{{ $stu.PermID }}-{{ .Title }}" onclick="select(this.id)" class="dropdown-item {{if .Icon}} bi bi-{{.Icon}} {{end}}"  data-bs-toggle="modal" data-bs-target="#commentModal" data-bs-permid="{{$stu.PermID}}" data-bs-comment="{{.Comment}}" data-bs-title="{{.Title}}" data-bs-cat="{{.Cat}}">  {{.Title}}</a>
                         {{ end}}
                     {{ end }}
                     </div>
@@ -106,6 +107,7 @@
     var comment = button.getAttribute('data-bs-comment');
     var title = button.getAttribute('data-bs-title');
     var cat = button.getAttribute('data-bs-cat');
+    var icon = button.getAttribute('data-bs-icon');
 
     console.log("selected title " + title);  
 
@@ -123,6 +125,9 @@
 
     var titleInput = document.getElementById("titleInput")
     titleInput.value = title;
+
+    var iconInput = document.getElementById("iconInput")
+    iconInput.value = icon;
     }
 
  
