@@ -59,6 +59,7 @@ func main() {
 
 	staffView.HF("/contact", staffView.ContactLog)
 	staffView.HF("/addContact", staffView.AddContact)
+	staffView.HF("/addStarStrike", staffView.AddStarStrike)
 	staffView.HF("/class", staffView.ClassEdit)
 
 
@@ -66,6 +67,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	// Admin Tools
 	adminView.HF("/admin/addMyStarStrike", staffView.AddMyStarStrikeAll)
 	// adminView.HF("/admin/staffView", staffView.StaffEdit)

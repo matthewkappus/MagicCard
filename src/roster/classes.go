@@ -17,13 +17,12 @@ func (v *View) Profile(w http.ResponseWriter, r *http.Request) {
 	v.tmpls.Lookup("profile").Execute(w, TD{N: v.N, C: c})
 }
 
-func (v *View) AddComment(w http.ResponseWriter, r *http.Request) {
+func (v *View) AddStarStrike(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method != http.MethodPost {
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return
 	}
-	r.ParseForm()
 
 	if v.User != r.PostFormValue("teacher") {
 		fmt.Printf("form.teacher: '%s' doesn't match session.teacher '%s'", r.PostFormValue("teacher"), v.User)
