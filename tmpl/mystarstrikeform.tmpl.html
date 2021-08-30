@@ -1,59 +1,70 @@
 {{ define "mystarstrikeform" }}
 
-{{ template "head"}}
+{{ template "head" .N}}
+{{ template "nav" .N}}
 
 
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-    <div class="offcanvas-header">
-      <h5 id="offcanvasRightLabel">Icon Chooser</h5>
-      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-      <div class="d-flex justify-content-around flex-wrap" id="iconSelect" ></div>
-    </div>
-  </div>
+<div class="container-md">
 
-  
- <!-- /admin/addMyStarStrike" -->
- <h4 class="text-center mb-3">Custom Stars & Strikes</h4>
- <form action="/admin/addMyStarStrike" method="POST">
-     <div class="row mb-1">
 
-        <!-- todo: get teacher from nav -->
-        <input type="hidden" name="teacher" value="{{.N.User}}">
-         <div class="col">
-             <label class="form-label" id="iconLabel"> Title</label>
-             <input type="text" name="title" class="form-control" placeholder="Title"
-                 aria-label="Comment title" required>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header">
+          <h5 id="offcanvasRightLabel">Icon Chooser</h5>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <div class="d-flex justify-content-around flex-wrap" id="iconSelect" ></div>
+        </div>
+      </div>
+    
+      
+     <!-- /admin/addMyStarStrike" -->
+     <h4 class="text-center mb-3">Custom Stars & Strikes</h4>
+     <form action="/admin/addMyStarStrike" method="POST">
+         <div class="row mb-1">
+    
+            <!-- todo: get teacher from nav -->
+            <input type="hidden" name="teacher" value="{{.N.User}}">
+             <div class="col">
+                 <label class="form-label" id="iconLabel"> Title</label>
+                 <input type="text" name="title" class="form-control" placeholder="Title"
+                     aria-label="Comment title" required>
+             </div>
+             <div class="col">
+                 <label class="form-label">Comment</label>
+                 <input type="text" name="comment" class="form-control" placeholder="Default comment"
+                     aria-label="Last name" required>
+             </div>
          </div>
-         <div class="col">
-             <label class="form-label">Comment</label>
-             <input type="text" name="comment" class="form-control" placeholder="Default comment"
-                 aria-label="Last name" required>
-         </div>
-     </div>
-     <div class="row mb-1">
-         <div class="col">
-             <label class="form-label">Category</label>
-            
-             <select onchange="defaultIcon(this.value)" name="cat" id="catSelect">
-                 <option value="0">Star</option>
-                 <option value="1">Minor Strike</option>
-                 <option value="2">Strike</option>
-                 <option value="3">Major Strike</option>
-             </select>
-         </div>
+         <div class="row mb-1">
+             <div class="col">
+                 <label class="form-label">Category</label>
+                
+                 <select onchange="defaultIcon(this.value)" name="cat" id="catSelect">
+                     <option value="0">Star</option>
+                     <option value="1">Minor Strike</option>
+                     <option value="2">Strike</option>
+                     <option value="3">Major Strike</option>
+                 </select>
+             </div>
+    
+    
+                 <input type="hidden" name="icon" id="iconInput">
+    
+             <button class="btn btn-primary form-control" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Select Icon</button>
+    
+    
+    
+             <input type="hidden" name="icon">
+         <button type="submit" class="btn btn-primary mt-2">Submit</button>
+     </form>
+    
 
 
-             <input type="hidden" name="icon" id="iconInput">
 
-         <button class="btn btn-primary form-control" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Select Icon</button>
+</div>
 
-
-
-         <input type="hidden" name="icon">
-     <button type="submit" class="btn btn-primary mt-2">Submit</button>
- </form>
 
 
     <script>
@@ -90,8 +101,7 @@
         icons.forEach(function (icon, index) {
             var div = document.createElement('div');
             div.id = icon;
-            var i = "bi bi-" + icon;
-            div.innerHTML = '<h1 class="' + i + '"></h1>';
+            div.innerHTML = '<h1 class="' + "bi bi-" + icon + '"></h1>';
             div.style.border = '1px solid black';
             div.style.margin = '5px';
             div.setAttribute("data-bs-dismiss","offcanvas");

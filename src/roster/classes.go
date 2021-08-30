@@ -103,21 +103,9 @@ func (v *View) AddMyStarStrikeAll(w http.ResponseWriter, r *http.Request) {
 
 func (v *View) MyStarStrikeForm(w http.ResponseWriter, r *http.Request) {
 
-	v.tmpls.Lookup("mystarstrikeform").Execute(w, nil)
+	v.tmpls.Lookup("mystarstrikeform").Execute(w, TD{N: v.N})
 
 }
-
-// func (v *View) StaffEdit(w http.ResponseWriter, r *http.Request) {
-// 	staff, err := v.store.GetTeachers()
-// 	if err != nil {
-// 		http.Error(w, err.Error(), http.StatusInternalServerError)
-// 		return
-// 	}
-
-// 	fmt.Println("showing staffedit")
-
-// 	v.tmpls.Lookup("staffedit").Execute(w, TD{N: v.N, T: staff})
-// }
 
 func (v *View) StaffAdd(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {

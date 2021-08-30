@@ -18,7 +18,7 @@ type TD struct {
 }
 
 type StaffData struct {
-	N        *Nav
+	N *Nav
 	// [full_name]{teacher, email}
 	Teachers map[string]*synergy.Staff
 }
@@ -103,6 +103,8 @@ func (v *View) MakeClassroom(teacher, section string) (*Classroom, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	fmt.Printf("MakeClassroom got myss of %v\n", myss)
 
 	// starstrikes takes generic starstrikes and puts each student perm in for use with buttons
 	ss := make(map[*synergy.Stu415][]*comment.StarStrike)
