@@ -75,12 +75,10 @@
             var iconInput = document.getElementById("iconInput")
 
             var iconClass = "bi bi-"+iconName
-            // <i class="bi bi-eye-fill"></i>
            
             label.setAttribute("class", iconClass);
-            iconInput.value = iconClass;
+            iconInput.value = iconName;
             // changeIcon is the 'bi bi-NAME' class for a bootstrap icon diaplay
-            console.log("icon changed to "+iconClass);
         }
 
         function defaultIcon(cat) {

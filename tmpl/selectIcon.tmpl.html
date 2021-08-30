@@ -12,9 +12,6 @@
   </div>
 </div>
 
-<!-- <div class="content">
-    <div class="d-flex justify-content-around flex-wrap" id="iconSelect" ></div>
-</div> -->
 
     <script>
         // id of the icon select
@@ -26,8 +23,7 @@
         icons.forEach(function (icon, index) {
             var div = document.createElement('div');
             div.id = icon;
-            var i = "bi bi-" + icon;
-            div.innerHTML = '<h1 class="' + i + '"></h1>';
+            div.innerHTML = '<h1 class="bi bi-' + icon +'" ></h1>';
             div.style.border = '1px solid black';
             div.style.margin = '5px';
             div.onclick = function () {
