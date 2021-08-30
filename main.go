@@ -23,6 +23,7 @@ func main() {
 	if *devMode {
 		fmt.Println("starting dev mode")
 		s, err = db.OpenStore("data/cards.db")
+
 	} else {
 		s, err = db.OpenCloudStore()
 	}
@@ -50,6 +51,8 @@ func main() {
 		http.HandleFunc("/devTeacher", staffView.DevTeacherLogin)
 		http.HandleFunc("/devStudent", studentView.DevStudentLogin)
 		http.HandleFunc("/devAdmin", staffView.DevAdminLogin)
+		// local bootsrap files
+		http.Handle("/tmpl/", http.StripPrefix("/tmpl/", http.FileServer(http.Dir("tmpl"))))
 	}
 
 	// list of students
@@ -61,7 +64,6 @@ func main() {
 	staffView.HF("/addContact", staffView.AddContact)
 	staffView.HF("/addStarStrike", staffView.AddStarStrike)
 	staffView.HF("/class", staffView.ClassEdit)
-
 
 	adminView, err := roster.NewView(s, "tmpl/*.tmpl.html", roster.Admin)
 	if err != nil {

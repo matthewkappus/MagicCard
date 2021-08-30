@@ -63,9 +63,8 @@
                               {{ range $star }}
                               <div class="card" style="width: 10rem;">
                                 <div class="card-body">
-                                  <h5 class="card-title bi bi-{{.Icon}}"> </h5>
-                                  <h6 class="card-subtitle mb-2 text-muted">{{ .Created.Format "Jan 02 2006" }} </h6>
-                                  <p class="card-text">{{ .Comment }} has icon {{.Icon}} </p>
+                                  <h6 class="card-subtitle mb-2 text-muted  ">{{ .Created.Format "Jan 02 2006" }} </h6>
+                                  <p class="card-text "> {{ .Comment }} </p>
                                   <a href="#" class="card-link">{{.Teacher}}</a>
                                 </div>
                               </div>

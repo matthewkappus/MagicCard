@@ -169,7 +169,7 @@ func (v *View) Home(w http.ResponseWriter, r *http.Request) {
 	case Teacher:
 		v.M, err = v.MakeTeacherMagicCard(user)
 	case Admin:
-		// show admin log with all classes
+		v.M, err = v.MakeTeacherMagicCard("*")
 	case Student:
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -177,6 +177,7 @@ func (v *View) Home(w http.ResponseWriter, r *http.Request) {
 		}
 		v.M, err = v.MakeStudentMagicCard(user)
 	default:
+		// guest page here
 	}
 
 	if err != nil {
