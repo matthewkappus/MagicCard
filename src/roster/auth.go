@@ -74,13 +74,13 @@ func (v *View) Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (v *View) DevAdminLogin(w http.ResponseWriter, r *http.Request) {
-	v.StartSession("Madison Admin", "Madison Admin", Admin, w, r)
+	v.StartSession("Kappus, Matthew D.", "Admin Matth", Admin, w, r)
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }
 
 func (v *View) DevTeacherLogin(w http.ResponseWriter, r *http.Request) {
 
-	v.StartSession("Kappus, Matthew D.", "Matt Kappus", Teacher, w, r)
+	v.StartSession("Johnson, Brandon S.", "Teacher Brandon", Teacher, w, r)
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }
 
