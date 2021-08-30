@@ -17,6 +17,11 @@ type TD struct {
 	// T []*Teacher
 }
 
+type StaffData struct {
+	N        *Nav
+	// [full_name]{teacher, email}
+	Teachers map[string]*synergy.Staff
+}
 type ContactData struct {
 	N *Nav
 	C []comment.Contact

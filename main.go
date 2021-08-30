@@ -72,7 +72,7 @@ func main() {
 
 	// Admin Tools
 	adminView.HF("/admin/addMyStarStrike", staffView.AddMyStarStrikeAll)
-	// adminView.HF("/admin/staffView", staffView.StaffEdit)
+	adminView.HF("/admin/staffView", staffView.StaffEdit)
 	adminView.HF("/admin/staffAdd", staffView.StaffAdd)
 	// http.HandleFunc("/admin/myStarStrikeForm", staffView.MyStarStrikeForm)
 	// http.HandleFunc("/admin", staffView.AdminHome)

@@ -16,12 +16,12 @@ type Store struct {
 	db *sql.DB
 }
 
-// todo: move to comment
-type Teacher struct {
-	Teacher    string
-	FullName   string
-	StaffEmail string
-}
+// // todo: move to comment
+// type Teacher struct {
+// 	Teacher    string
+// 	FullName   string
+// 	StaffEmail string
+// }
 
 // staff table
 const (
@@ -172,24 +172,43 @@ func toNameEmail(teacherName string) (name, email string) {
 	return name, email
 }
 
-func (s *Store) GetTeachers() ([]*Teacher, error) {
+func (s *Store) GetStaff() (map[string]*synergy.Staff, error) {
 	rows, err := s.db.Query(selectStaff)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
-	teachers := make([]*Teacher, 0)
+	staff := make(map[string]*synergy.Staff)
 	for rows.Next() {
-		t := new(Teacher)
-		err := rows.Scan(&t.Teacher, &t.FullName, &t.StaffEmail)
+		s := new(synergy.Staff)
+		var full string
+		// SELECT teacher, full_name, staff_email FROM staff
+		err := rows.Scan(&s.Name, &full, &s.Email)
 		if err != nil {
-			log.Printf("sql couldn't scan teacher: %v", err)
 			continue
 		}
-		teachers = append(teachers, t)
+		staff[full] = s
 	}
-	return teachers, rows.Err()
+	return staff, nil
 }
+
+// func (s *Store) GetTeachers() ([]*Teacher, error) {
+// 	rows, err := s.db.Query(selectStaff)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	defer rows.Close()
+// 	teachers := make([]*Teacher, 0)
+// 	for rows.Next() {
+// 		t := new(Teacher)
+// 		err := rows.Scan(&t.Teacher, &t.FullName, &t.StaffEmail)
+// 		if err != nil {
+// 			log.Printf("sql couldn't scan teacher: %v", err)
+// 			continue
+// 		}
+// 		teachers = append(teachers, t)
+// 	}
+// 	return teachers, rows.Err()
+// }
 
 // GetSession by cookie "sid"
 func (s *Store) GetSession(sid string) (user, sessionID string, expires time.Time, scope int, err error) {
