@@ -115,8 +115,7 @@ func (v *View) HF(path string, h http.HandlerFunc) {
 
 		// check if user has enough scope
 		if scope < v.Type {
-			fmt.Printf("HF: v.Type %v != cookie.Type %v\n", v.Type, scope)
-			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			http.Error(w, fmt.Sprintf("scope %d < v.Type %d", scope, v.Type), http.StatusUnauthorized)
 			return
 		}
 
@@ -175,10 +174,7 @@ func (v *View) Home(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("error making nav: %v", err)
 	}
-	fmt.Printf("\ngot magiccard %v\n", *v.M)
-
 	v.tmpls.Lookup("home").Execute(w, TD{N: v.N, M: v.M})
-
 }
 
 func UpdateRoster() ([]*synergy.Stu415, error) {

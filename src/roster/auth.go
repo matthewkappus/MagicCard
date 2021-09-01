@@ -60,13 +60,18 @@ func (v *View) Login(w http.ResponseWriter, r *http.Request) {
 		}
 		v.StartSession(stu.PermID, formatName(stu.StudentName), Student, w, r)
 	} else {
+		scope := Teacher
 		// teacher format
 		teacher, name, err := v.store.TeacherNameFromEmail(email)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
-		v.StartSession(teacher, name, Teacher, w, r)
+		if teacher == "Kappus, Matthew D." {
+			scope = Admin
+		}
+
+		v.StartSession(teacher, name, scope, w, r)
 	}
 
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
