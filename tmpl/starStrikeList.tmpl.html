@@ -68,7 +68,7 @@
                 {{ range $ss }}
                 <!-- if Cat is star -->
                     {{if eq .Cat 0}}
-                        <a id="star-{{ $stu.PermID }}-{{ .Title }}" onclick="select(this.id)" class="dropdown-item {{if .Icon}} {{.Icon}} {{end}}"  data-bs-toggle="modal" data-bs-target="#commentModal" data-bs-permid="{{$stu.PermID}}" data-bs-comment="{{.Comment}}" data-bs-title="{{.Title}}" data-bs-cat="{{.Cat}}" data-bs-icon="{{.Icon}}">  {{.Title}}</a>
+                        <a id="star-{{ $stu.PermID }}-{{ .Title }}" onclick="select(this.id)" class="dropdown-item {{if .Icon}} {{.Icon}} {{end}}"   data-bs-toggle="modal" data-bs-target="#commentModal" data-bs-icon="{{.Icon}}" data-bs-permid="{{$stu.PermID}}" data-bs-comment="{{.Comment}}" data-bs-title="{{.Title}}" data-bs-cat="{{.Cat}}">  {{.Title}}</a>
                     {{ end}}
                 {{ end }}
                 </div>
@@ -85,7 +85,7 @@
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     {{ range $ss }}
                         {{if ne .Cat 0}}
-                            <a id="strike-{{ $stu.PermID }}-{{ .Title }}" onclick="select(this.id)" class="dropdown-item {{if .Icon}} bi bi-{{.Icon}} {{end}}"  data-bs-toggle="modal" data-bs-target="#commentModal" data-bs-permid="{{$stu.PermID}}" data-bs-comment="{{.Comment}}" data-bs-title="{{.Title}}" data-bs-cat="{{.Cat}}">  {{.Title}}</a>
+                            <a id="strike-{{ $stu.PermID }}-{{ .Title }}" onclick="select(this.id)" class="dropdown-item {{if .Icon}} bi bi-{{.Icon}} {{end}}"  data-bs-toggle="modal" data-bs-target="#commentModal" data-bs-icon="{{.Icon}}" data-bs-permid="{{$stu.PermID}}" data-bs-comment="{{.Comment}}" data-bs-title="{{.Title}}" data-bs-cat="{{.Cat}}">  {{.Title}}</a>
                         {{ end}}
                     {{ end }}
                     </div>
@@ -102,7 +102,6 @@
 
 <script>
     function select(id) {
-    console.log("id selected " + id);
     var button = document.getElementById(id)
     var permid = button.getAttribute('data-bs-permid');
     var comment = button.getAttribute('data-bs-comment');
@@ -129,6 +128,8 @@
 
     var iconInput = document.getElementById("iconInput")
     iconInput.value = icon;
+
+    console.log("set icon to "+icon)
     }
 
  

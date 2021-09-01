@@ -30,7 +30,7 @@ func (v *View) AddStarStrike(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// perm_id, teacher, comment, title, cat, isActive
+	fmt.Println("gottt icon ", r.PostFormValue("icon"))
 	err := v.store.AddStarStrike(r.PostFormValue("permid"), r.PostFormValue("teacher"), r.PostFormValue("comment"), r.PostFormValue("title"), r.PostFormValue("icon"), r.PostFormValue("cat"))
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
@@ -63,7 +63,6 @@ func (v *View) ClassEdit(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
 
 	v.tmpls.Lookup("classedit").Execute(w, TD{N: v.N, C: class})
 }

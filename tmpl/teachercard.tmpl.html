@@ -18,7 +18,7 @@
                   <div class="accordion-item">
                       <h2 class="accordion-header" id="headingOne">
                           <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ (index $strike 0).ID }}" aria-expanded="true" aria-controls="collapse{{ (index $strike 0).ID }}">
-                            <span class="p-2 {{  (index $strike 0).Icon }} "> {{ $title }}</span> 
+                            <span class="p-2  bi bi-{{ (index $strike 0).Icon }} "> {{ $title }}</span> 
                             <span class="m-2 badge rounded-pill {{if eq (len $strike ) 2 }}  bg-warning {{ else if gt (len $strike) 2 }} bg-danger {{ else }} bg-primary {{ end }}"> {{ len $strike }}</span>
 
                           </button>
@@ -52,7 +52,7 @@
                   <div class="accordion-item">
                       <h2 class="accordion-header" id="headingOne">
                           <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ (index $star 0).ID }}" aria-expanded="true" aria-controls="collapse{{ (index $star 0).ID }}">
-                            <span class="p-2 {{  (index $star 0).Icon }} "> {{ $title }}</span> 
+                            <span class="p-2 bi bi-{{  (index $star 0).Icon }} "> {{ $title }}</span> 
                             <span class="m-2 badge rounded-pill {{if eq (len $star ) 2 }}  bg-warning {{ else if gt (len $star) 2 }} bg-danger {{ else }} bg-primary {{ end }}"> {{ len $star }}</span>
 
                           </button>
@@ -76,10 +76,8 @@
               </div>
             {{ end}}
           </div>
-      
         <!-- end .row -->
         </div>
-        <!-- end -->
       
       </div>
 
