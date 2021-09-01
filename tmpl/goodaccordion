@@ -1,4 +1,4 @@
-{{ define "teachermagiccard"}}
+{{ define "magiccard"}}
 
 {{ template "head" .N}}
 {{ template "nav" .N}}

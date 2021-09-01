@@ -158,10 +158,6 @@ func (v *View) Search(w http.ResponseWriter, r *http.Request) {
 
 func (v *View) Home(w http.ResponseWriter, r *http.Request) {
 	name, user, _, scope, _ := sessionCookies(r)
-	// if err != nil {
-	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
-	// 	return
-	// }
 
 	var err error
 	v.N, err = v.MakeNav(user, "/", "home", name, scope, w, r)
@@ -171,10 +167,6 @@ func (v *View) Home(w http.ResponseWriter, r *http.Request) {
 	case Admin:
 		v.M, err = v.MakeTeacherMagicCard("*")
 	case Student:
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
 		v.M, err = v.MakeStudentMagicCard(user)
 	default:
 		// guest page here
@@ -183,6 +175,8 @@ func (v *View) Home(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("error making nav: %v", err)
 	}
+	fmt.Printf("\ngot magiccard %v\n", *v.M)
+
 	v.tmpls.Lookup("home").Execute(w, TD{N: v.N, M: v.M})
 
 }

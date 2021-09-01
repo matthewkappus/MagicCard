@@ -1,7 +1,6 @@
-{{ define "teachermagiccard"}}
+{{ define "magiccard"}}
 
-{{ template "head" .N}}
-{{ template "nav" .N}}
+
 <div class="container-md">
     
     <h3 class="py-3">{{.M.Name}}'s Magic Card</h3>
@@ -76,6 +75,7 @@
               </div>
             {{ end}}
           </div>
+
         <!-- end .row -->
         </div>
       
@@ -87,5 +87,4 @@
 <a href="/contact?id={{.M.ID}}"> {{.M.Name}}'s Contact Log</a>
 
 
-{{ template "tail" }}
 {{ end }}
