@@ -74,7 +74,7 @@ func (v *View) Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (v *View) DevAdminLogin(w http.ResponseWriter, r *http.Request) {
-	v.StartSession("Kappus, Matthew D.", "Admin Matth", Admin, w, r)
+	v.StartSession("Kappus, Matthew D.", "Admin Matt", Admin, w, r)
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }
 

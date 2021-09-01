@@ -52,7 +52,7 @@ func main() {
 		http.HandleFunc("/devStudent", studentView.DevStudentLogin)
 		http.HandleFunc("/devAdmin", staffView.DevAdminLogin)
 		// local bootsrap files
-		http.Handle("/tmpl/", http.StripPrefix("/tmpl/", http.FileServer(http.Dir("tmpl"))))
+		// http.Handle("/tmpl/", http.StripPrefix("/tmpl/", http.FileServer(http.Dir("tmpl"))))
 	}
 
 	// list of students

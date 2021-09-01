@@ -64,6 +64,7 @@ func (v *View) ClassEdit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+
 	v.tmpls.Lookup("classedit").Execute(w, TD{N: v.N, C: class})
 }
 

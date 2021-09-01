@@ -104,8 +104,6 @@ func (v *View) MakeClassroom(teacher, section string) (*Classroom, error) {
 		return nil, err
 	}
 
-	fmt.Printf("MakeClassroom got myss of %v\n", myss)
-
 	// starstrikes takes generic starstrikes and puts each student perm in for use with buttons
 	ss := make(map[*synergy.Stu415][]*comment.StarStrike)
 	for _, stu := range s415s {
@@ -113,10 +111,13 @@ func (v *View) MakeClassroom(teacher, section string) (*Classroom, error) {
 		for _, mss := range myss {
 			mss.PermID = stu.PermID
 			mss.Teacher = teacher
+
 			s = append(s, mss)
 		}
+
 		ss[stu] = s
 	}
+
 	return &Classroom{
 		Stu415s:     s415s,
 		StarStrikes: ss,

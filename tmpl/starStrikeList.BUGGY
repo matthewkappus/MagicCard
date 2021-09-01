@@ -54,6 +54,7 @@
     <tr >
         <th class="studentRows" scope="row"> {{ $stu.StudentName }}</th>
         <td>
+            
 
             <!-- star select -->
             <div role="group" class="btn-group">
