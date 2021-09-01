@@ -30,7 +30,6 @@ func (v *View) AddStarStrike(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("gottt icon ", r.PostFormValue("icon"))
 	err := v.store.AddStarStrike(r.PostFormValue("permid"), r.PostFormValue("teacher"), r.PostFormValue("comment"), r.PostFormValue("title"), r.PostFormValue("icon"), r.PostFormValue("cat"))
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)

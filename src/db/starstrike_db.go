@@ -107,7 +107,6 @@ func (s *Store) GetStarStrikesByPerm(id string) ([]*comment.StarStrike, error) {
 			fmt.Printf("ss scan err: %v\n", err)
 			continue
 		}
-		fmt.Printf("appending with icon %s\n", strstr.Icon)
 		ss = append(ss, strstr)
 	}
 	return ss, nil

@@ -96,7 +96,7 @@ func (v *View) MakeClassroom(teacher, section string) (*Classroom, error) {
 		return nil, err
 	}
 	// sortStudents by fomatting StudentName to F Mi L and ascending order by L
-	sortStudents(s415s)
+	s415s = sortStudents(s415s)
 
 	myss, err := v.store.GetMyStarStrikes(teacher)
 
@@ -128,7 +128,7 @@ func (v *View) MakeClassroom(teacher, section string) (*Classroom, error) {
 
 // sortStudents by last name
 // todo: fix Jrs:  John C. Jr Anderson
-func sortStudents(s415s []*synergy.Stu415) {
+func sortStudents(s415s []*synergy.Stu415) []*synergy.Stu415 {
 	sort.Slice(s415s, func(i, j int) bool {
 		return s415s[i].StudentName < s415s[j].StudentName
 	})
@@ -141,6 +141,8 @@ func sortStudents(s415s []*synergy.Stu415) {
 			c.StudentName = fmt.Sprintf("%s %s", flm[1], flm[0])
 		}
 	}
+
+	return s415s
 
 }
 

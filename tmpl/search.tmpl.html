@@ -3,31 +3,38 @@
 
 {{ template "nav" .N}}
 
-<input type="text" id="nameInput" onkeyup="filterList()" placeholder="Search for names.." title="Type in a name">
+<div class="container-md">
 
-<!-- starstrike modal -->
+	<input type="text" id="nameInput" onkeyup="filterList()" placeholder="Search for names.." title="Type in a name">
+
 	{{ template "starStrikeList" .}}
 
-	
-	<script>
-		var rows = document.getElementsByClassName("studentRows");
-	
-		function filterList() {
-			var	input = document.getElementById("nameInput");
-		var	filter = input.value.toUpperCase();
 
-			console.log("filter: " + filter);
-			for (i = 0; i < rows.length; i++) {
-				var a = rows[i];
-				var txtValue = a.textContent || a.innerText;
-				if (txtValue.toUpperCase().indexOf(filter) > -1) {
-					a.parentElement.style.display = "";
-				} else {
-					a.parentElement.style.display = "none";
-				}
+	
+</div>
+
+
+
+	
+<script>
+	var rows = document.getElementsByClassName("studentRows");
+
+	function filterList() {
+		var	input = document.getElementById("nameInput");
+	var	filter = input.value.toUpperCase();
+
+		console.log("filter: " + filter);
+		for (i = 0; i < rows.length; i++) {
+			var a = rows[i];
+			var txtValue = a.textContent || a.innerText;
+			if (txtValue.toUpperCase().indexOf(filter) > -1) {
+				a.parentElement.style.display = "";
+			} else {
+				a.parentElement.style.display = "none";
 			}
 		}
-		</script>
+	}
+</script>
 {{ template "tail" }}
 {{ end }}
 
