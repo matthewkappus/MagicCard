@@ -165,7 +165,8 @@ func (v *View) Home(w http.ResponseWriter, r *http.Request) {
 	case Teacher:
 		v.M, err = v.MakeTeacherMagicCard(user)
 	case Admin:
-		v.M, err = v.MakeTeacherMagicCard("*")
+		http.Redirect(w, r, "/admin", http.StatusFound)
+		return
 	case Student:
 		v.M, err = v.MakeStudentMagicCard(user)
 	default:

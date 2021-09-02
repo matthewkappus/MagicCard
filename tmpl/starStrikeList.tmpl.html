@@ -23,8 +23,8 @@
                     <h6 class="modal-subtitle">  </h6>
 
                 <label for="message-text" class="col-form-label">Message:</label>
-                <!-- <textarea class="form-control" id="message-text"></textarea> -->
-                <input type="text" name="comment" id="message-text" placeholder="comment">
+                <!-- todo: set maxlength in handler -->
+                <input type="text" size="40" maxlength="40" name="comment" id="message-text" placeholder="comment">
                 </div>
                 </div>
                 <div class="modal-footer">
@@ -70,7 +70,7 @@
                 {{ range $ss }}
                 <!-- if Cat is star -->
                     {{if eq .Cat 0}}
-                        <a id="star-{{ $stu.PermID }}-{{ .Title }}" onclick="select(this.id)" class="dropdown-item {{if .Icon}} {{.Icon}} {{end}}"  data-bs-student={{$stu.StudentName}} data-bs-toggle="modal" data-bs-target="#commentModal" data-bs-icon="{{.Icon}}" data-bs-permid="{{$stu.PermID}}" data-bs-comment="{{.Comment}}" data-bs-title="{{.Title}}" data-bs-cat="{{.Cat}}">  {{.Title}}</a>
+                        <a id="star-{{ $stu.PermID }}-{{ .Title }}" onclick="select(this.id)" class="dropdown-item {{if .Icon}} bi bi-{{.Icon}} {{end}}"  data-bs-student="{{$stu.StudentName}}" data-bs-toggle="modal" data-bs-target="#commentModal" data-bs-icon="{{.Icon}}" data-bs-permid="{{$stu.PermID}}" data-bs-comment="{{.Comment}}" data-bs-title="{{.Title}}" data-bs-cat="{{.Cat}}">    {{.Title}}</a>
                     {{ end}}
                 {{ end }}
                 </div>
@@ -87,7 +87,7 @@
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     {{ range $ss }}
                         {{if ne .Cat 0}}
-                            <a id="strike-{{ $stu.PermID }}-{{ .Title }}" onclick="select(this.id)" class="dropdown-item {{if .Icon}} bi bi-{{.Icon}} {{end}}"  data-bs-toggle="modal" data-bs-target="#commentModal"  data-bs-student={{$stu.StudentName}}  data-bs-icon="{{.Icon}}" data-bs-permid="{{$stu.PermID}}" data-bs-comment="{{.Comment}}" data-bs-title="{{.Title}}" data-bs-cat="{{.Cat}}">  {{.Title}}</a>
+                            <a id="strike-{{ $stu.PermID }}-{{ .Title }}" onclick="select(this.id)" class="dropdown-item {{if .Icon}} bi bi-{{.Icon}} {{end}}"  data-bs-toggle="modal" data-bs-target="#commentModal"  data-bs-student="{{$stu.StudentName}}"  data-bs-icon="{{.Icon}}" data-bs-permid="{{$stu.PermID}}" data-bs-comment="{{.Comment}}" data-bs-title="{{.Title}}" data-bs-cat="{{.Cat}}">  {{.Title}}</a>
                         {{ end}}
                     {{ end }}
                     </div>

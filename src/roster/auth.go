@@ -85,7 +85,7 @@ func (v *View) DevAdminLogin(w http.ResponseWriter, r *http.Request) {
 
 func (v *View) DevTeacherLogin(w http.ResponseWriter, r *http.Request) {
 
-	v.StartSession("Johnson, Brandon S.", "Teacher Brandon", Teacher, w, r)
+	v.StartSession("Provencio, Sheri A.", "Ms. P", Teacher, w, r)
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }
 
