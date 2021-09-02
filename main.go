@@ -46,6 +46,7 @@ func main() {
 	}
 
 	http.HandleFunc("/login", staffView.Login)
+	http.HandleFunc("/logout", staffView.EndSession)
 
 	if *devMode {
 		http.HandleFunc("/devTeacher", staffView.DevTeacherLogin)

@@ -73,3 +73,13 @@ func (v *View) StartSession(user string, name string, s Scope, w http.ResponseWr
 	http.SetCookie(w, &http.Cookie{Name: "scope", Value: scope, Expires: exp})
 
 }
+
+
+func (v  *View) EndSession(w http.ResponseWriter, r *http.Request)  {
+	http.SetCookie(w, &http.Cookie{Name: "sid", MaxAge: -1})
+	http.SetCookie(w, &http.Cookie{Name: "name", MaxAge: -1})
+	http.SetCookie(w, &http.Cookie{Name: "user", MaxAge: -1})
+	http.SetCookie(w, &http.Cookie{Name: "scope", MaxAge: -1})
+
+	http.Redirect(w, r, "/", http.StatusFound)	
+}
