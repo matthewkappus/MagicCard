@@ -145,6 +145,7 @@ func (v *View) ClassList(r *http.Request) ([]*synergy.Stu415, error) {
 }
 
 func (v *View) Search(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "max-age:604800, public")
 
 	cr, err := v.MakeSchoolClassroom(v.User)
 	if err != nil {

@@ -273,6 +273,9 @@ func formatClassList(classlist []*synergy.Stu415) {
 
 // MakeNav returns data struct for use in <head> / <nav>
 func (v *View) MakeNav(user, path, title, name string, stype Scope, w http.ResponseWriter, r *http.Request) (n *Nav, err error) {
+	fmt.Println("MakeNav setting max-age")
+	w.Header().Set("Cache-Control", "max-age:604800, public")
+
 	// user is teacher name: try getting classes
 	classlist, err := v.store.ListClasses(user)
 	if err != nil {
