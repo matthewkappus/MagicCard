@@ -158,8 +158,6 @@ func (v *View) MakeSchoolClassroom(teacher string) (*Classroom, error) {
 		return nil, err
 	}
 
-	// sortStudents by fomatting StudentName to F Mi L and ascending order by L
-	sortStudents(s415s)
 
 	// starstrikes takes generic starstrikes and puts each student perm in for use with buttons
 	ss := make(map[*synergy.Stu415][]*comment.StarStrike)
