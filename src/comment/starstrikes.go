@@ -11,7 +11,6 @@ type Category int
 const (
 	Star Category = iota
 	MinorStrike
-	Strike
 	MajorStrike
 )
 
@@ -38,11 +37,6 @@ type Contact struct {
 
 	Sender *synergy.Staff
 
-	StudentName string
-
-	// student id
-	PermID string
-
 	// when contacted
 	Sent time.Time
 
@@ -52,13 +46,25 @@ type Contact struct {
 	StarStrike *StarStrike
 
 	Message string
+
+	// Is issue resolved
+	IsClosed bool 
 }
 
-func NewContact(ss *StarStrike, sender *synergy.Staff, resp, msg string) *Contact {
+func NewContact(ss *StarStrike, sender *synergy.Staff, resp, msg string, isClosed bool) *Contact {
 	return &Contact{
 		StarStrike: ss,
 		Sender:     sender,
 		Respondent: resp,
 		Message:    msg,
+		IsClosed:  isClosed,
 	}
 }
+
+
+
+
+// a contact is created from a starstrike
+// list a student's starstrikes and show icon if a contact is created
+
+// if  a starstrike doesn't have a contact, show plus button to add one

@@ -24,7 +24,8 @@ type StaffData struct {
 }
 type ContactData struct {
 	N *Nav
-	C []comment.Contact
+	// [*StarStrike]*Contact
+	C map[*comment.StarStrike]*comment.Contact
 }
 
 // Alert is a struct for use in <head> / <nav>

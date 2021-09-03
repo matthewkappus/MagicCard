@@ -53,11 +53,34 @@ func (v *View) AddContact(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 func (v *View) ContactLog(w http.ResponseWriter, r *http.Request) {
-
-	c, err := v.store.GetContacts(r.URL.Query().Get("id"))
+	perm := r.URL.Query().Get("id")
+	if perm == "" {
+		http.Error(w, "No student id provided", http.StatusBadRequest)
+		return
+	}
+	c, err := v.makeContactMap(perm)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	v.tmpls.ExecuteTemplate(w, "contact_log", ContactData{N: v.N, C: c})
+}
+
+// makeContactMap
+func (v *View) makeContactMap(perm string) (map[*comment.StarStrike]*comment.Contact, error) {
+	cm := make(map[*comment.StarStrike]*comment.Contact)
+
+	// get student strikes
+	ss, err := v.store.GetStudentStrikes(perm)
+	if err != nil {
+		return nil, err
+	}
+
+	// for each strike, get the contact
+	for _, s := range ss {
+		c, _ := v.store.GetContact(s.ID)
+		cm[s] = c
+	}
+
+	return cm, nil
 }

@@ -13,7 +13,7 @@ const (
 	selectStarStrikeByPermID         = `SELECT * FROM starstrike WHERE perm_id = ?`
 	selectNewestStarStrikesByTeacher = `SELECT * FROM starstrike WHERE teacher=? LIMIT ?`
 	selectStarStrikeByID             = `SELECT * FROM starstrike WHERE id = ?`
-	// select count(cat) from starstrike where cat=1 and perm_id="980016917"
+	selectStarStrikeByPerm           = `SELECT * FROM starstrike WHERE perm_id = ?`
 )
 
 // mystarstrike table holds teacher's saved starstrikes
@@ -118,5 +118,27 @@ func (s *Store) GetStarStrike(id int) (*comment.StarStrike, error) {
 	strstr := new(comment.StarStrike)
 	err := s.db.QueryRow(selectStarStrikeByID, id).Scan(&strstr.ID, &strstr.PermID, &strstr.Teacher, &strstr.Comment, &strstr.Title, &strstr.Icon, &strstr.Created, &strstr.Cat, &strstr.IsActive)
 	return strstr, err
+
+}
+
+// GetStudentStrikes returns all starstrikes for a given student
+func (s *Store) GetStudentStrikes(perm string) ([]*comment.StarStrike, error) {
+	rows, err := s.db.Query(selectStarStrikeByPerm, perm)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	ss := make([]*comment.StarStrike, 0)
+	for rows.Next() {
+		strstr := new(comment.StarStrike)
+		// id INTEGER PRIMARY KEY, perm_id TEXT, teacher TEXT, comment TEXT, title TEXT, icon TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, cat INTEGER, isActive BOOLEAN DEFAULT true
+		if err := rows.Scan(&strstr.ID, &strstr.PermID, &strstr.Teacher, &strstr.Comment, &strstr.Title, &strstr.Icon, &strstr.Created, &strstr.Cat, &strstr.IsActive); err != nil {
+			fmt.Printf("ss scan err: %v\n", err)
+			continue
+		}
+		ss = append(ss, strstr)
+	}
+	return ss, nil
 
 }
