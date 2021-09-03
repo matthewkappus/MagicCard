@@ -11,7 +11,11 @@ const (
 	createComment       = `CREATE TABLE IF NOT EXISTS contact(id INTEGER PRIMARY KEY, sender_name STRING, sender_fullname TEXT, sender_email TEXT, student_name TEXT, perm_id TEXT, sent DATETIME, respondent TEXT, starstrike INT, message TEXT)`
 	selectContactByPerm = `SELECT * FROM contact WHERE perm_id = ?`
 	insertContact       = `INSERT INTO contact(sender_name, sender_fullname, sender_email, student_name, perm_id, sent, respondent, starstrike, message) VALUES(?, ?,?, ?, ?, ?, ?, ?, ?)`
+
+	
 )
+
+
 
 func (s *Store) CreateCommentTable() {
 	s.db.Exec(createComment)

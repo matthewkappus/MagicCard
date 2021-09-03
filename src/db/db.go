@@ -46,6 +46,12 @@ func (s *Store) GetStaffEmail(teacher string) (email string, err error) {
 	return email, err
 }
 
+func (s *Store) GetTeacherEmail(teacher string) (email string, err error) {
+	err = s.db.QueryRow(selectEmailByTeacher, teacher).Scan(&email)
+	return email, err
+
+}
+
 func (s *Store) CreateSessions() error {
 	_, err := s.db.Exec(createSession)
 	return err
