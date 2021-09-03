@@ -20,7 +20,7 @@ func (s *Store) CreateCommentTable() {
 func (s *Store) InsertContact(c *comment.Contact) error {
 
 	// `INSERT INTO comment(sender_name, sender_fullname, sender_email, student_name, sent, respondent, starstrike, message) VALUES(?, ?, ?, ?, ?, ?, ?, ?)`
-	id, err := s.db.Exec(insertContact, c.Sender.Teacher, c.Sender.FullName, c.Sender.StaffEmail, c.StudentName, c.PermID, c.Sent, c.Respondent, c.StarStrike.ID, c.Message)
+	id, err := s.db.Exec(insertContact, c.Sender.Name, c.Sender.Email, c.PermID, c.Sent, c.Respondent, c.StarStrike.ID, c.Message)
 	if err != nil {
 		return err
 	}
@@ -42,9 +42,8 @@ func (s *Store) GetContacts(perm_id string) ([]comment.Contact, error) {
 		}
 
 		err := rows.Scan(&c.ID,
-			&c.Sender.Teacher,
-			&c.Sender.FullName,
-			&c.Sender.StaffEmail,
+			&c.Sender.Name,
+			&c.Sender.Email,
 			&c.StudentName,
 			&c.PermID,
 			&c.Sent,

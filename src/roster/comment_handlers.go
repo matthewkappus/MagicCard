@@ -6,16 +6,16 @@ import (
 	"time"
 
 	"github.com/matthewkappus/MagicCard/src/comment"
+	"github.com/matthewkappus/Roster/src/synergy"
 )
 
 func (v *View) AddContact(w http.ResponseWriter, r *http.Request) {
 	// sender_name, sender_fullname, sender_email, student_name, sent, respondent, starstrike, message
 
-	t := comment.Teacher{
-		Teacher:  r.PostFormValue("teacher"),
-		FullName: r.PostFormValue("full_name"),
+	s := &synergy.Staff{
+		Name: r.PostFormValue("teacher"),
 	}
-	t.StaffEmail, _ = v.store.GetStaffEmail(t.Teacher)
+	s.Email, _ = v.store.GetTeacherEmail(s.Name)
 
 	// todo add validation
 	// sender_name, sender_fullname, sender_email, student_name, sent, respondent, starstrike, message
@@ -37,7 +37,7 @@ func (v *View) AddContact(w http.ResponseWriter, r *http.Request) {
 	}
 
 	c := &comment.Contact{
-		Sender:     t,
+		Sender:     s,
 		StarStrike: ss,
 		Sent:       time.Now(),
 		Respondent: r.PostFormValue("respondent"),
