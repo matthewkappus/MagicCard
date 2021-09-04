@@ -1,6 +1,7 @@
 package roster
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -9,6 +10,7 @@ import (
 	"github.com/matthewkappus/Roster/src/synergy"
 )
 
+// AddContact parses Post data and adds a contact to the database
 func (v *View) AddContact(w http.ResponseWriter, r *http.Request) {
 	// sender_name, sender_fullname, sender_email, student_name, sent, respondent, starstrike, message
 
@@ -42,6 +44,7 @@ func (v *View) AddContact(w http.ResponseWriter, r *http.Request) {
 		Sent:       time.Now(),
 		Respondent: r.PostFormValue("respondent"),
 		Message:    r.PostFormValue("message"),
+		IsClosed:   r.PostFormValue("is_closed") == "true",
 	}
 	// todo add validation
 	if err := v.store.InsertContact(c); err != nil {
@@ -52,6 +55,8 @@ func (v *View) AddContact(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, "/", http.StatusFound)
 }
+
+// ContactLog shows the contact log for a student
 func (v *View) ContactLog(w http.ResponseWriter, r *http.Request) {
 	perm := r.URL.Query().Get("id")
 	if perm == "" {
@@ -63,6 +68,7 @@ func (v *View) ContactLog(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	fmt.Printf("rendering %d contacts for %s\n", len(c), perm)
 	v.tmpls.ExecuteTemplate(w, "contact_log", ContactData{N: v.N, C: c})
 }
 
