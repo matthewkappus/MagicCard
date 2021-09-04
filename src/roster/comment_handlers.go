@@ -84,7 +84,11 @@ func (v *View) makeContactMap(perm string) (map[*comment.StarStrike]*comment.Con
 
 	// for each strike, get the contact
 	for _, s := range ss {
-		c, _ := v.store.GetContact(s.ID)
+		c, err := v.store.GetContact(s.ID)
+		if err != nil {
+			cm[s] = nil
+			continue
+		}
 		cm[s] = c
 	}
 

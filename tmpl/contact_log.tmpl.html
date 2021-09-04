@@ -31,7 +31,26 @@
 <h3>{Someones} Contact List</h3>
   <ul class="list-group">
 {{ range $ss, $c := .C }}
-      <li class="list-group-item">{{$ss.Title}}</li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div class="ms-2 me-auto">
+          <div class="fw-bold"><a href="#">{{$ss.Title}}</a></div>
+          Cras justo odio
+        </div>
+
+        <!-- if contact exists, show either open or closed icon -->
+        {{ if $c}}
+          {{ if $c.IsClosed }}
+            <button type="button" class="btn btn-light bi bi-file-earmark-fill"></button>
+          {{ else }}
+            <button type="button" class="btn btn-light bi bi-file-earmark-diff"></button>
+          {{ end}}
+        {{ else }}
+        <!-- no contact, show create -->
+          <button type="button" class="btn btn-dark bi bi-file-earmark-plus"></button>
+        {{ end }}
+
+
+      </li>
 {{ end }}
 </ul>
   {{ template "tail" }}
