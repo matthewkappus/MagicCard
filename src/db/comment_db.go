@@ -12,7 +12,7 @@ const (
 	insertContact       = `INSERT INTO contact( sender_name, sender_email, respondent, starstrike_id, message, is_closed) VALUES(?, ?,?, ?, ?, ?)`
 
 	selectContactByID         = `SELECT * FROM contact WHERE id = ?`
-	selectContactByStarStrike = `SELECT * FROM contact WHERE starstrike = ?`
+	selectContactByStarStrike = `SELECT * FROM contact WHERE starstrike_id = ?`
 )
 
 func (s *Store) CreateCommentTable() {
@@ -38,6 +38,6 @@ func (s *Store) GetContact(strikeID int) (*comment.Contact, error) {
 		StarStrike: new(comment.StarStrike),
 	}
 	// (id INTEGER PRIMARY KEY, sender_name STRING, sender_email TEXT, respondent TEXT, starstrike_id INT, message TEXT, is_closed BOOL)
-	err := s.db.QueryRow(selectContactByID, strikeID).Scan(&c.ID, &c.Sender.Name, &c.Sender.Email, &c.Respondent, &c.StarStrike.ID, &c.Message, &c.IsClosed)
+	err := s.db.QueryRow(selectContactByStarStrike, strikeID).Scan(&c.ID, &c.Sender.Name, &c.Sender.Email, &c.Respondent, &c.StarStrike.ID, &c.Message, &c.IsClosed)
 	return c, err
 }

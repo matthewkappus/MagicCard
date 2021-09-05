@@ -18,7 +18,6 @@ func (v *View) AddContact(w http.ResponseWriter, r *http.Request) {
 		Name: r.PostFormValue("teacher"),
 	}
 	s.Email, _ = v.store.GetTeacherEmail(s.Name)
-	fmt.Printf("addContact teacher %s\nand email %s\n", s.Name, s.Email)
 
 	// todo add validation
 	// sender_name, sender_fullname, sender_email, student_name, sent, respondent, starstrike, message
@@ -42,7 +41,6 @@ func (v *View) AddContact(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-	fmt.Printf("addContact starstrike %d\n", ss.ID)
 
 	c := &comment.Contact{
 		Sender:     s,
@@ -58,7 +56,6 @@ func (v *View) AddContact(w http.ResponseWriter, r *http.Request) {
 		return
 
 	}
-	fmt.Printf("addContact contact %d\n", c.ID)
 
 	v.SendAlert(w, &Alert{Message: "Contact message saved", Type: "success"})
 
@@ -77,6 +74,7 @@ func (v *View) ContactLog(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 	v.tmpls.ExecuteTemplate(w, "contact_log", ContactData{N: v.N, C: c})
 }
 

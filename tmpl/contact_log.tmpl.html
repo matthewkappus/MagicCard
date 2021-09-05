@@ -82,9 +82,9 @@
         {{ if $c}}
           {{ if $c.IsClosed }}
             <button type="button" class="btn btn-light bi bi-file-earmark-fill"></button>
-          {{ else }}
-            <button type="button" class="btn btn-light bi bi-file-earmark-diff"></button>
-          {{ end}}
+            {{ else }}
+              <button type="button" class="btn btn-light bi bi-file-earmark-diff"></button>
+            {{ end}}
         {{ else }}
         <!-- no contact, show create -->
           <button id="strike={{$ss.ID}}" onclick="showForm(this.id)" type="button"  data-bs-toggle="modal" data-bs-target="#contactForm" class="btn btn-dark bi bi-file-earmark-plus" data-bs-ss_id="{{$ss.ID}}"></button>
