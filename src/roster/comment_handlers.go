@@ -18,25 +18,31 @@ func (v *View) AddContact(w http.ResponseWriter, r *http.Request) {
 		Name: r.PostFormValue("teacher"),
 	}
 	s.Email, _ = v.store.GetTeacherEmail(s.Name)
+	fmt.Printf("addContact teacher %s\nand email %s\n", s.Name, s.Email)
 
 	// todo add validation
 	// sender_name, sender_fullname, sender_email, student_name, sent, respondent, starstrike, message
 	ssid := r.PostFormValue("ss_id")
-	ss := new(comment.StarStrike)
-	if ssid != "" {
 
-		i, err := strconv.Atoi(r.PostFormValue("ss_id"))
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		ss, err = v.store.GetStarStrike(i)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+	// todo add validation
 
-			return
-		}
+	if ssid == "" {
+		http.Error(w, "No starstrike id provided", http.StatusBadRequest)
+		return
 	}
+
+	i, err := strconv.Atoi(r.PostFormValue("ss_id"))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	ss, err := v.store.GetStarStrike(i)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+
+		return
+	}
+	fmt.Printf("addContact starstrike %d\n", ss.ID)
 
 	c := &comment.Contact{
 		Sender:     s,
@@ -50,10 +56,13 @@ func (v *View) AddContact(w http.ResponseWriter, r *http.Request) {
 	if err := v.store.InsertContact(c); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
+
 	}
+	fmt.Printf("addContact contact %d\n", c.ID)
+
 	v.SendAlert(w, &Alert{Message: "Contact message saved", Type: "success"})
 
-	http.Redirect(w, r, "/", http.StatusFound)
+	http.Redirect(w, r, r.Referer(), http.StatusFound)
 }
 
 // ContactLog shows the contact log for a student
@@ -68,7 +77,6 @@ func (v *View) ContactLog(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	fmt.Printf("rendering %d contacts for %s\n", len(c), perm)
 	v.tmpls.ExecuteTemplate(w, "contact_log", ContactData{N: v.N, C: c})
 }
 

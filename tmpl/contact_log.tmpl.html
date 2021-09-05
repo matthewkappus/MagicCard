@@ -28,6 +28,47 @@
   
   -->
 
+  <!-- Modal -->
+  <div class="modal fade" id="contactForm" tabindex="-1" aria-labelledby="contactFormLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="contactFormLabel">Modal title</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                   
+
+
+                <form method="POST" action="/addContact">
+                  <div class="mb-3">
+                    <input type="hidden" name="teacher" value="{{.N.User}}">
+                    <input type="hidden" id="ss_id_input" name="ss_id" >
+                    <label for="parent" class="form-label">Parent/Guardian</label>
+                    <input name="respondent" type="text" class="form-control" id="parent" aria-describedby="parentInfo">
+                    <div id="parentInfo" class="form-text">Who was contacted about incident</div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="message" class="form-label">Message</label>
+                    <input name="message" type="text" class="form-control" id="message_input" size="40" maxlength="200" required>
+                  </div>
+                  <div class="mb-3 form-check">
+                    <input name="is_closed" type="checkbox" class="form-check-input" id="isClosedCheck">
+                    <label class="form-check-label" for="isClosedCheck">Incident Closed</label>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+                </form>
+
+
+              </div>
+           
+          </div>
+      </div>
+  </div>
+
 <h3>{Someones} Contact List</h3>
   <ul class="list-group">
 {{ range $ss, $c := .C }}
@@ -46,7 +87,8 @@
           {{ end}}
         {{ else }}
         <!-- no contact, show create -->
-          <button type="button" class="btn btn-dark bi bi-file-earmark-plus"></button>
+          <button id="strike={{$ss.ID}}" onclick="showForm(this.id)" type="button"  data-bs-toggle="modal" data-bs-target="#contactForm" class="btn btn-dark bi bi-file-earmark-plus" data-bs-ss_id="{{$ss.ID}}"></button>
+          
         {{ end }}
 
 
@@ -54,4 +96,18 @@
 {{ end }}
 </ul>
   {{ template "tail" }}
+
+  <script>
+    function showForm(id) {
+      // get button attributes
+      button = document.getElementById(id);
+      ss_id = button.getAttribute("data-bs-ss_id");
+
+      // set form values
+      student = document.getElementById("ss_id_input");
+      student.value = ss_id;
+
+    }
+  </script>
 {{ end }}
+

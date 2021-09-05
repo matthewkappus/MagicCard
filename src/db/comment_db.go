@@ -9,7 +9,7 @@ import (
 const (
 	createComment       = `CREATE TABLE IF NOT EXISTS contact(id INTEGER PRIMARY KEY, sender_name STRING, sender_email TEXT, respondent TEXT, starstrike_id INT, message TEXT, is_closed BOOL)`
 	selectContactByPerm = `SELECT * FROM contact WHERE perm_id = ?`
-	insertContact       = `INSERT INTO contact(sender_name,  sender_email, student_name, perm_id, sent, respondent, starstrike, message, ) VALUES(?, ?,?, ?, ?, ?, ?, ?, ?)`
+	insertContact       = `INSERT INTO contact( sender_name, sender_email, respondent, starstrike_id, message, is_closed) VALUES(?, ?,?, ?, ?, ?)`
 
 	selectContactByID         = `SELECT * FROM contact WHERE id = ?`
 	selectContactByStarStrike = `SELECT * FROM contact WHERE starstrike = ?`
@@ -21,7 +21,7 @@ func (s *Store) CreateCommentTable() {
 
 func (s *Store) InsertContact(c *comment.Contact) error {
 
-	// `INSERT INTO comment(sender_name, sender_fullname, sender_email, student_name, sent, respondent, starstrike, message) VALUES(?, ?, ?, ?, ?, ?, ?, ?)`
+	// `id INTEGER PRIMARY KEY, sender_name STRING, sender_email TEXT, respondent TEXT, starstrike_id INT, message TEXT, is_closed BOOL
 	id, err := s.db.Exec(insertContact, &c.Sender.Name, &c.Sender.Email, &c.Respondent, &c.StarStrike.ID, &c.Message, &c.IsClosed)
 	if err != nil {
 		return err
