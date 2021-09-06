@@ -28,7 +28,35 @@
   
   -->
 
-  <!-- Modal -->
+
+  <!-- Contact Modal -->
+  {{ range $ss, $c := .C }}
+    {{ if $c}}
+      <div class="modal fade" id="showModal{{$c.ID}}" tabindex="-1" aria-labelledby="showModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="showModalLabel">Modal title</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <p>SS: {{$ss}}</p>
+                    <p>$c.Sender: {{ $c.Sender }}</p>
+                    <p>$c.Message: {{ $c.Message }}</p>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-primary">Save changes</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+    {{ end }}
+  {{ end }}
+  
+
+
+  <!-- Form Modal -->
   <div class="modal fade" id="contactForm" tabindex="-1" aria-labelledby="contactFormLabel" aria-hidden="true">
       <div class="modal-dialog">
           <div class="modal-content">
@@ -69,7 +97,7 @@
       </div>
   </div>
 
-<h3>{Someones} Contact List</h3>
+<h3> {{.StudentName}}'' Contact List</h3>
   <ul class="list-group">
 {{ range $ss, $c := .C }}
       <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -83,7 +111,7 @@
           {{ if $c.IsClosed }}
             <button type="button" class="btn btn-light bi bi-file-earmark-fill"></button>
             {{ else }}
-              <button type="button" class="btn btn-light bi bi-file-earmark-diff"></button>
+              <button data-bs-toggle="modal" data-bs-target="#showModal{{$c.ID}}" type="button" class="btn btn-light bi bi-file-earmark-diff"></button>
             {{ end}}
         {{ else }}
         <!-- no contact, show create -->
