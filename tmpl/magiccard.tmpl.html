@@ -27,10 +27,16 @@
                               {{ range $strike }}
                               <div class="card" style="width: 18rem;">
                                 <div class="card-body">
-                                  <h5 class="card-title bi bi-{{.Icon}}"> </h5>
-                                  <h6 class="card-subtitle mb-2 text-muted">{{  .Created.Format "Jan 02 2006"  }} </h6>
+                                 
+                                  <h5>Teacher Comment:</h5>
                                   <p class="card-text">{{ .Comment }} </p>
-                                  <a href="#" class="card-link">{{.Teacher}}</a>
+
+
+                                  <a href="#" class="card-link">{{ .Teacher}}</a>
+                                  <h6 class="card-subtitle mb-2 text-muted">{{  .Created.Format "Jan 02 2006"  }} </h6>
+
+                            
+
                                 </div>
                               </div>
                               {{ end }}
