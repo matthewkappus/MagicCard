@@ -16,7 +16,7 @@ const (
 	selectStudentList     = `SELECT DISTINCT perm_id, student_name FROM stu415;`
 	selectStu415ByPermID  = `SELECT organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled FROM stu415 WHERE perm_id=? `
 	selectStu415BySection = `SELECT organization_name, school_year, student_name, perm_id, gender, grade, term_name, per, term, section_id, course_id_and_title, meet_days, teacher, room, pre_scheduled FROM stu415 WHERE section_id=? `
-
+	selectNameByPerm      = `SELECT student_name from stu415 WHERE perm_id=?`
 	//    SELECT  DISTINCT * from stu415 WHERE teacher="Susco Taylor, Kevin R.";
 	selectDistinctSectionsByTeacher = `SELECT DISTINCT section_id, course_id_and_title, per from stu415 WHERE teacher=?`
 )
@@ -30,10 +30,17 @@ func (s *Store) SelectStu415(permid string) (s415 *synergy.Stu415, err error) {
 	return
 }
 
+func (s *Store) GetStudentName(permid string) (string, error) {
+	var name string
+	err := s.db.QueryRow(selectNameByPerm, permid).Scan(&name)
+	return name, err
+
+}
 func (s *Store) UpdateStu415(stu415CSV string) error {
 	f, err := os.Open(stu415CSV)
 	if err != nil {
 		return err
+		
 	}
 	defer f.Close()
 	s415s, err := synergy.ReadStu415sFromCSV(f)

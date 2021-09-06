@@ -1,7 +1,6 @@
 package roster
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -65,8 +64,9 @@ func (v *View) AddContact(w http.ResponseWriter, r *http.Request) {
 // ContactLog shows the contact log for a student
 func (v *View) ContactLog(w http.ResponseWriter, r *http.Request) {
 	perm := r.URL.Query().Get("id")
-	if perm == "" {
-		http.Error(w, "No student id provided", http.StatusBadRequest)
+	name, err := v.store.GetStudentName(perm)
+	if err != nil || name == "" {
+		http.Error(w, "No student found for "+perm, http.StatusBadRequest)
 		return
 	}
 	c, err := v.makeContactMap(perm)
@@ -75,7 +75,9 @@ func (v *View) ContactLog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	v.tmpls.ExecuteTemplate(w, "contact_log", ContactData{N: v.N, C: c})
+	// get the student's name
+
+	v.tmpls.ExecuteTemplate(w, "contact_log", ContactData{N: v.N, C: c, StudentName: formatName(name)})
 }
 
 // makeContactMap

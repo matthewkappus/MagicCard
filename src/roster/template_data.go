@@ -24,6 +24,7 @@ type StaffData struct {
 }
 type ContactData struct {
 	N *Nav
+	StudentName string
 	// [*StarStrike]*Contact
 	C map[*comment.StarStrike]*comment.Contact
 }
