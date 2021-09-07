@@ -48,7 +48,7 @@ type Contact struct {
 	Message string
 
 	// Is issue resolved
-	IsClosed bool 
+	IsClosed bool
 }
 
 func NewContact(ss *StarStrike, sender *synergy.Staff, resp, msg string, isClosed bool) *Contact {
@@ -57,12 +57,9 @@ func NewContact(ss *StarStrike, sender *synergy.Staff, resp, msg string, isClose
 		Sender:     sender,
 		Respondent: resp,
 		Message:    msg,
-		IsClosed:  isClosed,
+		IsClosed:   isClosed,
 	}
 }
-
-
-
 
 // a contact is created from a starstrike
 // list a student's starstrikes and show icon if a contact is created

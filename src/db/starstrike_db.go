@@ -113,6 +113,25 @@ func (s *Store) GetStarStrikesByPerm(id string) ([]*comment.StarStrike, error) {
 
 }
 
+func (s *Store) GetStarStrikesAndScore(id string) (ss []*comment.StarStrike, score int, err error) {
+	ss, err = s.GetStarStrikesByPerm(id)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	for _, strstr := range ss {
+		switch strstr.Cat {
+		case comment.Star:
+			score += 1
+		case comment.MinorStrike:
+			score -= 1
+		case comment.MajorStrike:
+			score -= 2
+		}
+	}
+	return ss, score, nil
+}
+
 func (s *Store) GetStarStrike(id int) (*comment.StarStrike, error) {
 
 	strstr := new(comment.StarStrike)
