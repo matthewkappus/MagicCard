@@ -34,6 +34,7 @@ const (
 )
 
 // session table
+// todo: move to comment
 const (
 	createSession      = `CREATE TABLE IF NOT EXISTS session(user TEXT, sid TEXT, expires DATETIME, scope INT)`
 	insertSession      = `INSERT INTO session(user, sid, expires, scope) VALUES(?,?,?,?)`

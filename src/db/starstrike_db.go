@@ -91,6 +91,23 @@ func (s *Store) AddStarStrike(perm_id, teacher, comment, title, icon, cat string
 	return err
 }
 
+// BatchAddStarStrikes into the store
+func (s *Store) BatchAddStarStrikes(ss []*comment.StarStrike) error {
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	for _, strstr := range ss {
+		_, err := tx.Exec(insertStarStrike, strstr.PermID, strstr.Teacher, strstr.Comment, strstr.Title, strstr.Icon, strstr.Cat, true)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+	return tx.Commit()
+
+}
+
 // GetStarStrikesByPerm returns all starstrikes for a given perm_id
 func (s *Store) GetStarStrikesByPerm(id string) ([]*comment.StarStrike, error) {
 	rows, err := s.db.Query(selectStarStrikeByPermID, id)
@@ -109,27 +126,9 @@ func (s *Store) GetStarStrikesByPerm(id string) ([]*comment.StarStrike, error) {
 		}
 		ss = append(ss, strstr)
 	}
+
 	return ss, nil
 
-}
-
-func (s *Store) GetStarStrikesAndScore(id string) (ss []*comment.StarStrike, score int, err error) {
-	ss, err = s.GetStarStrikesByPerm(id)
-	if err != nil {
-		return nil, 0, err
-	}
-
-	for _, strstr := range ss {
-		switch strstr.Cat {
-		case comment.Star:
-			score += 1
-		case comment.MinorStrike:
-			score -= 1
-		case comment.MajorStrike:
-			score -= 2
-		}
-	}
-	return ss, score, nil
 }
 
 func (s *Store) GetStarStrike(id int) (*comment.StarStrike, error) {

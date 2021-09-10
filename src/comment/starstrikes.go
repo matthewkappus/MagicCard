@@ -61,7 +61,19 @@ func NewContact(ss *StarStrike, sender *synergy.Staff, resp, msg string, isClose
 	}
 }
 
-// a contact is created from a starstrike
-// list a student's starstrikes and show icon if a contact is created
 
-// if  a starstrike doesn't have a contact, show plus button to add one
+// BatchCreateStarstrike returns a slice of non-repeating starstrikes for the provided students
+func BatchCreateStarstrike(s *StarStrike, permIDs []string) []*StarStrike {
+
+	m := make(map[string]*StarStrike)
+	for _, id := range permIDs {
+		s.PermID = id
+		m[id] = s
+	}
+	out := make([]*StarStrike, len(m))
+	for _, ss := range m {
+		out = append(out, ss)
+	}
+	return out
+
+}

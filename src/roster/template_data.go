@@ -23,7 +23,7 @@ type StaffData struct {
 	Teachers map[string]*synergy.Staff
 }
 type ContactData struct {
-	N *Nav
+	N           *Nav
 	StudentName string
 	// [*StarStrike]*Contact
 	C map[*comment.StarStrike]*comment.Contact
@@ -84,6 +84,10 @@ type Classroom struct {
 type MagicCard struct {
 	Name string
 	ID   string
+
+	// Score is the sum of all StarStrikes
+	// Minjor -1 Major -2 Star +1
+	Score uint
 
 	S415 *synergy.Stu415
 	// Star.Title to SS
@@ -159,7 +163,6 @@ func (v *View) MakeSchoolClassroom(teacher string) (*Classroom, error) {
 	if err != nil {
 		return nil, err
 	}
-
 
 	// starstrikes takes generic starstrikes and puts each student perm in for use with buttons
 	ss := make(map[*synergy.Stu415][]*comment.StarStrike)
@@ -252,10 +255,23 @@ func (v *View) MakeStudentMagicCard(perm string) (*MagicCard, error) {
 		}
 	}
 
+	var score uint
+	for _, strstr := range ss {
+		switch strstr.Cat {
+		case comment.Star:
+			score += 1
+		case comment.MinorStrike:
+			score -= 1
+		case comment.MajorStrike:
+			score -= 2
+		}
+	}
+
 	return &MagicCard{
 
 		Name:      formatName(stu.StudentName),
 		ID:        stu.PermID,
+		Score:     score,
 		S415:      stu,
 		StarMap:   stars,
 		StrikeMap: strikes}, nil
