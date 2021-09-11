@@ -1,0 +1,28 @@
+{{ define "perfect_attendance_form" }}
+{{ template "head" }}
+{{ template "nav" .N }}
+
+
+  
+<h1 class="text-center mb-3">Perefect Attendance Star</h1>
+<form method="post" action="/admin/addAttendance" enctype="multipart/form-data">
+    <div class="row mb-1">
+        <div class="col">
+            <label class="form-label">Stu401 CSV</label>
+            <input  type="file" accept=".csv" name="stu401" class="form-control" placeholder="Stu401 csv"
+                aria-label="Stu401 csv" required>
+        </div>
+      
+    <div class="row mb-1">
+        <div class="col">
+            <label class="form-label">Message</label>
+            <textarea type="text" name="message" class="form-control" placeholder="Message"
+                aria-label="Message" required></textarea>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Submit</button>
+</form>
+
+
+{{ template "tail" }}
+{{ end }}

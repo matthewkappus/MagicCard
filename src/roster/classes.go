@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+
+	"github.com/matthewkappus/MagicCard/src/comment"
 )
 
 func (v *View) Profile(w http.ResponseWriter, r *http.Request) {
@@ -30,7 +32,21 @@ func (v *View) AddStarStrike(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := v.store.AddStarStrike(r.PostFormValue("permid"), r.PostFormValue("teacher"), r.PostFormValue("comment"), r.PostFormValue("title"), r.PostFormValue("icon"), r.PostFormValue("cat"))
+	ss := &comment.StarStrike{
+		PermID:  r.PostFormValue("perm_id"),
+		Teacher: r.PostFormValue("teacher"),
+		Comment: r.PostFormValue("comment"),
+		Title:   r.PostFormValue("title"),
+		Icon:    r.PostFormValue("icon"),
+		Cat:     comment.ToCat(r.PostFormValue("cat")),
+	}
+
+	if !ss.IsValid() {
+		http.Error(w, "Invalid starstrike", http.StatusNotAcceptable)
+		return
+	}
+
+	err := v.store.AddStarStrike(ss)
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return

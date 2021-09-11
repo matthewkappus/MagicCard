@@ -9,7 +9,7 @@ import (
 // starstrike table
 const (
 	createStarStrike                 = `CREATE TABLE IF NOT EXISTS starstrike (id INTEGER PRIMARY KEY, perm_id TEXT, teacher TEXT, comment TEXT, title TEXT, icon TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, cat INTEGER, isActive BOOLEAN DEFAULT true, FOREIGN KEY(perm_id) REFERENCES stu415(perm_id))`
-	insertStarStrike                 = `INSERT INTO starstrike(perm_id, teacher, comment, title, icon, cat, isActive) VALUES(?,?,?,?,?,?,?);`
+	insertStarStrike                 = `INSERT INTO starstrike(perm_id, teacher, comment, title, icon, cat, isActive) VALUES(?,?,?,?,?,?,?)`
 	selectStarStrikeByPermID         = `SELECT * FROM starstrike WHERE perm_id = ?`
 	selectNewestStarStrikesByTeacher = `SELECT * FROM starstrike WHERE teacher=? LIMIT ?`
 	selectStarStrikeByID             = `SELECT * FROM starstrike WHERE id = ?`
@@ -86,8 +86,9 @@ func (s *Store) GetMyStarStrikes(teacher string) ([]*comment.StarStrike, error) 
 }
 
 // AddStarStrike into the store
-func (s *Store) AddStarStrike(perm_id, teacher, comment, title, icon, cat string) error {
-	_, err := s.db.Exec(insertStarStrike, perm_id, teacher, comment, title, icon, cat, true)
+func (s *Store) AddStarStrike(ss *comment.StarStrike) error {
+	// INSERT INTO starstrike(perm_id, teacher, comment, title, icon, cat, isActive) VALUES(?,?,?,?,?,?,?)
+	_, err := s.db.Exec(insertStarStrike, ss.PermID, ss.Teacher, ss.Comment, ss.Title, ss.Icon, ss.Cat, true)
 	return err
 }
 
@@ -97,8 +98,8 @@ func (s *Store) BatchAddStarStrikes(ss []*comment.StarStrike) error {
 	if err != nil {
 		return err
 	}
-	for _, strstr := range ss {
-		_, err := tx.Exec(insertStarStrike, strstr.PermID, strstr.Teacher, strstr.Comment, strstr.Title, strstr.Icon, strstr.Cat, true)
+	for _, starstrike := range ss {
+		_, err := tx.Exec(insertStarStrike, starstrike)
 		if err != nil {
 			tx.Rollback()
 			return err

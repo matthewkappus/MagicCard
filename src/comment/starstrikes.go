@@ -14,6 +14,24 @@ const (
 	MajorStrike
 )
 
+func ToCat(s string) Category {
+	switch s {
+	case "0":
+		return Star
+	case "1":
+		return MinorStrike
+	case "2":
+		return MajorStrike
+	}
+	return Star
+}
+
+func (ss *StarStrike) IsValid() bool {
+
+	// todo: validate the ss
+	return true
+}
+
 type StarStrike struct {
 	ID     int    `json:"id,omitempty"`
 	PermID string `json:"perm_id,omitempty"`
@@ -60,7 +78,6 @@ func NewContact(ss *StarStrike, sender *synergy.Staff, resp, msg string, isClose
 		IsClosed:   isClosed,
 	}
 }
-
 
 // BatchCreateStarstrike returns a slice of non-repeating starstrikes for the provided students
 func BatchCreateStarstrike(s *StarStrike, permIDs []string) []*StarStrike {
