@@ -86,6 +86,7 @@ func (s *Store) GetMyStarStrikes(teacher string) ([]*comment.StarStrike, error) 
 }
 
 // AddStarStrike into the store
+// Should call IsValid() before calling this
 func (s *Store) AddStarStrike(ss *comment.StarStrike) error {
 	// INSERT INTO starstrike(perm_id, teacher, comment, title, icon, cat, isActive) VALUES(?,?,?,?,?,?,?)
 	_, err := s.db.Exec(insertStarStrike, ss.PermID, ss.Teacher, ss.Comment, ss.Title, ss.Icon, ss.Cat, true)
@@ -111,6 +112,11 @@ func (s *Store) BatchAddStarStrikes(ss []*comment.StarStrike) error {
 
 // GetStarStrikesByPerm returns all starstrikes for a given perm_id
 func (s *Store) GetStarStrikesByPerm(id string) ([]*comment.StarStrike, error) {
+	stu415, err := s.GetStu415ByPermID(id)
+
+	if err != nil {
+		return nil, err
+	}
 	rows, err := s.db.Query(selectStarStrikeByPermID, id)
 	if err != nil {
 		return nil, err
@@ -125,6 +131,7 @@ func (s *Store) GetStarStrikesByPerm(id string) ([]*comment.StarStrike, error) {
 			fmt.Printf("ss scan err: %v\n", err)
 			continue
 		}
+		strstr.Student = stu415
 		ss = append(ss, strstr)
 	}
 
@@ -135,13 +142,24 @@ func (s *Store) GetStarStrikesByPerm(id string) ([]*comment.StarStrike, error) {
 func (s *Store) GetStarStrike(id int) (*comment.StarStrike, error) {
 
 	strstr := new(comment.StarStrike)
+
 	err := s.db.QueryRow(selectStarStrikeByID, id).Scan(&strstr.ID, &strstr.PermID, &strstr.Teacher, &strstr.Comment, &strstr.Title, &strstr.Icon, &strstr.Created, &strstr.Cat, &strstr.IsActive)
+	if err != nil {
+		return nil, err
+	}
+	strstr.Student, err = s.GetStu415ByPermID(strstr.PermID)
+
 	return strstr, err
 
 }
 
 // GetStudentStrikes returns all starstrikes for a given student
 func (s *Store) GetStudentStrikes(perm string) ([]*comment.StarStrike, error) {
+	stu415, err := s.GetStu415ByPermID(perm)
+
+	if err != nil {
+		return nil, err
+	}
 	rows, err := s.db.Query(selectStarStrikeByPerm, perm)
 	if err != nil {
 		return nil, err
@@ -156,6 +174,7 @@ func (s *Store) GetStudentStrikes(perm string) ([]*comment.StarStrike, error) {
 			fmt.Printf("ss scan err: %v\n", err)
 			continue
 		}
+		strstr.Student = stu415
 		ss = append(ss, strstr)
 	}
 	return ss, nil

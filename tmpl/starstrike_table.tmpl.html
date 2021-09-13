@@ -1,0 +1,43 @@
+{{ define "starstrike_table"}}
+
+
+<!-- todo <input searchFilter -->
+
+<!-- // chose starstrikes by day/month/year -->
+<table class="table table-dark">
+    <thead>
+        <tr>
+            <th scope="col">Student</th>
+            <th scope="col">Teacher</th>
+            <th scope="col">Type</th>
+            <th scope="col">Title</th>
+            <th scope="col">Date</th>
+            <th scope="col">Contact</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ range $ss, $contact := .StarContacts }}
+        <tr>
+
+        
+            <th scope="row">student row {{ $ss.</th>
+            <td>teacher row</td>
+            <td>type tow</td>
+            <td>title row</td>
+            <td>date row</td>
+            <td>contact row</td>
+        </tr>
+     
+    </tbody>
+</table>
+
+<!-- todo: add CSV export that prints the data to drive or file -->
+
+<script>
+    // add each starstrike as js to filter the table
+
+    // based on filterType, apply the appropriate function to the list data
+    // starstrikes.forEach(function(starstrike) {filterTable(starstrike)});
+</script>
+
+{{ end }}

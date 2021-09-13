@@ -35,6 +35,9 @@ func (ss *StarStrike) IsValid() bool {
 type StarStrike struct {
 	ID     int    `json:"id,omitempty"`
 	PermID string `json:"perm_id,omitempty"`
+
+	Student *synergy.Stu415
+	
 	// staff(name)
 	Teacher string `json:"teacher,omitempty"`
 	Comment string `json:"comment,omitempty"`

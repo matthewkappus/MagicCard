@@ -6,8 +6,12 @@
 <div class="container-md">
 
 
-    <h3>Home</h3>
+    <h3>Administrator</h3>
 
+    <div id="container-sm">
+        {{ template "starstrike_table" }}
+    </div>
+    
     <!-- starstrikes -->
 
     <a href="/admin/myStarStrikeForm">Add School StarStrikes</a>
@@ -27,5 +31,4 @@
 
 
 {{ template "tail" }}
-
 {{ end }}

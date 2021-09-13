@@ -42,6 +42,19 @@ const (
 	selectSessionBySID = `SELECT * FROM session where sid=?`
 )
 
+// student table
+const (
+	selectStudentByPerm = `SELECT * FROM stu415 WHERE perm=?`
+)
+
+func (s *Store) GetStu415ByPermID(perm string) (*synergy.Stu415, error) {
+	s415 := new(synergy.Stu415)
+	row := s.db.QueryRow(selectStudentByPerm, perm)
+	err := row.Scan(&s415.OrganizationName, &s415.SchoolYear, &s415.StudentName, &s415.PermID, &s415.Gender, &s415.Grade, &s415.TermName, &s415.Per, &s415.Term, &s415.SectionID, &s415.CourseIDAndTitle, &s415.MeetDays, &s415.Teacher, &s415.Room, &s415.PreScheduled)
+	return s415, err
+
+}
+
 func (s *Store) GetStaffEmail(teacher string) (email string, err error) {
 	err = s.db.QueryRow(selectTeacherNameByEmail, teacher).Scan(&email)
 	return email, err

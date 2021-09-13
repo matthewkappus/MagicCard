@@ -29,6 +29,14 @@ type ContactData struct {
 	C map[*comment.StarStrike]*comment.Contact
 }
 
+type AdminData struct {
+	N *Nav
+
+	// [*StarStrike]*Contact
+	StarContacts map[string]*comment.Contact
+	Staff    map[string]*synergy.Staff
+}
+
 // Alert is a struct for use in <head> / <nav>
 type Alert struct {
 	// Types: primary secondary success warning danger info light dark
