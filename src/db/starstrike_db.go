@@ -100,7 +100,11 @@ func (s *Store) BatchAddStarStrikes(ss []*comment.StarStrike) error {
 		return err
 	}
 	for _, starstrike := range ss {
-		_, err := tx.Exec(insertStarStrike, starstrike)
+		if starstrike == nil {
+			continue
+		}
+		// INSERT INTO starstrike(perm_id, teacher, comment, title, icon, cat, isActive) VALUES(?,?,?,?,?,?,?)
+		_, err := tx.Exec(insertStarStrike, starstrike.PermID, starstrike.Teacher, starstrike.Comment, starstrike.Title, starstrike.Icon, starstrike.Cat, true)
 		if err != nil {
 			tx.Rollback()
 			return err

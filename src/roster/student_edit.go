@@ -45,5 +45,5 @@ func (v *View) StudentCard(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// todo: add email and session info
-	v.tmpls.Lookup("studentmagiccard").Execute(w, TD{M: mc, N: v.N})
+	v.tmpls.Lookup("view_magiccard").Execute(w, TD{M: mc, N: v.N})
 }

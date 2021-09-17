@@ -102,3 +102,6 @@ func (v *View) makeContactMap(perm string) (map[*comment.StarStrike]*comment.Con
 
 	return cm, nil
 }
+
+
+

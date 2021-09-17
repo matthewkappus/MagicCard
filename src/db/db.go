@@ -42,6 +42,10 @@ const (
 	selectSessionBySID = `SELECT * FROM session where sid=?`
 )
 
+// [starstrike]contact map
+const selectStarStrikesAndComments = `SELECT DISTINCT stu415.perm_id, stu415.student_name, starstrike.teacher, starstrike.title, starstrike.comment, starstrike.teacher  FROM stu415 join starstrike WHERE stu415.perm_id = starstrike.perm_id`
+const selectStarStrikesAndComments2 = `SELECT DISTINCT * FROM stu415 INNER JOIN starstrike ON starstrike.perm_id = stu415.perm_id`
+
 // student table
 const (
 	selectStudentByPerm = `SELECT * FROM stu415 WHERE perm=?`

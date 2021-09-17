@@ -21,18 +21,18 @@ func (v *View) StaffEdit(w http.ResponseWriter, r *http.Request) {
 }
 
 func (v *View) AdminHome(w http.ResponseWriter, r *http.Request) {
+
 	v.tmpls.Lookup("admin_home").Execute(w, TD{N: v.N})
 }
 
-
-func (v  *View) PerfectAttendance(w http.ResponseWriter, r *http.Request)  {
+func (v *View) PerfectAttendance(w http.ResponseWriter, r *http.Request) {
 	v.tmpls.Lookup("perfect_attendance_form").Execute(w, TD{N: v.N})
 }
 
 func (v *View) AddPerfectAttendance(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return 
+		return
 	}
 
 	err := r.ParseMultipartForm(32 << 20)
@@ -60,6 +60,7 @@ func (v *View) AddPerfectAttendance(w http.ResponseWriter, r *http.Request) {
 	s := &comment.StarStrike{
 		Teacher:  "Madison Attendance",
 		Title:    "Perfect Attendance",
+		Comment:  r.PostFormValue("message"),
 		Created:  time.Now(),
 		Cat:      comment.Star,
 		Icon:     "award",

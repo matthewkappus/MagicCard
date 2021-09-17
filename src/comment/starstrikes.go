@@ -6,6 +6,26 @@ import (
 	"github.com/matthewkappus/Roster/src/synergy"
 )
 
+type StarStrike struct {
+	ID     int    `json:"id,omitempty"`
+	PermID string `json:"perm_id,omitempty"`
+
+	Student *synergy.Stu415
+
+	// staff(name)
+	Teacher string `json:"teacher,omitempty"`
+	Comment string `json:"comment,omitempty"`
+	// Title is a catagory of the comment
+	Title string `json:"title,omitempty"`
+
+	Created time.Time `json:"created,omitempty"`
+	// 0 star 1 minor 2 strik 3 major
+	Cat Category
+
+	Icon     string
+	IsActive bool `json:"is_active,omitempty"`
+}
+
 type Category int
 
 const (
@@ -30,26 +50,6 @@ func (ss *StarStrike) IsValid() bool {
 
 	// todo: validate the ss
 	return true
-}
-
-type StarStrike struct {
-	ID     int    `json:"id,omitempty"`
-	PermID string `json:"perm_id,omitempty"`
-
-	Student *synergy.Stu415
-	
-	// staff(name)
-	Teacher string `json:"teacher,omitempty"`
-	Comment string `json:"comment,omitempty"`
-	// Title is a catagory of the comment
-	Title string `json:"title,omitempty"`
-
-	Created time.Time `json:"created,omitempty"`
-	// 0 star 1 minor 2 strik 3 major
-	Cat Category
-
-	Icon     string
-	IsActive bool `json:"is_active,omitempty"`
 }
 
 // Contact logs teacher-parent communications regarding starstrikes
