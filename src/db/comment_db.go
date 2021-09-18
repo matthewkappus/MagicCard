@@ -7,9 +7,9 @@ import (
 
 // contact table
 const (
-	createComment       = `CREATE TABLE IF NOT EXISTS contact(id INTEGER PRIMARY KEY, sender_name STRING, sender_email TEXT, respondent TEXT, starstrike_id INT, message TEXT, is_closed BOOL)`
+	createComment       = `CREATE TABLE IF NOT EXISTS contact(id INTEGER PRIMARY KEY, sender_name STRING, sender_email TEXT, respondent TEXT, starstrike_id INT, method TEXT, is_closed BOOL)`
 	selectContactByPerm = `SELECT * FROM contact WHERE perm_id = ?`
-	insertContact       = `INSERT INTO contact( sender_name, sender_email, respondent, starstrike_id, message, is_closed) VALUES(?, ?,?, ?, ?, ?)`
+	insertContact       = `INSERT INTO contact( sender_name, sender_email, respondent, starstrike_id, method, is_closed) VALUES(?, ?,?, ?, ?, ?)`
 
 	selectContactByID         = `SELECT * FROM contact WHERE id = ?`
 	selectContactByStarStrike = `SELECT * FROM contact WHERE starstrike_id = ?`
@@ -21,8 +21,8 @@ func (s *Store) CreateCommentTable() {
 
 func (s *Store) InsertContact(c *comment.Contact) error {
 
-	// `id INTEGER PRIMARY KEY, sender_name STRING, sender_email TEXT, respondent TEXT, starstrike_id INT, message TEXT, is_closed BOOL
-	id, err := s.db.Exec(insertContact, &c.Sender.Name, &c.Sender.Email, &c.Respondent, &c.StarStrike.ID, &c.Message, &c.IsClosed)
+	// `id INTEGER PRIMARY KEY, sender_name STRING, sender_email TEXT, respondent TEXT, starstrike_id INT, method TEXT, is_closed BOOL
+	id, err := s.db.Exec(insertContact, &c.Sender.Name, &c.Sender.Email, &c.Respondent, &c.StarStrike.ID, &c.Method, &c.IsClosed)
 	if err != nil {
 		return err
 	}
@@ -37,7 +37,7 @@ func (s *Store) GetContact(strikeID int) (*comment.Contact, error) {
 		Sender:     new(synergy.Staff),
 		StarStrike: new(comment.StarStrike),
 	}
-	// (id INTEGER PRIMARY KEY, sender_name STRING, sender_email TEXT, respondent TEXT, starstrike_id INT, message TEXT, is_closed BOOL)
-	err := s.db.QueryRow(selectContactByStarStrike, strikeID).Scan(&c.ID, &c.Sender.Name, &c.Sender.Email, &c.Respondent, &c.StarStrike.ID, &c.Message, &c.IsClosed)
+	// (id INTEGER PRIMARY KEY, sender_name STRING, sender_email TEXT, respondent TEXT, starstrike_id INT, method TEXT, is_closed BOOL)
+	err := s.db.QueryRow(selectContactByStarStrike, strikeID).Scan(&c.ID, &c.Sender.Name, &c.Sender.Email, &c.Respondent, &c.StarStrike.ID, &c.Method, &c.IsClosed)
 	return c, err
 }

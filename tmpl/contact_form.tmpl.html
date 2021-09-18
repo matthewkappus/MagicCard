@@ -15,9 +15,15 @@
   
         <div class="row mb-1">
             <div class="col">
-                <label class="form-label">Message</label>
-                <textarea type="text" name="message" class="form-control" placeholder="Message"
-                    aria-label="Message" required></textarea>
+                <label class="form-label">Method</label>
+                <!-- todo: Set from call method by looking for strike count -->
+                <select aria-label="Message"  name="method" id="">
+                    <option value="Student Warned">Warning</option>
+                    <option value="Parent Email">Parent Email</option>
+                    <option value="Parent Call">Parent Call</option>
+                    <option value="Parent Meeting">Parent Meeting</option>
+                </select>
+             
             </div>
         </div>
         <button type="submit" class="btn btn-primary mt-2">Submit</button>

@@ -46,7 +46,7 @@ func (v *View) AddContact(w http.ResponseWriter, r *http.Request) {
 		StarStrike: ss,
 		Sent:       time.Now(),
 		Respondent: r.PostFormValue("respondent"),
-		Message:    r.PostFormValue("message"),
+		Method:     comment.ContactMethod(r.PostFormValue("method")),
 		IsClosed:   r.PostFormValue("is_closed") == "true",
 	}
 	// todo add validation
@@ -102,6 +102,3 @@ func (v *View) makeContactMap(perm string) (map[*comment.StarStrike]*comment.Con
 
 	return cm, nil
 }
-
-
-

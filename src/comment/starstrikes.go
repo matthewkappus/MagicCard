@@ -34,6 +34,15 @@ const (
 	MajorStrike
 )
 
+type ContactMethod string
+
+const (
+	StudentWarning ContactMethod = "Student Warned"
+	ParentCall                   = "Parent Call"
+	ParentEmail                  = "Parent Email"
+	ParentMeeting                = "Parent Meeting"
+)
+
 func ToCat(s string) Category {
 	switch s {
 	case "0":
@@ -66,18 +75,18 @@ type Contact struct {
 
 	StarStrike *StarStrike
 
-	Message string
+	Method ContactMethod
 
 	// Is issue resolved
 	IsClosed bool
 }
 
-func NewContact(ss *StarStrike, sender *synergy.Staff, resp, msg string, isClosed bool) *Contact {
+func NewContact(ss *StarStrike, sender *synergy.Staff, resp string, meth ContactMethod, isClosed bool) *Contact {
 	return &Contact{
 		StarStrike: ss,
 		Sender:     sender,
 		Respondent: resp,
-		Message:    msg,
+		Method:     meth,
 		IsClosed:   isClosed,
 	}
 }
